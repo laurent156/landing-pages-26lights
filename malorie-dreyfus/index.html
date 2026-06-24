@@ -318,7 +318,7 @@ body {
   .bio-inner { grid-template-columns: 1fr; row-gap: 36px; }
   .bio-photo { width: 280px; height: 348px; }
 }
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .hero { height: auto; padding-bottom: 0; background: linear-gradient(135deg, #050510 0%, #0d0d2b 50%, #1a1550 100%); }
   .hero-portrait { display: none; }
   .hero-inner { position: relative; z-index: 4; padding: 40px 24px 20px; }
@@ -408,16 +408,8 @@ body {
   border: 1px solid rgba(255,255,255,0.25);
   border-radius: 20px; padding: 4px 12px;
 }
-@media (max-width: 900px) {
-  .hero { height: auto; min-height: 700px; }
-  .hero h1 { position: static; width: 100%; font-size: clamp(36px, 4vw, 60px); line-height: 1.08; top: auto; left: auto; }
-  .hero-sub { position: static; width: 100%; }
-  .hero-glass-card { bottom: 40px; right: auto; left: 40px; }
-  .hero .btn { position: static; display: inline-block; margin-top: 14px; }
-  .hero-inner { padding: 60px 40px 180px; }
-}
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .hero-glass-card {
     position: static;
     width: auto;
@@ -459,7 +451,7 @@ body {
   .pt-row { grid-template-columns: 1fr 150px; gap: 0 20px; }
   .pt-row .btn { grid-column: span 2; width: 150px; }
 }
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .pt-row { grid-template-columns: 1fr; gap: 12px 0; padding: 22px 0; }
   .pt-row--featured { padding: 22px 18px; margin: 0 -18px; }
   .pt-row .btn { width: 100%; text-align: center; justify-content: center; }
@@ -472,7 +464,7 @@ body {
   text-decoration: underline; text-underline-offset: 3px; transition: color .15s;
 }
 .contact-email:hover { color: rgba(255,255,255,0.9); }
-@media (max-width: 720px) { .contact-actions { flex-direction: column; align-items: flex-start; gap: 14px; } }
+@media (max-width: 900px) { .contact-actions { flex-direction: column; align-items: flex-start; gap: 14px; } }
 
 /* ---------- stagger grid reveals ---------- */
 .recognize-grid .r-item:nth-child(1) { transition-delay: 0ms; }
@@ -592,7 +584,7 @@ body {
 .hero-portrait-mobile {
   display: none;
 }
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .hero-portrait-mobile {
     display: block;
     width: 200px;
