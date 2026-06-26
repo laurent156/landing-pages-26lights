@@ -261,6 +261,51 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
 .hero-proof-quote { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.8); font-style: italic; }
 .hero-proof-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.04em; }
 .btn-how { margin-top: 48px; }
+
+/* METHOD */
+.method { background: linear-gradient(135deg, #08081f 0%, #0d1235 100%); padding: 96px 0; }
+.method-label { color: rgba(255,255,255,0.4); }
+.method-h2 { color: #F7F7F7; margin-bottom: 24px; }
+.method-split { display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: center; }
+.method-intro { font-size: 15px; color: #A4AAC4; margin: 0 0 40px; line-height: 1.6; }
+.method-funnel { display: block; }
+.seg1,.seg2,.seg3,.seg4,.seg6{fill:#161A33}
+.seg5{fill:#5363F5}
+.txt1,.txt2,.txt3,.txt4,.txt6{fill:#A4AAC4}
+.txt5{fill:#F4F5F9}
+@media (prefers-reduced-motion: no-preference){
+  .seg1{animation:cs1 12s ease infinite}
+  .seg2{animation:cs2 12s ease infinite}
+  .seg3{animation:cs3 12s ease infinite}
+  .seg4{animation:cs4 12s ease infinite}
+  .seg5{animation:cs5 12s ease infinite}
+  .seg6{animation:cs6 12s ease infinite}
+  .txt1{animation:ct1 12s ease infinite}
+  .txt2{animation:ct2 12s ease infinite}
+  .txt3{animation:ct3 12s ease infinite}
+  .txt4{animation:ct4 12s ease infinite}
+  .txt5{animation:ct5 12s ease infinite}
+  .txt6{animation:ct6 12s ease infinite}
+}
+@keyframes cs1{0%,1%{fill:#161A33}2%,14%{fill:#5363F5}15%,100%{fill:#161A33}}
+@keyframes cs2{0%,18%{fill:#161A33}19%,31%{fill:#5363F5}32%,100%{fill:#161A33}}
+@keyframes cs3{0%,34%{fill:#161A33}35%,48%{fill:#5363F5}49%,100%{fill:#161A33}}
+@keyframes cs4{0%,51%{fill:#161A33}52%,64%{fill:#5363F5}65%,100%{fill:#161A33}}
+@keyframes cs5{0%,68%{fill:#161A33}69%,81%{fill:#5363F5}82%,100%{fill:#161A33}}
+@keyframes cs6{0%,84%{fill:#161A33}85%,98%{fill:#5363F5}99%,100%{fill:#161A33}}
+@keyframes ct1{0%,1%{fill:#A4AAC4}2%,14%{fill:#F4F5F9}15%,100%{fill:#A4AAC4}}
+@keyframes ct2{0%,18%{fill:#A4AAC4}19%,31%{fill:#F4F5F9}32%,100%{fill:#A4AAC4}}
+@keyframes ct3{0%,34%{fill:#A4AAC4}35%,48%{fill:#F4F5F9}49%,100%{fill:#A4AAC4}}
+@keyframes ct4{0%,51%{fill:#A4AAC4}52%,64%{fill:#F4F5F9}65%,100%{fill:#A4AAC4}}
+@keyframes ct5{0%,68%{fill:#A4AAC4}69%,81%{fill:#F4F5F9}82%,100%{fill:#A4AAC4}}
+@keyframes ct6{0%,84%{fill:#A4AAC4}85%,98%{fill:#F4F5F9}99%,100%{fill:#A4AAC4}}
+@media (max-width: 900px) {
+  .method-split { grid-template-columns: 1fr; gap: 40px; }
+}
+
+.how-method-link { display: inline-block; margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color .15s ease; }
+.how-method-link:hover { color: rgba(255,255,255,0.75); }
+@media (max-width: 900px) { .method-card { padding: 32px 20px 28px; } }
 </style>
 </head>
 <body>
@@ -358,6 +403,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
         <div class="how-num">01 — Co-creation workshops</div>
         <h3>Think together, live</h3>
         <p>You explain your business. Arik maps it live on a shared board — connecting the dots you've been too close to see. Then you solve it together.</p>
+        <a href="#method" class="how-method-link">See how the method works ↓</a>
       </div>
       <div class="how-card reveal" style="--reveal-delay:120ms">
         <div class="how-num">02 — On-call support</div>
@@ -366,6 +412,47 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
       </div>
     </div>
     <a href="#pricing" class="btn btn-how reveal" style="--reveal-delay:200ms">See rates</a>
+  </div>
+</section>
+
+<!-- THE METHOD -->
+<section class="method" id="method">
+  <div class="wrap">
+    <div class="method-split">
+      <div class="method-left">
+        <div class="section-label method-label reveal">The method</div>
+        <h2 class="method-h2 reveal">Why co-creation actually works</h2>
+        <p class="method-intro reveal">A structured process that turns a room of different perspectives into one shared plan — in a single day.</p>
+      </div>
+      <div class="method-right reveal">
+        <svg class="method-funnel" width="100%" viewBox="0 0 720 520" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="40"  x2="720" y2="40"  stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <line x1="0" y1="112" x2="720" y2="112" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <line x1="0" y1="184" x2="720" y2="184" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <line x1="0" y1="256" x2="720" y2="256" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <line x1="0" y1="328" x2="720" y2="328" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <line x1="0" y1="400" x2="720" y2="400" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+          <polygon class="seg1" points="110,40 390,40 367.5,112 132.5,112"/>
+          <polygon class="seg2" points="132.5,112 367.5,112 345,184 155,184"/>
+          <polygon class="seg3" points="155,184 345,184 322.5,256 177.5,256"/>
+          <polygon class="seg4" points="177.5,256 322.5,256 300,328 200,328"/>
+          <polygon class="seg5" points="200,328 300,328 277.5,400 222.5,400"/>
+          <polygon class="seg6" points="222.5,400 277.5,400 250,472"/>
+          <text class="txt1" x="88" y="76"  font-size="19" font-weight="600" text-anchor="end" dominant-baseline="central">01</text>
+          <text class="txt2" x="88" y="148" font-size="19" font-weight="600" text-anchor="end" dominant-baseline="central">02</text>
+          <text class="txt3" x="88" y="220" font-size="19" font-weight="600" text-anchor="end" dominant-baseline="central">03</text>
+          <text class="txt4" x="88" y="292" font-size="19" font-weight="600" text-anchor="end" dominant-baseline="central">04</text>
+          <text class="txt5" x="88" y="364" font-size="19" font-weight="700" text-anchor="end" dominant-baseline="central">05</text>
+          <text class="txt6" x="88" y="436" font-size="19" font-weight="600" text-anchor="end" dominant-baseline="central">06</text>
+          <text class="txt1" x="408" y="76"  font-size="19" font-weight="500" dominant-baseline="central">Map the business together</text>
+          <text class="txt2" x="408" y="148" font-size="19" font-weight="500" dominant-baseline="central">50+ ideas surface in one session</text>
+          <text class="txt3" x="408" y="220" font-size="19" font-weight="500" dominant-baseline="central">Evaluated in small groups</text>
+          <text class="txt4" x="408" y="292" font-size="19" font-weight="500" dominant-baseline="central">Prioritized together</text>
+          <text class="txt5" x="408" y="364" font-size="19" font-weight="700" dominant-baseline="central">3-5 ideas validated</text>
+          <text class="txt6" x="408" y="436" font-size="19" font-weight="500" dominant-baseline="central">Delivered, with follow-through</text>
+        </svg>
+      </div>
+    </div>
   </div>
 </section>
 
