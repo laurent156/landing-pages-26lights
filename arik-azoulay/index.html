@@ -306,6 +306,14 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
 .how-method-link { display: inline-block; margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color .15s ease; }
 .how-method-link:hover { color: rgba(255,255,255,0.75); }
 @media (max-width: 900px) { .method-card { padding: 32px 20px 28px; } }
+
+.how-card--featured {
+  border-color: rgba(83,99,245,0.5);
+  background: rgba(83,99,245,0.1);
+  box-shadow: 0 0 0 1px rgba(83,99,245,0.3), 0 8px 32px rgba(83,99,245,0.12);
+}
+.how-card--featured .how-num { color: rgba(153,163,255,0.7); }
+.how-card--featured h3 { color: #fff; }
 </style>
 </head>
 <body>
@@ -399,7 +407,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
     <div class="section-label reveal">How it works</div>
     <h2 class="reveal">Two ways to work together</h2>
     <div class="how-grid">
-      <div class="how-card reveal">
+      <div class="how-card how-card--featured reveal">
         <div class="how-num">01 — Co-creation workshops</div>
         <h3>Think together, live</h3>
         <p>You explain your business. Arik maps it live on a shared board — connecting the dots you've been too close to see. Then you solve it together.</p>
