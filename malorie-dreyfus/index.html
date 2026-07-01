@@ -854,6 +854,7 @@ document.documentElement.classList.add('js-reveal');
   window.addEventListener('load', send);
   window.addEventListener('resize', send);
   document.addEventListener('DOMContentLoaded', send);
+  window.addEventListener('message', function(ev){ if (ev.data && ev.data.type === 'gp-request') send(); });
   if (window.ResizeObserver) { try { new ResizeObserver(send).observe(document.body); } catch(err){} }
   [100,400,900,1600,2600,4000].forEach(function(t){ setTimeout(send, t); });
   Array.prototype.forEach.call(document.images, function(img){ if(!img.complete) img.addEventListener('load', send); });
