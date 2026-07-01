@@ -103,7 +103,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 /* ====================================================== SERVICES INTRO + PILLARS (ways) */
 .services-intro { background: #fff; }
 .services-intro h2 { color: var(--ink); max-width: 820px; margin-bottom: 26px; }
-.services-intro .why-intro { font-size: 18px; line-height: 1.65; color: #444; max-width: 760px; margin: 0; }
+.services-intro .why-intro { font-size: 17px; line-height: 1.65; color: #444; max-width: 760px; margin: 0; }
 .ways-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px; margin-top: 64px; }
 .way .eyebrow { font-size: 14px; font-weight: 500; color: var(--blue-text); margin-bottom: 16px; letter-spacing: .2px; }
 .way h3 { font-size: 24px; font-weight: 500; line-height: 1.18; color: #000; margin-bottom: 16px; }
@@ -130,6 +130,10 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .detail-title { font-size: clamp(32px, 3.6vw, 44px); font-weight: 500; line-height: 1.06; letter-spacing: -0.6px; color: var(--ink); margin-bottom: 20px; }
 .detail-lead { font-size: clamp(18px, 1.7vw, 21px); font-weight: 500; line-height: 1.4; letter-spacing: -0.2px; color: var(--ink); margin-bottom: 18px; }
 .detail-content p { font-size: 15px; line-height: 1.7; color: var(--gray-1); margin-bottom: 14px; }
+.detail-cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; font-size: 15px; font-weight: 600; color: var(--blue-text); text-decoration: none; }
+.detail-cta::after { content: "\2192"; transition: transform .15s ease; }
+.detail-cta:hover::after { transform: translateX(4px); }
+
 
 /* ====================================================== APPROACH */
 .approach { background: #fff; }
@@ -159,7 +163,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .team { background: #fafafa; }
 .team-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: 18px; flex-wrap: wrap; }
 .team-header h2 { color: var(--ink); max-width: 820px; }
-.team-intro { font-size: 18px; line-height: 1.65; color: #444; max-width: 760px; margin: 0 0 56px; }
+.team-intro { font-size: 17px; line-height: 1.65; color: #444; max-width: 760px; margin: 0 0 56px; }
 .team-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 30px 24px; }
 .member-photo { aspect-ratio: 1 / 1; border-radius: 16px; background: linear-gradient(135deg, #e7e8f0 0%, #d6d9ea 100%); margin-bottom: 14px; overflow: hidden; }
 .member-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block; filter: grayscale(1) contrast(1.02); }
@@ -168,24 +172,11 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 
 /* ====================================================== CONTACT */
 .contact { background: #fff; }
-.contact-split { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
-.contact h2 { color: var(--ink); margin-bottom: 18px; max-width: 460px; }
-.contact .sub { font-size: 16px; line-height: 1.6; color: var(--gray-1); max-width: 420px; }
-.contact-form { display: flex; flex-direction: column; gap: 14px; }
-.contact-form input, .contact-form textarea {
-  font-family: inherit; font-size: 15px; color: var(--ink);
-  background: #f6f6f9; border: 1px solid #e6e6ee; border-radius: 8px; padding: 14px 16px; width: 100%;
-  transition: border-color .15s ease, background .15s ease;
-}
-.contact-form input::placeholder, .contact-form textarea::placeholder { color: #aaa; }
-.contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--blue); background: #fff; }
-.contact-form textarea { min-height: 130px; resize: vertical; }
-.contact-form .btn { align-self: flex-start; margin-top: 6px; }
+.contact-inner { max-width: 620px; }
+.contact h2 { color: var(--ink); margin-bottom: 18px; }
+.contact .sub { font-size: 17px; line-height: 1.6; color: var(--gray-1); margin-bottom: 30px; }
 
-/* ====================================================== FINAL CTA + FOOTER */
-.final { padding: 84px 0; }
-.final h2 { color: #fff; margin-bottom: 20px; max-width: 720px; }
-.final p { max-width: 640px; font-size: 18px; font-weight: 300; line-height: 1.55; color: rgba(255,255,255,0.85); margin-bottom: 30px; }
+/* ====================================================== FOOTER */
 .footer { padding: 38px 0; background: #0a0a14; color: rgba(255,255,255,0.5); font-size: 13px; }
 .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
@@ -264,7 +255,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .method-label { color: rgba(255,255,255,0.4); }
 .method-h2 { color: #F7F7F7; margin-bottom: 24px; }
 .method-split { display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: center; }
-.method-intro { font-size: 15px; color: #A4AAC4; margin: 0 0 40px; line-height: 1.6; }
+.method-intro { font-size: 17px; color: #A4AAC4; margin: 0 0 40px; line-height: 1.6; }
 .method-funnel { display: block; }
 .seg1,.seg2,.seg3,.seg4,.seg6{fill:#161A33}
 .seg5{fill:#5363F5}
@@ -321,7 +312,6 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
   .approach-grid { grid-template-columns: 1fr; gap: 40px; }
   .cases-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: repeat(3, 1fr); }
-  .contact-split { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 600px) {
   .wrap, .footer-inner { padding-left: 24px; padding-right: 24px; }
@@ -442,6 +432,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
           <h2 class="detail-title reveal">Growth plan</h2>
           <p class="detail-lead reveal">We'll help you lay out and implement an ambitious but realistic plan as well as all the relevant KPIs. We'll be with you every step of the way.</p>
           <p class="reveal">Whether you're just starting out or need to reevaluate where you are, having a clear growth plan is essential. It helps the company set clear goals, prioritize resources, and track progress towards its objectives. It also provides a roadmap for success and helps the company stay focused on its mission.</p>
+          <a href="https://calendly.com/alicia-26lights/30min?month=2026-06" target="_blank" class="detail-cta reveal">Build your growth plan</a>
         </div>
       </div>
     </div>
@@ -456,6 +447,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
           <h2 class="detail-title reveal">Business plan</h2>
           <p class="detail-lead reveal">Beyond funding, a good business plan is critical to increase your chances of success and make informed decisions that support long-term growth. And we can help with that!</p>
           <p class="reveal">Maybe you're just starting out, or maybe your previous plan got punched in the mouth. Either way, we'll work with you to lay out your company's goals, strategy, and operating model. We'll also build a clear view of the target market, competition, and the resources required to bring the product or service to market.</p>
+          <a href="https://calendly.com/alicia-26lights/30min?month=2026-06" target="_blank" class="detail-cta reveal">Build your business plan</a>
         </div>
       </div>
     </div>
@@ -492,6 +484,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
           <p class="detail-lead reveal">It's hard to establish new processes when you spend your time putting out fires, and to keep a big-picture view when you never take a step back. Crucial knowledge shouldn't only reside in the founder's head.</p>
           <p class="reveal">Mapping efficient business processes unlocks the untapped potential of an otherwise healthy business and makes the company less reliant on one person. It also provides a necessary and solid base for future projects.</p>
           <p class="reveal">Sometimes, you just need to rewire the machine for it to work better. And we've got the best engineers!</p>
+          <a href="https://calendly.com/alicia-26lights/30min?month=2026-06" target="_blank" class="detail-cta reveal">Map your processes</a>
         </div>
       </div>
     </div>
@@ -637,29 +630,12 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
   <!-- CONTACT -->
   <section class="contact" id="contact" data-screen-label="Get in touch">
     <div class="wrap">
-      <div class="contact-split">
-        <div class="contact-left">
-          <div class="section-label reveal">Get in touch</div>
-          <h2 class="reveal">We're in the business of making a difference. Let's get started!</h2>
-          <p class="sub reveal">Want to see what difference we can bring to your business? Book a consultation today.</p>
-        </div>
-        <form class="contact-form reveal" onsubmit="return handleContact(event)">
-          <input type="text" name="name" placeholder="Name" autocomplete="name">
-          <input type="text" name="company" placeholder="Company name" autocomplete="organization">
-          <input type="email" name="email" placeholder="Email" autocomplete="email">
-          <textarea name="message" placeholder="Message"></textarea>
-          <button type="submit" class="btn">Send</button>
-        </form>
+      <div class="contact-inner">
+        <div class="section-label reveal">Get in touch</div>
+        <h2 class="reveal">We're in the business of making a difference. Let's get started!</h2>
+        <p class="sub reveal">Want to see what difference we can bring to your business? Tell us about it and we'll take it from there.</p>
+        <a href="https://www.26lights.com/contact-us/" target="_blank" class="btn btn-wide reveal">Contact us</a>
       </div>
-    </div>
-  </section>
-
-  <!-- FINAL CTA -->
-  <section class="final bistre" data-screen-label="Final CTA">
-    <div class="wrap">
-      <h2 class="reveal">Smart, predictable growth starts with one conversation.</h2>
-      <p class="reveal">Book a free 30-minute consultation and let's see what difference we can make for your business.</p>
-      <a href="https://calendly.com/alicia-26lights/30min?month=2026-06" target="_blank" class="btn btn-wide reveal">Let's talk about your growth</a>
     </div>
   </section>
 
@@ -685,11 +661,6 @@ document.documentElement.classList.add('js-reveal');
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
   els.forEach(function (e) { io.observe(e); });
 })();
-function handleContact(e){
-  e.preventDefault();
-  window.open('https://calendly.com/alicia-26lights/30min?month=2026-06', '_blank');
-  return false;
-}
 
 // Process-mapping illustration entrance (Web Animations API)
 (function () {
