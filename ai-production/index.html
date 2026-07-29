@@ -218,12 +218,49 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .features-head { max-width: 620px; margin-bottom: 56px; }
 .features-head h2 { color: var(--ink); margin-bottom: 20px; }
 .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-.feat { padding: 32px 30px; border: 1px solid #ececf2; border-radius: 16px; background: #fff; transition: border-color .2s ease, transform .2s ease; }
+.feat { padding: 0 0 30px; border: 1px solid #ececf2; border-radius: 16px; background: #fff; overflow: hidden; transition: border-color .2s ease, transform .2s ease; }
 .feat:hover { border-color: #dcdce6; transform: translateY(-2px); }
-.feat-ico { width: 44px; height: 44px; border-radius: 11px; background: var(--magenta-tint); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-.feat-ico svg { width: 21px; height: 21px; color: var(--magenta); }
+.feat-body { padding: 26px 28px 0; }
 .feat h3 { font-size: 21px; font-weight: 500; line-height: 1.22; color: var(--ink); margin-bottom: 12px; letter-spacing: -0.2px; text-wrap: balance; }
 .feat p { font-size: 15px; line-height: 1.65; color: var(--gray-1); }
+
+/* ---------- feature visuals (light glass, same language as hero + code card) ---------- */
+.feat-visual {
+  position: relative; padding: 20px 22px;
+  background: linear-gradient(158deg, #FDF2F8 0%, #F8F6FC 52%, #FBFAFD 100%);
+  border-bottom: 1px solid #F0EAF2;
+}
+.feat-visual::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(58% 120% at 82% 0%, rgba(254,59,155,0.11) 0%, rgba(254,59,155,0) 64%);
+}
+.feat-visual svg { position: relative; display: block; width: 100%; height: auto; }
+.fv-bar { fill: #DCDCE6; }
+.fv-bar-accent { fill: var(--magenta); }
+.fv-bar-cut { fill: rgba(217,45,32,0.22); }
+.fv-strike { stroke: var(--danger); stroke-width: 1.6; stroke-linecap: round; }
+.fv-num { fill: #A9A9B6; font-size: 8px; font-family: var(--mono); }
+.fv-node { fill: #fff; stroke: #DCDCE6; stroke-width: 1.4; }
+.fv-node-accent { fill: var(--magenta); }
+.fv-link { fill: none; stroke: #CFCFDC; stroke-width: 1.6; }
+.fv-label { fill: #6E6E78; font-size: 10.5px; font-weight: 600; font-family: var(--font); letter-spacing: .2px; }
+.fv-label-on { fill: #fff; font-size: 11px; font-weight: 700; font-family: var(--font); letter-spacing: .3px; }
+.fv-shield { fill: none; stroke: var(--magenta); stroke-width: 2; stroke-linejoin: round; }
+.fv-check { stroke: var(--magenta); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.fv-flag { stroke: var(--danger); stroke-width: 2; stroke-linecap: round; fill: none; }
+
+/* entrance: the diagram assembles when the card scrolls in */
+.js-reveal .reveal .fv-step { opacity: 0; }
+.js-reveal .reveal.in .fv-step { animation: fvIn .5s var(--ease) both; animation-delay: var(--d, 0ms); }
+@keyframes fvIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.fv-step { transform-box: fill-box; transform-origin: center; }
+/* one slow, low-amplitude loop so the diagrams feel alive without competing with the hero */
+.fv-pulse { animation: fvPulse 5.2s ease-in-out infinite; }
+@keyframes fvPulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal .fv-step, .js-reveal .reveal.in .fv-step { opacity: 1; animation: none; }
+  .fv-pulse { animation: none; opacity: 1; }
+}
 
 /* ====================================================== TEAM */
 .team { background: #fafafa; }
@@ -456,25 +493,84 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
       </div>
       <div class="feat-grid">
         <div class="feat reveal">
-          <div class="feat-ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
+          <div class="feat-visual">
+            <svg viewBox="0 0 300 128" role="img" aria-label="Redundant lines of code struck out, leaving a clean refactored result">
+              <g class="fv-step" style="--d:60ms"><text class="fv-num" x="8" y="14">1</text><rect class="fv-bar" x="24" y="7" width="132" height="8" rx="4"/></g>
+              <g class="fv-step" style="--d:120ms"><text class="fv-num" x="8" y="35">2</text><rect class="fv-bar-cut" x="24" y="28" width="186" height="8" rx="4"/><line class="fv-strike" x1="24" y1="32" x2="210" y2="32"/></g>
+              <g class="fv-step" style="--d:180ms"><text class="fv-num" x="8" y="56">3</text><rect class="fv-bar" x="24" y="49" width="104" height="8" rx="4"/></g>
+              <g class="fv-step" style="--d:240ms"><text class="fv-num" x="8" y="77">4</text><rect class="fv-bar-cut" x="24" y="70" width="164" height="8" rx="4"/><line class="fv-strike" x1="24" y1="74" x2="188" y2="74"/></g>
+              <g class="fv-step" style="--d:300ms"><text class="fv-num" x="8" y="98">5</text><rect class="fv-bar" x="24" y="91" width="120" height="8" rx="4"/></g>
+              <g class="fv-step" style="--d:380ms"><text class="fv-num" x="8" y="119">6</text><rect class="fv-bar-accent fv-pulse" x="24" y="112" width="148" height="8" rx="4"/></g>
+            </svg>
           </div>
-          <h3>Code sanitization &amp; logic cleanup</h3>
-          <p>AI-generated code is often redundant. We refactor your core logic by hand to cut technical debt and keep your app workable for the next round of AI prompts.</p>
+          <div class="feat-body">
+            <h3>Code sanitization &amp; logic cleanup</h3>
+            <p>AI-generated code is often redundant. We refactor your core logic by hand to cut technical debt and keep your app workable for the next round of AI prompts.</p>
+          </div>
         </div>
         <div class="feat reveal" style="--reveal-delay:80ms">
-          <div class="feat-ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3M12 12V8"/></svg>
+          <div class="feat-visual">
+            <svg viewBox="0 0 300 128" role="img" aria-label="Stripe, OAuth and API services connected to your app through secured links">
+              <g class="fv-step" style="--d:60ms">
+                <rect class="fv-node" x="4" y="10" width="76" height="24" rx="7"/><text class="fv-label" x="18" y="26">Stripe</text>
+                <rect class="fv-node" x="4" y="52" width="76" height="24" rx="7"/><text class="fv-label" x="18" y="68">OAuth</text>
+                <rect class="fv-node" x="4" y="94" width="76" height="24" rx="7"/><text class="fv-label" x="18" y="110">Custom API</text>
+              </g>
+              <g class="fv-step" style="--d:170ms">
+                <path class="fv-link" d="M80 22 C122 22, 128 56, 168 62"/>
+                <path class="fv-link" d="M80 64 C122 64, 130 64, 168 64"/>
+                <path class="fv-link" d="M80 106 C122 106, 128 72, 168 66"/>
+              </g>
+              <g class="fv-step" style="--d:280ms">
+                <circle cx="124" cy="32" r="8" fill="#fff" stroke="#E4E4EE" stroke-width="1.2"/><path class="fv-check" d="m120.5 32 2.4 2.4 4.2-4.6"/>
+                <circle cx="124" cy="64" r="8" fill="#fff" stroke="#E4E4EE" stroke-width="1.2"/><path class="fv-check" d="m120.5 64 2.4 2.4 4.2-4.6"/>
+                <circle cx="124" cy="96" r="8" fill="#fff" stroke="#E4E4EE" stroke-width="1.2"/><path class="fv-check" d="m120.5 96 2.4 2.4 4.2-4.6"/>
+              </g>
+              <g class="fv-step" style="--d:390ms">
+                <rect class="fv-node-accent fv-pulse" x="168" y="46" width="112" height="36" rx="9"/>
+                <text class="fv-label-on" x="188" y="68">Your app</text>
+              </g>
+            </svg>
           </div>
-          <h3>Hardened third-party integrations</h3>
-          <p>Bulletproof connections for Stripe payments, OAuth logins, and custom APIs. No more integration hell: your pipelines come out professional-grade.</p>
+          <div class="feat-body">
+            <h3>Hardened third-party integrations</h3>
+            <p>Bulletproof connections for Stripe payments, OAuth logins, and custom APIs. No more integration hell: your pipelines come out professional-grade.</p>
+          </div>
         </div>
         <div class="feat reveal" style="--reveal-delay:160ms">
-          <div class="feat-ico">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2-1 4-2 7-2 2.5 0 4.5 1 6 2a1 1 0 0 1 1 1v7z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div class="feat-visual">
+            <svg viewBox="0 0 300 128" role="img" aria-label="A security audit report: three checks passed, one issue flagged">
+              <g class="fv-step" style="--d:60ms">
+                <path class="fv-shield fv-pulse" d="M46 14 C60 20, 74 22, 74 22 L74 62 C74 84, 60 96, 46 104 C32 96, 18 84, 18 62 L18 22 C18 22, 32 20, 46 14 Z"/>
+                <path class="fv-check" d="m35 58 8 8 16-18"/>
+              </g>
+              <g class="fv-step" style="--d:180ms">
+                <rect class="fv-node" x="98" y="8" width="198" height="24" rx="7"/>
+                <path class="fv-check" d="m110 20 3.4 3.4 6-6.8"/>
+                <rect class="fv-bar" x="130" y="16" width="112" height="8" rx="4"/>
+              </g>
+              <g class="fv-step" style="--d:270ms">
+                <rect class="fv-node" x="98" y="40" width="198" height="24" rx="7"/>
+                <path class="fv-check" d="m110 52 3.4 3.4 6-6.8"/>
+                <rect class="fv-bar" x="130" y="48" width="140" height="8" rx="4"/>
+              </g>
+              <g class="fv-step" style="--d:360ms">
+                <rect x="98" y="72" width="198" height="24" rx="7" fill="rgba(217,45,32,0.06)" stroke="rgba(217,45,32,0.24)" stroke-width="1.4"/>
+                <circle cx="115" cy="84" r="7" fill="none" stroke="var(--danger)" stroke-width="1.8"/>
+                <path class="fv-flag" d="M115 80.6 v3.6 M115 87.6 v.1"/>
+                <rect class="fv-bar-cut" x="130" y="80" width="96" height="8" rx="4"/>
+              </g>
+              <g class="fv-step" style="--d:450ms">
+                <rect class="fv-node" x="98" y="104" width="198" height="24" rx="7"/>
+                <path class="fv-check" d="m110 116 3.4 3.4 6-6.8"/>
+                <rect class="fv-bar-accent" x="130" y="112" width="124" height="8" rx="4"/>
+              </g>
+            </svg>
           </div>
-          <h3>Production-grade security audit</h3>
-          <p>A demo is fine; a production app needs to be a vault. We run deep security testing to protect user data and meet industry compliance standards.</p>
+          <div class="feat-body">
+            <h3>Production-grade security audit</h3>
+            <p>A demo is fine; a production app needs to be a vault. We run deep security testing to protect user data and meet industry compliance standards.</p>
+          </div>
         </div>
       </div>
     </div>
