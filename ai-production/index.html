@@ -25,6 +25,9 @@
   --gray-2: #757575;
   --light: #F5F5F5;
   --danger: #D92D20;
+  --red-text: #C4271B;   /* 5.75:1 on white */
+  --green: #059669;      /* bar fill, 3.23:1 vs track */
+  --green-text: #0B7D5A; /* 5.13:1 on white */
   --font: "Kumbh Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -105,38 +108,44 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .hero-sub { max-width: 500px; margin-top: 20px; font-size: 17px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.76); }
 .hero-ctas { display: flex; gap: 14px; align-items: center; margin-top: 32px; flex-wrap: wrap; }
 
-/* progress card — the 80% wall */
+/* progress card — the 80% wall (white card on the dark hero) */
 .prog-card {
   position: relative;
-  background: rgba(255,255,255,0.055);
-  border: 1px solid rgba(255,255,255,0.13);
+  background: #fff;
+  border: 1px solid rgba(255,255,255,0.5);
   border-radius: 20px; padding: 28px 28px 26px;
-  box-shadow: 0 26px 64px rgba(0,0,0,0.45);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.42), 0 2px 8px rgba(0,0,0,0.16);
 }
 .prog-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; gap: 12px; }
-.prog-title { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-.prog-val { font-size: 13px; font-weight: 700; color: var(--magenta-on-dark); font-variant-numeric: tabular-nums; }
-.prog-track { position: relative; height: 12px; border-radius: 20px; background: rgba(255,255,255,0.1); overflow: hidden; margin-bottom: 8px; }
-.prog-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 20px; background: rgba(255,255,255,0.34); animation: progGrow 5s var(--ease) infinite; }
+.prog-title { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-1); }
+.prog-val { font-size: 13px; font-weight: 700; color: var(--gray-1); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.prog-val b { color: var(--green-text); font-weight: 700; }
+.prog-track { position: relative; height: 12px; border-radius: 20px; background: #EDEDF2; overflow: hidden; margin-bottom: 9px; }
+.prog-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 20px; background: #C9C9D4; animation: progGrow 5.6s linear infinite; }
 @keyframes progGrow {
-  0%   { width: 0;    background: rgba(255,255,255,0.34); }
-  26%  { width: 80%;  background: rgba(255,255,255,0.34); }
-  40%  { width: 80%;  background: rgba(255,255,255,0.34); }
-  52%  { width: 80%;  background: var(--magenta-bright); }
-  74%  { width: 100%; background: var(--magenta-bright); }
-  100% { width: 100%; background: var(--magenta-bright); }
+  /* AI sprints to 80% */
+  0%   { width: 0;    background: #C9C9D4; animation-timing-function: cubic-bezier(.22,.9,.3,1); }
+  22%  { width: 80%;  background: #C9C9D4; animation-timing-function: linear; }
+  /* stuck at the wall */
+  40%  { width: 80%;  background: #C9C9D4; animation-timing-function: linear; }
+  /* 26lights steps in: colour flips, width holds */
+  48%  { width: 80%;  background: var(--magenta); animation-timing-function: cubic-bezier(.4,0,.3,1); }
+  /* the deliberate push to 100% */
+  74%  { width: 100%; background: var(--magenta); animation-timing-function: linear; }
+  /* shipped */
+  82%  { width: 100%; background: var(--green); animation-timing-function: linear; }
+  100% { width: 100%; background: var(--green); }
 }
-.prog-wall { position: absolute; left: 80%; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed rgba(255,255,255,0.55); }
-.prog-scale { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
-.prog-scale .wall { color: #FF9C9C; margin-left: auto; margin-right: 6%; }
-.prog-scale .end { color: var(--magenta-on-dark); }
-.prog-list { display: flex; flex-direction: column; gap: 12px; }
-.prog-item { display: flex; align-items: center; gap: 11px; font-size: 14px; color: rgba(255,255,255,0.62); line-height: 1.4; }
+.prog-wall { position: absolute; left: 80%; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed rgba(20,20,30,0.34); }
+.prog-scale { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--gray-2); margin-bottom: 24px; }
+.prog-scale .wall { color: var(--red-text); margin-left: auto; margin-right: 6%; }
+.prog-scale .end { color: var(--green-text); }
+.prog-list { display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid #EDEDF2; }
+.prog-item { display: flex; align-items: center; gap: 11px; font-size: 14px; color: var(--gray-1); line-height: 1.4; }
 .prog-item svg { width: 17px; height: 17px; flex: none; }
-.prog-item.bad svg { color: #FF8A8A; }
-.prog-item.good { color: #fff; font-weight: 500; }
-.prog-item.good svg { color: var(--magenta-bright); }
+.prog-item.bad svg { color: var(--danger); }
+.prog-item.good { color: var(--ink); font-weight: 500; }
+.prog-item.good svg { color: var(--magenta); }
 
 @keyframes heroUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
 .hero-badges { animation: heroUp .8s var(--ease) .05s both; }
@@ -146,7 +155,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .hero-visual { animation: heroUp 1s var(--ease) .46s both; }
 @media (prefers-reduced-motion: reduce) {
   .hero-badges, .hero h1, .hero-sub, .hero-ctas, .hero-visual { animation: none; }
-  .prog-fill { animation: none; width: 100%; background: var(--magenta-bright); }
+  .prog-fill { animation: none; width: 100%; background: var(--green); }
 }
 
 /* ====================================================== TOOLS BAR */
@@ -338,7 +347,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
         <div class="prog-card">
           <div class="prog-head">
             <span class="prog-title">Development progress</span>
-            <span class="prog-val">80% → 100%</span>
+            <span class="prog-val">80% → <b>100%</b></span>
           </div>
           <div class="prog-track">
             <div class="prog-fill"></div>
