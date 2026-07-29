@@ -262,6 +262,41 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
   .fv-pulse { animation: none; opacity: 1; }
 }
 
+/* ---------- feature 1 visual: real code that de-duplicates itself ---------- */
+.mini-editor {
+  border-radius: 10px; overflow: hidden;
+  background: rgba(255,255,255,0.62); border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 6px 18px rgba(80,20,60,0.07), inset 0 1px 0 rgba(255,255,255,0.85);
+}
+.mini-editor-bar { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(80,20,60,0.08); }
+.mini-editor-bar .code-dots i { width: 7px; height: 7px; }
+.mini-editor-file { margin-left: auto; margin-right: auto; font-family: var(--mono); font-size: 10px; color: var(--gray-1); }
+.mini-editor-body { padding: 12px 13px 13px; font-family: var(--mono); font-size: 10px; line-height: 1.85; color: var(--gray-1); white-space: nowrap; }
+.mini-editor-body .kw { color: #6D28D9; }
+.mini-editor-body .fn { color: #1D4ED8; }
+.mini-editor-body .str { color: var(--magenta); }
+.mc-row { position: relative; }
+.mc-indent { padding-left: 1.4em; }
+.mc-text { position: relative; display: inline-block; }
+.mc-text::after { content: ""; position: absolute; left: 0; top: 50%; height: 1.5px; width: 0; background: var(--danger); border-radius: 1px; }
+.mc-flag { display: flex; align-items: center; gap: 7px; margin-top: 3px; font-family: var(--font); font-size: 11px; font-weight: 600; color: var(--magenta-hover); opacity: 0; white-space: normal; }
+.mc-flag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--magenta); flex: none; }
+
+.js-reveal .reveal .mc-dup-block { max-height: 62px; overflow: hidden; }
+.js-reveal .reveal.in .mc-dup-row:nth-child(1) .mc-text::after { animation: mcStrike .45s var(--ease) forwards; animation-delay: 900ms; }
+.js-reveal .reveal.in .mc-dup-row:nth-child(2) .mc-text::after { animation: mcStrike .45s var(--ease) forwards; animation-delay: 1000ms; }
+.js-reveal .reveal.in .mc-dup-row:nth-child(3) .mc-text::after { animation: mcStrike .45s var(--ease) forwards; animation-delay: 1100ms; }
+@keyframes mcStrike { to { width: 100%; } }
+.js-reveal .reveal.in .mc-dup-block { animation: mcCollapse .5s var(--ease) forwards; animation-delay: 1650ms; }
+@keyframes mcCollapse { 0% { max-height: 62px; opacity: 1; } 100% { max-height: 0; opacity: 0; } }
+.js-reveal .reveal.in .mc-flag { animation: mcFlagIn .4s ease forwards; animation-delay: 2150ms; }
+@keyframes mcFlagIn { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .mc-dup-block { display: none; }
+  .mc-text::after { display: none; }
+  .mc-flag { opacity: 1; }
+}
+
 /* ====================================================== TEAM */
 .team { background: #fafafa; }
 .team-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; display: grid; grid-template-columns: 0.85fr 1.15fr; column-gap: 64px; align-items: start; }
@@ -493,15 +528,24 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
       </div>
       <div class="feat-grid">
         <div class="feat reveal">
-          <div class="feat-visual">
-            <svg viewBox="0 0 300 128" role="img" aria-label="Redundant lines of code struck out, leaving a clean refactored result">
-              <g class="fv-step" style="--d:60ms"><text class="fv-num" x="8" y="14">1</text><rect class="fv-bar" x="24" y="7" width="132" height="8" rx="4"/></g>
-              <g class="fv-step" style="--d:120ms"><text class="fv-num" x="8" y="35">2</text><rect class="fv-bar-cut" x="24" y="28" width="186" height="8" rx="4"/><line class="fv-strike" x1="24" y1="32" x2="210" y2="32"/></g>
-              <g class="fv-step" style="--d:180ms"><text class="fv-num" x="8" y="56">3</text><rect class="fv-bar" x="24" y="49" width="104" height="8" rx="4"/></g>
-              <g class="fv-step" style="--d:240ms"><text class="fv-num" x="8" y="77">4</text><rect class="fv-bar-cut" x="24" y="70" width="164" height="8" rx="4"/><line class="fv-strike" x1="24" y1="74" x2="188" y2="74"/></g>
-              <g class="fv-step" style="--d:300ms"><text class="fv-num" x="8" y="98">5</text><rect class="fv-bar" x="24" y="91" width="120" height="8" rx="4"/></g>
-              <g class="fv-step" style="--d:380ms"><text class="fv-num" x="8" y="119">6</text><rect class="fv-bar-accent fv-pulse" x="24" y="112" width="148" height="8" rx="4"/></g>
-            </svg>
+          <div class="feat-visual" aria-hidden="true">
+            <div class="mini-editor fv-step" style="--d:60ms">
+              <div class="mini-editor-bar">
+                <div class="code-dots"><i></i><i></i><i></i></div>
+                <span class="mini-editor-file">validators.js</span>
+              </div>
+              <div class="mini-editor-body">
+                <div class="mc-row"><span class="kw">function</span> <span class="fn">isValidEmail</span>(e) {</div>
+                <div class="mc-row mc-indent"><span class="mc-text"><span class="kw">return</span> e.<span class="fn">includes</span>(<span class="str">'@'</span>) &amp;&amp; e.length &gt; 4;</span></div>
+                <div class="mc-row"><span class="mc-text">}</span></div>
+                <div class="mc-dup-block">
+                  <div class="mc-row mc-dup-row"><span class="mc-text"><span class="kw">function</span> <span class="fn">checkEmailValid</span>(e) {</span></div>
+                  <div class="mc-row mc-dup-row mc-indent"><span class="mc-text"><span class="kw">return</span> e.<span class="fn">includes</span>(<span class="str">'@'</span>) &amp;&amp; e.length &gt; 4;</span></div>
+                  <div class="mc-row mc-dup-row"><span class="mc-text">}</span></div>
+                </div>
+                <div class="mc-flag"><i class="mc-flag-dot"></i>Duplicate removed</div>
+              </div>
+            </div>
           </div>
           <div class="feat-body">
             <h3>Code sanitization &amp; logic cleanup</h3>
