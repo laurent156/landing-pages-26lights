@@ -263,15 +263,17 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 }
 
 /* ---------- feature 1 visual: real code that de-duplicates itself ---------- */
+/* same aspect ratio as the SVG visuals on cards 2 & 3 (300:128), so the card is always the same size and never resizes as the animation plays */
+.feat-visual--code .mini-editor { width: 100%; aspect-ratio: 300 / 128; display: flex; flex-direction: column; }
 .mini-editor {
   border-radius: 10px; overflow: hidden;
   background: rgba(255,255,255,0.62); border: 1px solid rgba(255,255,255,0.9);
   box-shadow: 0 6px 18px rgba(80,20,60,0.07), inset 0 1px 0 rgba(255,255,255,0.85);
 }
-.mini-editor-bar { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(80,20,60,0.08); }
+.mini-editor-bar { flex: none; display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(80,20,60,0.08); }
 .mini-editor-bar .code-dots i { width: 7px; height: 7px; }
 .mini-editor-file { margin-left: auto; margin-right: auto; font-family: var(--mono); font-size: 10px; color: var(--gray-1); }
-.mini-editor-body { padding: 12px 13px 13px; font-family: var(--mono); font-size: 10px; line-height: 1.85; color: var(--gray-1); white-space: nowrap; }
+.mini-editor-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 10px 13px; font-family: var(--mono); font-size: 11px; line-height: 1.75; color: var(--gray-1); white-space: nowrap; }
 .mini-editor-body .kw { color: #6D28D9; }
 .mini-editor-body .fn { color: #1D4ED8; }
 .mini-editor-body .str { color: var(--magenta); }
@@ -282,19 +284,35 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .mc-flag { display: flex; align-items: center; gap: 7px; margin-top: 3px; font-family: var(--font); font-size: 11px; font-weight: 600; color: var(--magenta-hover); opacity: 0; white-space: normal; }
 .mc-flag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--magenta); flex: none; }
 
-.js-reveal .reveal .mc-dup-block { max-height: 62px; overflow: hidden; }
-.js-reveal .reveal.in .mc-dup-row:nth-child(1) .mc-text::after { animation: mcStrike .45s var(--ease) forwards; animation-delay: 900ms; }
-.js-reveal .reveal.in .mc-dup-row:nth-child(2) .mc-text::after { animation: mcStrike .45s var(--ease) forwards; animation-delay: 1000ms; }
-.js-reveal .reveal.in .mc-dup-row:nth-child(3) .mc-text::after { animation: mcStrike .45s var(--ease) forwards; animation-delay: 1100ms; }
+.js-reveal .reveal .mc-dup-block { max-height: 38px; overflow: hidden; }
+.js-reveal .reveal.in .mc-dup-row:nth-child(1) .mc-text::after { animation: mcStrike .4s var(--ease) forwards; animation-delay: 900ms; }
+.js-reveal .reveal.in .mc-dup-row:nth-child(2) .mc-text::after { animation: mcStrike .4s var(--ease) forwards; animation-delay: 1000ms; }
 @keyframes mcStrike { to { width: 100%; } }
-.js-reveal .reveal.in .mc-dup-block { animation: mcCollapse .5s var(--ease) forwards; animation-delay: 1650ms; }
-@keyframes mcCollapse { 0% { max-height: 62px; opacity: 1; } 100% { max-height: 0; opacity: 0; } }
-.js-reveal .reveal.in .mc-flag { animation: mcFlagIn .4s ease forwards; animation-delay: 2150ms; }
+.js-reveal .reveal.in .mc-dup-block { animation: mcCollapse .5s var(--ease) forwards; animation-delay: 1550ms; }
+@keyframes mcCollapse { 0% { max-height: 38px; opacity: 1; } 100% { max-height: 0; opacity: 0; } }
+.js-reveal .reveal.in .mc-flag { animation: mcFlagIn .4s ease forwards; animation-delay: 2050ms; }
 @keyframes mcFlagIn { to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .mc-dup-block { display: none; }
   .mc-text::after { display: none; }
   .mc-flag { opacity: 1; }
+}
+
+/* ---------- feature 2 visual: links visibly harden as each service checks out ---------- */
+.fv-link { stroke-dasharray: 5 4; }
+.js-reveal .reveal.in .fv-link { animation: fvLinkSecure .6s var(--ease) forwards; animation-delay: 230ms; }
+@keyframes fvLinkSecure { to { stroke-dasharray: 0 0; stroke: var(--green); } }
+@media (prefers-reduced-motion: reduce) { .fv-link { stroke-dasharray: 0; stroke: var(--green); } }
+
+/* ---------- feature 3 visual: the flagged issue gets patched, mirroring card 1's fix ---------- */
+.fv-fixedrow { opacity: 0; }
+.js-reveal .reveal.in .fv-flagrow { animation: fvFadeOut .5s var(--ease) forwards; animation-delay: 1900ms; }
+.js-reveal .reveal.in .fv-fixedrow { animation: fvFadeIn .5s var(--ease) forwards; animation-delay: 2050ms; }
+@keyframes fvFadeOut { to { opacity: 0; } }
+@keyframes fvFadeIn { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .fv-flagrow { opacity: 0; }
+  .fv-fixedrow { opacity: 1; }
 }
 
 /* ====================================================== TEAM */
@@ -528,20 +546,18 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
       </div>
       <div class="feat-grid">
         <div class="feat reveal">
-          <div class="feat-visual" aria-hidden="true">
-            <div class="mini-editor fv-step" style="--d:60ms">
+          <div class="feat-visual feat-visual--code" aria-hidden="true">
+            <div class="mini-editor">
               <div class="mini-editor-bar">
                 <div class="code-dots"><i></i><i></i><i></i></div>
                 <span class="mini-editor-file">validators.js</span>
               </div>
               <div class="mini-editor-body">
-                <div class="mc-row"><span class="kw">function</span> <span class="fn">isValidEmail</span>(e) {</div>
-                <div class="mc-row mc-indent"><span class="mc-text"><span class="kw">return</span> e.<span class="fn">includes</span>(<span class="str">'@'</span>) &amp;&amp; e.length &gt; 4;</span></div>
-                <div class="mc-row"><span class="mc-text">}</span></div>
+                <div class="mc-row"><span class="kw">function</span> <span class="fn">isValid</span>(e) {</div>
+                <div class="mc-row mc-indent"><span class="mc-text"><span class="kw">return</span> e.<span class="fn">includes</span>(<span class="str">'@'</span>); }</span></div>
                 <div class="mc-dup-block">
-                  <div class="mc-row mc-dup-row"><span class="mc-text"><span class="kw">function</span> <span class="fn">checkEmailValid</span>(e) {</span></div>
-                  <div class="mc-row mc-dup-row mc-indent"><span class="mc-text"><span class="kw">return</span> e.<span class="fn">includes</span>(<span class="str">'@'</span>) &amp;&amp; e.length &gt; 4;</span></div>
-                  <div class="mc-row mc-dup-row"><span class="mc-text">}</span></div>
+                  <div class="mc-row mc-dup-row"><span class="mc-text"><span class="kw">function</span> <span class="fn">checkValid</span>(e) {</span></div>
+                  <div class="mc-row mc-dup-row mc-indent"><span class="mc-text"><span class="kw">return</span> e.<span class="fn">includes</span>(<span class="str">'@'</span>); }</span></div>
                 </div>
                 <div class="mc-flag"><i class="mc-flag-dot"></i>Duplicate removed</div>
               </div>
@@ -583,7 +599,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
         </div>
         <div class="feat reveal" style="--reveal-delay:160ms">
           <div class="feat-visual">
-            <svg viewBox="0 0 300 128" role="img" aria-label="A security audit report: three checks passed, one issue flagged">
+            <svg viewBox="0 0 300 128" role="img" aria-label="A security audit report: three checks passed, and a flagged issue gets patched live">
               <g class="fv-step" style="--d:60ms">
                 <path class="fv-shield fv-pulse" d="M46 14 C60 20, 74 22, 74 22 L74 62 C74 84, 60 96, 46 104 C32 96, 18 84, 18 62 L18 22 C18 22, 32 20, 46 14 Z"/>
                 <path class="fv-check" d="m35 58 8 8 16-18"/>
@@ -599,10 +615,17 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
                 <rect class="fv-bar" x="130" y="48" width="140" height="8" rx="4"/>
               </g>
               <g class="fv-step" style="--d:360ms">
-                <rect x="98" y="72" width="198" height="24" rx="7" fill="rgba(217,45,32,0.06)" stroke="rgba(217,45,32,0.24)" stroke-width="1.4"/>
-                <circle cx="115" cy="84" r="7" fill="none" stroke="var(--danger)" stroke-width="1.8"/>
-                <path class="fv-flag" d="M115 80.6 v3.6 M115 87.6 v.1"/>
-                <rect class="fv-bar-cut" x="130" y="80" width="96" height="8" rx="4"/>
+                <g class="fv-flagrow">
+                  <rect x="98" y="72" width="198" height="24" rx="7" fill="rgba(217,45,32,0.06)" stroke="rgba(217,45,32,0.24)" stroke-width="1.4"/>
+                  <circle cx="115" cy="84" r="7" fill="none" stroke="var(--danger)" stroke-width="1.8"/>
+                  <path class="fv-flag" d="M115 80.6 v3.6 M115 87.6 v.1"/>
+                  <rect class="fv-bar-cut" x="130" y="80" width="96" height="8" rx="4"/>
+                </g>
+                <g class="fv-fixedrow">
+                  <rect class="fv-node" x="98" y="72" width="198" height="24" rx="7"/>
+                  <path class="fv-check" d="m110 84 3.4 3.4 6-6.8"/>
+                  <rect class="fv-bar-accent" x="130" y="80" width="96" height="8" rx="4"/>
+                </g>
               </g>
               <g class="fv-step" style="--d:450ms">
                 <rect class="fv-node" x="98" y="104" width="198" height="24" rx="7"/>
