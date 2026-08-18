@@ -437,9 +437,10 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .stackwrap { position: relative; width: 300px; margin: 0 auto; }
 .stack-ghost { position: absolute; inset: 0; border-radius: 22px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16); }
 .stack-ghost .stack-tag { position: absolute; top: 16px; right: 16px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); border-radius: 5px; padding: 2px 7px; }
-.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; height: 420px; opacity: 0; }
+.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; height: 420px; background: #fff; border-color: rgba(255,255,255,0.6); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+.stack-ghost.v1 .stack-tag { color: rgba(10,10,10,0.55); background: rgba(10,10,10,0.06); }
 .stack-ghost.v5 { transform: translate(18px, 10px) rotate(6deg); z-index: 2; background: rgba(255,255,255,0.09); height: 460px; }
-.appcard { position: relative; z-index: 3; background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.20); border-radius: 22px; padding: 22px 22px 20px; box-shadow: 0 26px 64px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.14); backdrop-filter: blur(22px) saturate(150%); -webkit-backdrop-filter: blur(22px) saturate(150%); }
+.appcard { position: relative; z-index: 3; background-image: linear-gradient(rgba(255,255,255,0.10), rgba(255,255,255,0.10)), linear-gradient(rgba(16,8,21,0.72), rgba(16,8,21,0.72)); border: 1px solid rgba(255,255,255,0.20); border-radius: 22px; padding: 22px 22px 20px; box-shadow: 0 26px 64px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.14); backdrop-filter: blur(22px) saturate(150%); -webkit-backdrop-filter: blur(22px) saturate(150%); }
 .appcard-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .appcard-brand { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: -0.1px; }
 .appcard-brand-mark { width: 26px; height: 26px; border-radius: 50%; background: var(--magenta-bright); display: flex; align-items: center; justify-content: center; color: #1a0311; flex: none; }

@@ -520,22 +520,36 @@ via `@keyframes cs1..cs6` / `ct1..ct6` on a 12s infinite timer, each keyframe a 
 `.seg5{fill:#5363F5}` / the `cs*` fill values need the accent swap).
 
 **Layered draft-stack** (hero visual for "many iterations" stories, e.g. `ai-prototyping`) —
-a small pile of offset/rotated ghost rectangles behind a fully-opaque foreground card, each
-tagged with a version label (`v1.0`, `v5.0`...), conveying "many drafts converging on one
+a small pile of offset/rotated ghost rectangles peeking out from behind a glass foreground card,
+each tagged with a version label (`v1.0`, `v5.0`...), conveying "many drafts converging on one
 result." Structure:
 ```css
 .stackwrap { position: relative; width: 300px; margin: 0 auto; }
 .stack-ghost { position: absolute; inset: 0; border-radius: 22px; border: 1px solid rgba(255,255,255,0.16); }
-.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; opacity: 0; }   /* back-most: invisible, see rule below */
+.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; background: #fff; box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+.stack-ghost.v1 .stack-tag { color: rgba(10,10,10,0.55); background: rgba(10,10,10,0.06); } /* dark tag text on the white card */
 .stack-ghost.v5 { transform: translate(18px, 10px) rotate(6deg); z-index: 2; background: rgba(255,255,255,0.09); }
-/* .appcard (or equivalent) sits on top, z-index: 3, fully opaque glass per §13 */
+/* .appcard (or equivalent) sits on top, z-index: 3, glass per §13 */
 ```
-**Rule for any stacked/layered translucent-card composition**: only the front-most 1–2 layers
-should carry visible opacity — every layer behind that should fade to `opacity: 0` (or very
-close to it). Giving every layer in the stack a similar low alpha (e.g. 0.07 / 0.09 / 0.10, as
-first tried here) reads as noise, not depth — the eye can't tell the layers apart and the whole
-stack looks like a single smudged card. Depth should come from the *offset + rotation* of the
-one or two layers you keep visible, not from stacking many equally-faint ones.
+**Two things that broke on the way to this, worth knowing before you build a similar stack:**
+- *All layers at similar low opacity is illegible.* The first pass gave every ghost the same
+  ~0.07–0.10 alpha — it read as noise, not depth, because the eye can't tell the layers apart.
+  The back layer needs to read as a **distinct, solid card** peeking out (here: opaque white),
+  not another faint smudge.
+- *A solid layer behind a `backdrop-filter: blur()` card can wash out its own text.* The
+  foreground card's glass background (`rgba(255,255,255,0.10)` + blur) assumes it's sitting over
+  the dark hero gradient. Put an opaque white card directly behind it and the blur picks that up
+  instead — white text on what's now a near-white blurred backdrop disappears. Fix: give the
+  foreground glass card its **own solid dark base**, independent of whatever sits behind it, by
+  stacking two background layers instead of one:
+  ```css
+  background-image:
+    linear-gradient(rgba(255,255,255,0.10), rgba(255,255,255,0.10)), /* the frost sheen */
+    linear-gradient(rgba(16,8,21,0.72), rgba(16,8,21,0.72));         /* solid dark base — always legible */
+  ```
+  Any glass card that might ever sit over something other than a plain dark gradient (this
+  layered-stack motif, or a future variant) should use this two-layer background instead of a
+  single translucent color.
 
 ## 13. Glass / frosted-card language (used across hero visuals, tool chips, floating credential cards)
 
