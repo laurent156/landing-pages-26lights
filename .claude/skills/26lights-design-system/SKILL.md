@@ -519,6 +519,24 @@ via `@keyframes cs1..cs6` / `ct1..ct6` on a 12s infinite timer, each keyframe a 
 → 100%` fill flip — copy verbatim, it's fully self-contained and unit-color-swappable (only
 `.seg5{fill:#5363F5}` / the `cs*` fill values need the accent swap).
 
+**Layered draft-stack** (hero visual for "many iterations" stories, e.g. `ai-prototyping`) —
+a small pile of offset/rotated ghost rectangles behind a fully-opaque foreground card, each
+tagged with a version label (`v1.0`, `v5.0`...), conveying "many drafts converging on one
+result." Structure:
+```css
+.stackwrap { position: relative; width: 300px; margin: 0 auto; }
+.stack-ghost { position: absolute; inset: 0; border-radius: 22px; border: 1px solid rgba(255,255,255,0.16); }
+.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; opacity: 0; }   /* back-most: invisible, see rule below */
+.stack-ghost.v5 { transform: translate(18px, 10px) rotate(6deg); z-index: 2; background: rgba(255,255,255,0.09); }
+/* .appcard (or equivalent) sits on top, z-index: 3, fully opaque glass per §13 */
+```
+**Rule for any stacked/layered translucent-card composition**: only the front-most 1–2 layers
+should carry visible opacity — every layer behind that should fade to `opacity: 0` (or very
+close to it). Giving every layer in the stack a similar low alpha (e.g. 0.07 / 0.09 / 0.10, as
+first tried here) reads as noise, not depth — the eye can't tell the layers apart and the whole
+stack looks like a single smudged card. Depth should come from the *offset + rotation* of the
+one or two layers you keep visible, not from stacking many equally-faint ones.
+
 ## 13. Glass / frosted-card language (used across hero visuals, tool chips, floating credential cards)
 
 One recipe, reused everywhere something needs to look like "premium translucent UI floating
