@@ -222,8 +222,8 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .features-head { max-width: 620px; margin-bottom: 56px; }
 .features-head h2 { color: var(--ink); margin-bottom: 20px; }
 .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-.feat { padding: 0 0 30px; border: 1px solid #ececf2; border-radius: 16px; background: #fff; overflow: hidden; transition: border-color .2s ease, transform .2s ease; }
-.feat:hover { border-color: #dcdce6; transform: translateY(-2px); }
+.feat { padding: 0 0 30px; border: 1px solid #ececf2; border-radius: 16px; background: #fff; overflow: hidden; box-shadow: 0 12px 28px rgba(20,10,25,0.06); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.feat:hover { border-color: #dcdce6; transform: translateY(-2px); box-shadow: 0 18px 36px rgba(20,10,25,0.09); }
 .feat-body { padding: 26px 28px 0; }
 .feat h3 { font-size: 21px; font-weight: 500; line-height: 1.22; color: var(--ink); margin-bottom: 12px; letter-spacing: -0.2px; text-wrap: balance; }
 .feat p { font-size: 15px; line-height: 1.65; color: var(--gray-1); }
@@ -478,8 +478,8 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 
 /* ====================================================== FEATURES — icon variant (no diagram, just icon + copy) */
 .feat-icon-wrap { padding: 30px 28px 6px; }
-.feat-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--magenta-tint); color: var(--magenta); display: flex; align-items: center; justify-content: center; }
-.feat-icon svg { width: 23px; height: 23px; }
+.feat-icon { width: 56px; height: 56px; border-radius: 14px; background: var(--magenta-tint); color: var(--magenta); display: flex; align-items: center; justify-content: center; }
+.feat-icon svg { width: 27px; height: 27px; }
 .feat-icon-wrap + .feat-body { padding-top: 14px; }
 .features-head h2 span { color: var(--gray-2); }
 
