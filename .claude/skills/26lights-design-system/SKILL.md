@@ -519,37 +519,34 @@ via `@keyframes cs1..cs6` / `ct1..ct6` on a 12s infinite timer, each keyframe a 
 → 100%` fill flip — copy verbatim, it's fully self-contained and unit-color-swappable (only
 `.seg5{fill:#5363F5}` / the `cs*` fill values need the accent swap).
 
-**Layered draft-stack** (hero visual for "many iterations" stories, e.g. `ai-prototyping`) —
-a small pile of offset/rotated ghost rectangles peeking out from behind a glass foreground card,
-each tagged with a version label (`v1.0`, `v5.0`...), conveying "many drafts converging on one
-result." Structure:
+**Layered draft-stack** (hero visual for "many iterations" stories, e.g. `ai-prototyping`) — a
+solid, fully-opaque foreground card carrying the real content, with a couple of offset/rotated
+liquid-glass "ghost" cards peeking out behind it (each tagged with a version label, `v1.0`,
+`v5.0`...), conveying "many drafts converging on one, readable result." The **front card is the
+one that has to be legible**, so it's the one that breaks from the glass language, not the ghosts
+behind it:
 ```css
 .stackwrap { position: relative; width: 300px; margin: 0 auto; }
-.stack-ghost { position: absolute; inset: 0; border-radius: 22px; border: 1px solid rgba(255,255,255,0.16); }
-.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; background: #fff; box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
-.stack-ghost.v1 .stack-tag { color: rgba(10,10,10,0.55); background: rgba(10,10,10,0.06); } /* dark tag text on the white card */
+.stack-ghost { position: absolute; inset: 0; border-radius: 22px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16); } /* liquid glass, per §13 */
+.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; }
 .stack-ghost.v5 { transform: translate(18px, 10px) rotate(6deg); z-index: 2; background: rgba(255,255,255,0.09); }
-/* .appcard (or equivalent) sits on top, z-index: 3, glass per §13 */
+/* the foreground card — opaque, its own light color scheme, NOT glass */
+.appcard { position: relative; z-index: 3; background: #fff; border: 1px solid rgba(10,10,20,0.06); border-radius: 22px; box-shadow: 0 30px 70px rgba(0,0,0,0.38); }
+/* every label/value inside it uses the light-surface tokens (--ink, --gray-2, --magenta-tint…),
+   not the dark-surface ones (#fff text, --magenta-on-dark) the rest of the hero uses */
 ```
-**Two things that broke on the way to this, worth knowing before you build a similar stack:**
-- *All layers at similar low opacity is illegible.* The first pass gave every ghost the same
-  ~0.07–0.10 alpha — it read as noise, not depth, because the eye can't tell the layers apart.
-  The back layer needs to read as a **distinct, solid card** peeking out (here: opaque white),
-  not another faint smudge.
-- *A solid layer behind a `backdrop-filter: blur()` card can wash out its own text.* The
-  foreground card's glass background (`rgba(255,255,255,0.10)` + blur) assumes it's sitting over
-  the dark hero gradient. Put an opaque white card directly behind it and the blur picks that up
-  instead — white text on what's now a near-white blurred backdrop disappears. Fix: give the
-  foreground glass card its **own solid dark base**, independent of whatever sits behind it, by
-  stacking two background layers instead of one:
-  ```css
-  background-image:
-    linear-gradient(rgba(255,255,255,0.10), rgba(255,255,255,0.10)), /* the frost sheen */
-    linear-gradient(rgba(16,8,21,0.72), rgba(16,8,21,0.72));         /* solid dark base — always legible */
-  ```
-  Any glass card that might ever sit over something other than a plain dark gradient (this
-  layered-stack motif, or a future variant) should use this two-layer background instead of a
-  single translucent color.
+**Two wrong turns on the way to this, worth knowing before you build a similar stack:**
+- *All layers at similar low opacity is illegible.* The first pass gave every layer — including
+  the front card — the same ~0.07–0.10 glass alpha. It read as noise, not depth: the eye
+  couldn't tell the layers apart, and the actual content (a balance, a transaction list) was
+  sitting on near-invisible text. A stack like this needs exactly **one** layer that's fully
+  legible; that's always the front one, since that's where the real content lives.
+- *Don't fix it by making a back layer opaque instead* — that was tried next (an opaque white
+  ghost card behind the still-glass front card) and broke worse: the front card's
+  `backdrop-filter: blur()` picked up the solid white behind it, and its white-on-dark text
+  disappeared into the resulting near-white blur. If a glass card ever needs to sit over
+  something other than the plain dark hero gradient, that's a sign it should stop being glass,
+  not that the thing behind it needs patching.
 
 ## 13. Glass / frosted-card language (used across hero visuals, tool chips, floating credential cards)
 
