@@ -223,8 +223,10 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .features-head { max-width: 620px; margin-bottom: 56px; }
 .features-head h2 { color: var(--ink); margin-bottom: 20px; }
 .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-.feat { padding: 0 0 30px; border: 1px solid #ececf2; border-radius: 16px; background: #fff; overflow: hidden; box-shadow: 0 12px 28px rgba(20,10,25,0.06); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.feat { padding: 0 0 30px; border: 1px solid #ececf2; border-radius: 16px; background: #fff; overflow: hidden; box-shadow: 0 12px 28px rgba(20,10,25,0.06); }
 .feat:hover { border-color: #dcdce6; transform: translateY(-2px); box-shadow: 0 18px 36px rgba(20,10,25,0.09); }
+/* .feat also carries .reveal (single-class, same specificity) — .feat.reveal wins the cascade so none of these get silently dropped */
+.feat.reveal { transition: opacity .65s var(--ease), transform .3s var(--ease), border-color .25s ease, box-shadow .5s var(--ease); }
 .feat-body { padding: 26px 28px 0; }
 .feat h3 { font-size: 21px; font-weight: 500; line-height: 1.22; color: var(--ink); margin-bottom: 12px; letter-spacing: -0.2px; text-wrap: balance; }
 .feat p { font-size: 15px; line-height: 1.65; color: var(--gray-1); }
@@ -726,8 +728,8 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
               </g>
               <g class="fv-step" style="--d:320ms">
                 <rect class="fv-node-accent fv-pulse" x="168" y="42" width="122" height="46" rx="10"/>
-                <text class="fv-label-on" x="200" y="66" text-anchor="middle" dy="0.35em">Approved</text>
-                <path d="M262 66 l7 7 14-16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <text class="fv-label-on" x="246" y="65" text-anchor="end" dy="0.35em">Approved</text>
+                <path d="M256 65 l6.5 6.5 13-14" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
               </g>
             </svg>
           </div>
