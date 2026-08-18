@@ -640,6 +640,33 @@ Team grid alternative for a **6-across roster** (not 2–3 featured members):
 ```
 (collapses to `repeat(3,1fr)` at ≤980px, `repeat(2,1fr)` at ≤600px)
 
+**Team section skeleton — two layouts, pick by how much intro copy the team needs.** The
+side-by-side version (§ hero-adjacent pages: description left, `.tcard`s right in a
+`0.85fr 1.15fr` grid) suits a longer pitch about the team. When the intro is short, a **centered
+header above a full-width card row** reads cleaner and is the one to reach for by default:
+```css
+.team-head { max-width: 640px; margin: 0 auto 48px; text-align: center; }
+.team-head h2 { color: var(--ink); margin-bottom: 16px; }
+.team-head p { font-size: 17px; line-height: 1.7; color: var(--gray-1); }
+.team-meta-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
+```
+```html
+<section class="team">
+  <div class="wrap">
+    <div class="team-head">
+      <div class="section-label reveal">…</div>
+      <h2 class="reveal">…</h2>
+      <p class="reveal">…</p>
+      <div class="team-meta-row"><!-- status pill, chat link, or any other small meta — centered together --></div>
+    </div>
+    <div class="team-cards team-cards--three"><!-- .tcard × 3, full width, see table above --></div>
+  </div>
+</section>
+```
+Reuses the plain `.wrap` container (no bespoke `.team-inner` grid needed) — the same
+header-above-grid skeleton as `.features-head`/`.pricing-head` elsewhere in the system, just with
+`.tcard`s instead of feature or plan cards.
+
 ## 15. Pricing — three layouts, pick by offer shape
 
 1. **Card grid** (tech unit `.plans`/`.plan`, Malorie's `.pricing-shell`) — 3–4 boxed plans side
