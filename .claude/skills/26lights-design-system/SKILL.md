@@ -433,6 +433,18 @@ bare logo row, used when the "trusted by" is tools/integrations rather than clie
 }
 .tool-logo { height: 20px; width: auto; object-fit: contain; display: block; } /* bare-class selector — the <img> needs this exact class */
 ```
+**A uniform `height` does not mean uniform visual size — check each logo by eye.** Source logo
+files carry wildly different amounts of internal padding around the actual mark (some are
+cropped tight to the ink, some have a lot of surrounding whitespace baked into the PNG/SVG
+canvas), and some are stacked two-line lockups instead of a single-line wordmark. Constrain
+every logo to the same `height` first, but then look at the rendered row: any logo whose visible
+mark reads smaller or lighter than its neighbors needs its own boosted height, not a shrink of
+the others. In practice a couple of `px` bump classes are enough:
+```css
+.tool-logo--boost-lg { height: 36px; } /* for a logo with heavy internal padding or a 2-line lockup, e.g. Vercel (padded canvas), OpenAI Codex (stacked icon+text) */
+```
+Applied per-`<img>`, not per-position — if you swap which tool is 4th in the row, the boost
+class travels with the logo that actually needs it.
 
 ## 10. Feature / pillar grids (3 across, icon or number + heading + text)
 
