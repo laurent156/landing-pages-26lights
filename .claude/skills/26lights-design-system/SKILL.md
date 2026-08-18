@@ -426,12 +426,12 @@ bare logo row, used when the "trusted by" is tools/integrations rather than clie
 /* .tools variant — frosted chips instead of bare logos (tech unit) */
 .tools { position: relative; padding: 52px 0; background: linear-gradient(180deg, var(--accent-tint) 0%, #F7F5FB 55%, #ffffff 100%); }
 .tool-chip {
-  display: flex; align-items: center; justify-content: center; height: 58px; padding: 0 18px;
-  background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.9); border-radius: 14px;
+  display: flex; align-items: center; justify-content: center; height: 75px; padding: 0 23px;
+  background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.9); border-radius: 16px;
   backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
   box-shadow: 0 6px 20px rgba(80,20,60,0.07), inset 0 1px 0 rgba(255,255,255,0.85);
 }
-.tool-logo { height: 20px; width: auto; object-fit: contain; display: block; } /* bare-class selector — the <img> needs this exact class */
+.tool-logo { height: 26px; width: auto; object-fit: contain; display: block; } /* bare-class selector — the <img> needs this exact class */
 ```
 **A uniform `height` does not mean uniform visual size — check each logo by eye.** Source logo
 files carry wildly different amounts of internal padding around the actual mark (some are
@@ -441,10 +441,32 @@ every logo to the same `height` first, but then look at the rendered row: any lo
 mark reads smaller or lighter than its neighbors needs its own boosted height, not a shrink of
 the others. In practice a couple of `px` bump classes are enough:
 ```css
-.tool-logo--boost-lg { height: 36px; } /* for a logo with heavy internal padding or a 2-line lockup, e.g. Vercel (padded canvas), OpenAI Codex (stacked icon+text) */
+.tool-logo--boost-lg { height: 47px; } /* for a logo with heavy internal padding or a 2-line lockup, e.g. Vercel (padded canvas), OpenAI Codex (stacked icon+text) — 1.8× the base height */
 ```
 Applied per-`<img>`, not per-position — if you swap which tool is 4th in the row, the boost
-class travels with the logo that actually needs it.
+class travels with the logo that actually needs it. If the whole row later needs to grow or
+shrink (e.g. "make everything 30% bigger"), scale every logo height by the same factor —
+`.tool-logo`, `.tool-logo--boost-lg`, and `.tool-chip`'s own height/padding all move together so
+the boosted logos stay proportional to the base ones instead of drifting back out of balance.
+
+**Balanced row count — don't let `flex-wrap` leave an orphan trailing row.** A `tool-chip` row
+left to wrap naturally breaks wherever the container width happens to run out, which can strand
+1–2 logos alone on a final line (e.g. 9 logos wrapping 4/4/1). Once you know the total count,
+split it into explicit rows yourself instead of trusting the wrap point:
+```css
+.tools-rows { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.tools-row { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+```
+```html
+<div class="tools-rows">
+  <div class="tools-row"><!-- first 5 chips --></div>
+  <div class="tools-row"><!-- remaining 4 chips --></div>
+</div>
+```
+Rule of thumb: rows should differ by at most one item, and a lone row should never have
+noticeably fewer logos than the others — for 9, that's 5+4 (or 3+3+3), never 4+4+1. Put the
+larger row first. `flex-wrap: wrap` stays on each individual row only as a narrow-viewport
+safety net, not as the thing deciding the split.
 
 ## 10. Feature / pillar grids (3 across, icon or number + heading + text)
 
