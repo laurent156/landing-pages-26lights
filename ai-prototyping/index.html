@@ -434,16 +434,22 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 }
 
 /* ====================================================== HERO — app-card stack (AI Prototype Sprint) */
+/* fan pinned at a shared top-left corner, each layer behind smaller + rotated a little more, per client reference (Group 622.svg) */
 .stackwrap { position: relative; width: 300px; margin: 0 auto; }
-.stack-ghost { position: absolute; inset: 0; border-radius: 22px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16); }
+.stack-ghost {
+  position: absolute; inset: 0; border-radius: 22px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16);
+  transform-origin: top left; opacity: 0;
+}
 .stack-ghost .stack-tag { position: absolute; top: 16px; right: 16px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); border-radius: 5px; padding: 2px 7px; }
-.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; height: 420px; }
-.stack-ghost.v5 { transform: translate(18px, 10px) rotate(6deg); z-index: 2; background: rgba(255,255,255,0.09); height: 460px; }
+@keyframes stackFan { from { transform: translate(0,0) rotate(0deg) scale(1); opacity: 0; } to { transform: translate(var(--fan-x), var(--fan-y)) rotate(var(--fan-r)) scale(var(--fan-s)); opacity: 1; } }
+.stack-ghost.v5 { z-index: 2; background: rgba(255,255,255,0.09); --fan-x: 60px; --fan-y: 16px; --fan-r: 3deg; --fan-s: 0.94; animation: stackFan .8s var(--ease) .6s both; }
+.stack-ghost.v1 { z-index: 1; --fan-x: 118px; --fan-y: 38px; --fan-r: 5.5deg; --fan-s: 0.87; animation: stackFan .8s var(--ease) .74s both; }
+@media (prefers-reduced-motion: reduce) {
+  .stack-ghost { animation: none; opacity: 1; transform: translate(var(--fan-x), var(--fan-y)) rotate(var(--fan-r)) scale(var(--fan-s)); }
+}
 .appcard { position: relative; z-index: 3; background: #fff; border: 1px solid rgba(10,10,20,0.06); border-radius: 22px; padding: 22px 22px 20px; box-shadow: 0 30px 70px rgba(0,0,0,0.38); }
-.appcard-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.appcard-brand { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.1px; }
-.appcard-brand-mark { width: 26px; height: 26px; border-radius: 50%; background: var(--magenta-bright); display: flex; align-items: center; justify-content: center; color: #1a0311; flex: none; }
-.appcard-brand-mark svg { width: 13px; height: 13px; }
+.appcard-head { display: flex; align-items: center; justify-content: flex-end; margin-bottom: 16px; }
 .appcard-menu { width: 16px; height: 16px; color: rgba(10,10,20,0.3); }
 .appcard-balance { text-align: center; padding: 4px 0 18px; }
 .appcard-label { font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gray-2); margin-bottom: 8px; }
@@ -451,7 +457,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .appcard-delta { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 11px; font-weight: 700; color: var(--green-text); background: rgba(5,150,105,0.10); border-radius: 20px; padding: 4px 11px; }
 .appcard-actions { display: flex; gap: 10px; margin-bottom: 6px; }
 .appcard-actions span { flex: 1; text-align: center; padding: 11px 0; border-radius: 11px; font-size: 12px; font-weight: 600; }
-.appcard-actions .primary { background: var(--magenta-bright); color: #1a0311; }
+.appcard-actions .primary { background: var(--magenta-bright); color: #fff; }
 .appcard-actions .ghost { background: var(--light); color: var(--ink); border: 1px solid rgba(10,10,20,0.08); }
 .appcard-tx { display: flex; align-items: center; justify-content: space-between; padding: 12px 2px; border-top: 1px solid rgba(10,10,20,0.08); }
 .appcard-tx-left { display: flex; align-items: center; gap: 10px; }
@@ -561,12 +567,6 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
           <div class="stack-ghost v5"><span class="stack-tag">v5.0</span></div>
           <div class="appcard">
             <div class="appcard-head">
-              <div class="appcard-brand">
-                <span class="appcard-brand-mark">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 9.00006L16.5 4.50006M12 14.5001L18.5 8.00006M12 19.5001L19.5 12.0001"/><path d="M12 22C16.4183 22 20 18.3541 20 13.8567C20 9.39453 17.4467 4.18759 13.4629 2.32555C12.9986 2.10852 12.4993 2 12 2M12 22C7.58172 22 4 18.3541 4 13.8567C4 9.39453 6.55332 4.18759 10.5371 2.32555C11.0014 2.10852 11.5007 2 12 2M12 22V2"/></svg>
-                </span>
-                FinFlow
-              </div>
               <svg class="appcard-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M20 7L4 7"/><path d="M20 12L4 12"/><path d="M20 17L4 17"/></svg>
             </div>
             <div class="appcard-balance">

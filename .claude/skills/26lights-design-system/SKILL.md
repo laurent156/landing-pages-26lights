@@ -520,22 +520,41 @@ via `@keyframes cs1..cs6` / `ct1..ct6` on a 12s infinite timer, each keyframe a 
 `.seg5{fill:#5363F5}` / the `cs*` fill values need the accent swap).
 
 **Layered draft-stack** (hero visual for "many iterations" stories, e.g. `ai-prototyping`) — a
-solid, fully-opaque foreground card carrying the real content, with a couple of offset/rotated
-liquid-glass "ghost" cards peeking out behind it (each tagged with a version label, `v1.0`,
-`v5.0`...), conveying "many drafts converging on one, readable result." The **front card is the
-one that has to be legible**, so it's the one that breaks from the glass language, not the ghosts
-behind it:
+solid, fully-opaque foreground card carrying the real content, with a couple of liquid-glass
+"ghost" cards peeking out behind it (each tagged with a version label, `v1.0`, `v5.0`...),
+conveying "many drafts converging on one, readable result." The **front card is the one that has
+to be legible**, so it's the one that breaks from the glass language, not the ghosts behind it.
+
+Positioning follows a client-supplied reference (fan pinned at one shared corner — every layer
+rotates a little more and shrinks a little as it recedes, all in the *same* direction, rather
+than a symmetric left/right spread):
 ```css
 .stackwrap { position: relative; width: 300px; margin: 0 auto; }
-.stack-ghost { position: absolute; inset: 0; border-radius: 22px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16); } /* liquid glass, per §13 */
-.stack-ghost.v1 { transform: translate(-20px, 18px) rotate(-7deg); z-index: 1; }
-.stack-ghost.v5 { transform: translate(18px, 10px) rotate(6deg); z-index: 2; background: rgba(255,255,255,0.09); }
-/* the foreground card — opaque, its own light color scheme, NOT glass */
+.stack-ghost {
+  position: absolute; inset: 0; border-radius: 22px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.16); /* liquid glass, per §13 */
+  transform-origin: top left; opacity: 0;
+}
+@keyframes stackFan { from { transform: translate(0,0) rotate(0deg) scale(1); opacity: 0; } to { transform: translate(var(--fan-x), var(--fan-y)) rotate(var(--fan-r)) scale(var(--fan-s)); opacity: 1; } }
+.stack-ghost.v5 { z-index: 2; background: rgba(255,255,255,0.09); --fan-x: 60px; --fan-y: 16px; --fan-r: 3deg; --fan-s: 0.94; animation: stackFan .8s var(--ease) .6s both; }
+.stack-ghost.v1 { z-index: 1; --fan-x: 118px; --fan-y: 38px; --fan-r: 5.5deg; --fan-s: 0.87; animation: stackFan .8s var(--ease) .74s both; }
+@media (prefers-reduced-motion: reduce) {
+  .stack-ghost { animation: none; opacity: 1; transform: translate(var(--fan-x), var(--fan-y)) rotate(var(--fan-r)) scale(var(--fan-s)); }
+}
+/* the foreground card — opaque, its own light color scheme, NOT glass, no animation (always in place) */
 .appcard { position: relative; z-index: 3; background: #fff; border: 1px solid rgba(10,10,20,0.06); border-radius: 22px; box-shadow: 0 30px 70px rgba(0,0,0,0.38); }
 /* every label/value inside it uses the light-surface tokens (--ink, --gray-2, --magenta-tint…),
    not the dark-surface ones (#fff text, --magenta-on-dark) the rest of the hero uses */
 ```
-**Two wrong turns on the way to this, worth knowing before you build a similar stack:**
+Reads as: pin each ghost's top-left corner where it is, shrink it toward that corner
+(`scale()`), rotate it around that same corner, *then* slide the whole result outward
+(`translate()`) — `transform-origin: top left` plus that function order is what makes the fan
+pivot from a shared corner instead of each layer's own center. The entrance animation runs the
+same transform from an identity/invisible start, staggered ~140ms apart, back-to-front, so the
+ghosts read as sliding out from behind the front card on load — a dedicated one-shot keyframe
+like the hero's own entrance (§19), not the scroll-gated `.reveal` system.
+
+**Wrong turns on the way to this, worth knowing before you build a similar stack:**
 - *All layers at similar low opacity is illegible.* The first pass gave every layer — including
   the front card — the same ~0.07–0.10 glass alpha. It read as noise, not depth: the eye
   couldn't tell the layers apart, and the actual content (a balance, a transaction list) was
@@ -547,6 +566,10 @@ behind it:
   disappeared into the resulting near-white blur. If a glass card ever needs to sit over
   something other than the plain dark hero gradient, that's a sign it should stop being glass,
   not that the thing behind it needs patching.
+- *A symmetric left/right ghost spread isn't the same thing as a fan* — the first legible version
+  offset the two ghosts in opposite directions from center. The client's own reference fans every
+  layer the same way from one shared corner; if given a reference image, match its actual
+  geometry (check pivot points, not just "does it look roughly stacked").
 
 ## 13. Glass / frosted-card language (used across hero visuals, tool chips, floating credential cards)
 
