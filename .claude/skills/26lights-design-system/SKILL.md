@@ -740,6 +740,23 @@ of ~60–80ms). The script (verbatim, §4) adds `.js-reveal` to `<html>`, then f
 Always keep the `prefers-reduced-motion` escape hatch that shows everything at `opacity:1` with
 no transition.
 
+**Cascade trap: `.reveal` can silently eat a component's own hover transition.** Almost every
+card on the page carries both a component class and `.reveal` (e.g. `class="feat reveal"`).
+`transition` doesn't merge across two same-specificity rules — whichever selector comes later in
+the stylesheet wins *entirely*, discarding the other rule's properties. `.reveal { transition:
+opacity .65s, transform .65s; }` defined after `.feat { transition: border-color …, box-shadow …;
+}` means `.feat`'s hover transition is dropped without any visible error — box-shadow/border-color
+just snap instantly on `:hover` instead of easing, which reads as "cheap" rather than "broken"
+(that's exactly what happened on `ai-prototyping`'s feature cards). Fix: give the compound
+selector its own rule with every property both sides need, e.g.
+```css
+.feat.reveal { transition: opacity .65s var(--ease), transform .3s var(--ease), border-color .25s ease, box-shadow .5s var(--ease); }
+```
+`.feat.reveal` (specificity 0,2,0) always wins over `.reveal` alone (0,1,0), regardless of source
+order. Whenever a card class needs its own `:hover` transition, check whether it also carries
+`.reveal` and, if so, verify with `getComputedStyle(el).transition` that all the properties you
+expect are actually present — don't assume the individual rules combine.
+
 **Count-up numbers** — for a stat that should animate up when scrolled into view
 (`.case-stat[data-count]`, growth-plan): put the target number in `data-count` (+ optional
 `data-prefix`/`data-suffix`), start the visible text at 0, and ease it up over ~1.1s with a cubic
