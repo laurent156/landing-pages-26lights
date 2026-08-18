@@ -499,6 +499,24 @@ Bordered-card version (tech unit `.feat`):
 ```
 All icons in this system are 24×24 viewBox, `fill="none" stroke="currentColor" stroke-width="1.5–2.2" stroke-linecap="round"` line icons — **never** fill-colored/multi-color icon sets; recolor by wrapping in a tinted box and letting `currentColor` inherit (see §13).
 
+**Diagram labels (`.fv-label`/`.fv-label-on`) are always set in `var(--mono)`, never the display
+font — even when the diagram itself isn't code.** The `fv-*` node/link diagrams (§12) started out
+using the regular display font for their labels ("Stripe", "OAuth", flow names, audit checklist
+items), which read a little soft/generic next to card 1's actual code editor. Setting every
+diagram label in the monospace stack (`font-family: var(--mono); letter-spacing: 0;`, and drop
+the size ~1px since mono reads slightly larger) ties every card in the grid to the same
+technical, "this is real system output" register, whether the card shows literal code or not.
+```css
+.fv-label { fill: #6E6E78; font-size: 9.5px; font-weight: 600; font-family: var(--mono); letter-spacing: 0; }
+.fv-label-on { fill: #fff; font-size: 10px; font-weight: 700; font-family: var(--mono); letter-spacing: 0; }
+```
+Corollary: an abstract diagram row is weaker than a labeled one. The security-audit illustration
+originally represented each checklist line as a bare gray bar (`.fv-bar`) with no text — it read
+as unfinished placeholder decoration. Real short labels ("Auth tokens encrypted", "SQL injection
+guards"…) in the same row, in this same mono style, make it read as an actual report. Default to
+real text over an abstract filler shape whenever a diagram row is meant to represent a specific,
+nameable thing.
+
 ## 11. Detail / split sections (photo or graphic + copy, alternating sides)
 
 `.detail-split` (growth-plan, generic) / `.why-split` (persona pages, photo-heavy) / production's
