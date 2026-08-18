@@ -246,7 +246,9 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .fv-strike { stroke: var(--danger); stroke-width: 1.6; stroke-linecap: round; }
 .fv-num { fill: #A9A9B6; font-size: 8px; font-family: var(--mono); }
 .fv-node { fill: #fff; stroke: #DCDCE6; stroke-width: 1.4; }
-.fv-node-accent { fill: var(--magenta); }
+.fv-node-accent { fill: var(--magenta); transform-box: fill-box; transform-origin: center; transition: transform .25s var(--ease), filter .25s ease; }
+.feat:hover .fv-node-accent { transform: scale(1.06); filter: drop-shadow(0 6px 14px rgba(219,24,124,0.4)); }
+@media (prefers-reduced-motion: reduce) { .feat:hover .fv-node-accent { transform: none; filter: none; } }
 .fv-link { fill: none; stroke: #CFCFDC; stroke-width: 1.6; }
 .fv-label { fill: #6E6E78; font-size: 10.5px; font-weight: 600; font-family: var(--font); letter-spacing: .2px; }
 .fv-label-on { fill: #fff; font-size: 11px; font-weight: 700; font-family: var(--font); letter-spacing: .3px; }
