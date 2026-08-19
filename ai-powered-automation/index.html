@@ -494,13 +494,32 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 
 /* ====================================================== VALUE SHIFT (4-card grid) */
 .shift-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-.shift-card { border: 1px solid #ececf2; border-radius: 14px; padding: 22px 20px; transition: border-color .2s ease, transform .2s ease; }
+.shift-card { border: 1px solid #ececf2; border-radius: 14px; padding: 22px 20px; transition: border-color .2s ease, transform .2s ease, background .2s ease; }
 .shift-card:hover { border-color: #dcdce6; transform: translateY(-2px); }
 .shift-card .value-icon { margin-bottom: 14px; }
 .shift-card h4 { font-size: 15.5px; font-weight: 600; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.1px; }
 .shift-card p { font-size: 13.5px; line-height: 1.5; color: var(--gray-1); }
 @media (max-width: 980px) { .shift-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .shift-grid { grid-template-columns: 1fr; } }
+
+/* dark variant — same gradient recipe as .hero, for a section that should read as a continuation of the header */
+.features--dark { position: relative; background: var(--hero-bg); overflow: hidden; }
+.features--dark::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(68% 78% at 86% 14%, rgba(254,59,155,0.50) 0%, rgba(254,59,155,0) 58%),
+    radial-gradient(80% 90% at 2% 108%, rgba(120,30,120,0.42) 0%, rgba(120,30,120,0) 55%),
+    linear-gradient(155deg, #0d0713 0%, #23102b 54%, #100a15 100%);
+}
+.features--dark > .wrap { position: relative; z-index: 1; }
+.features--dark .section-label { color: var(--magenta-on-dark); }
+.features--dark .features-head h2 { color: #F7F7F7; }
+.features--dark .features-head .sub-text { color: rgba(255,255,255,0.76); }
+.features--dark .shift-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
+.features--dark .shift-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+.features--dark .shift-card h4 { color: #F7F7F7; }
+.features--dark .shift-card p { color: rgba(255,255,255,0.65); }
+.features--dark .value-icon { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: var(--magenta-on-dark); }
 
 </style>
 </head>
@@ -549,21 +568,21 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
               <span class="auto-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2Z"/><path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2h16Z"/></svg></span>
               <div class="auto-row-text"><span class="auto-row-label">Trigger</span><span class="auto-row-title">New inquiry received</span></div>
             </div>
-            <div class="auto-row reveal" style="--reveal-delay:140ms">
+            <div class="auto-row reveal" style="--reveal-delay:450ms">
               <span class="auto-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
               <div class="auto-row-text"><span class="auto-row-label">Notion &middot; 0.2s</span><span class="auto-row-title">Create client page</span></div>
             </div>
-            <div class="auto-row reveal" style="--reveal-delay:280ms">
+            <div class="auto-row reveal" style="--reveal-delay:900ms">
               <span class="auto-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16M15 4v16"/></svg></span>
               <div class="auto-row-text"><span class="auto-row-label">Spreadsheet &middot; 0.4s</span><span class="auto-row-title">Log new entry</span></div>
               <span class="auto-row-tag">+Row</span>
             </div>
-            <div class="auto-row reveal" style="--reveal-delay:420ms">
+            <div class="auto-row reveal" style="--reveal-delay:1350ms">
               <span class="auto-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
               <div class="auto-row-text"><span class="auto-row-label">CRM &middot; 1.1s</span><span class="auto-row-title">Create deal &amp; contact</span></div>
               <span class="erp-check-dot"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4.5 8.2 2.6 2.6 4.4-5"/></svg></span>
             </div>
-            <div class="auto-row reveal" style="--reveal-delay:560ms">
+            <div class="auto-row reveal" style="--reveal-delay:1800ms">
               <span class="auto-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l2.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg></span>
               <div class="auto-row-text"><span class="auto-row-label">Slack &middot; 0.1s</span><span class="auto-row-title">Notify team</span></div>
             </div>
@@ -683,7 +702,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
   </section>
 
   <!-- VALUE SHIFT -->
-  <section class="features" id="value-shift" data-screen-label="The value shift">
+  <section class="features features--dark" id="value-shift" data-screen-label="The value shift">
     <div class="wrap">
       <div class="features-head">
         <div class="section-label reveal">The Value Shift</div>
