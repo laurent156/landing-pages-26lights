@@ -432,6 +432,8 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .reveal { transition: opacity .65s var(--ease), transform .65s var(--ease); }
 .js-reveal .reveal { opacity: 0; transform: translateY(24px); transition-delay: var(--reveal-delay, 0ms); }
 .js-reveal .reveal.in { opacity: 1; transform: none; }
+/* smaller lift for the micro-elements inside the hero dashboard mockup — 24px reads as a glitch at this scale */
+.js-reveal .hero-visual .reveal { transform: translateY(7px); transition: opacity .5s var(--ease), transform .5s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
 
 .features-head h2 span { color: var(--gray-2); }
 /* neutral (non-accent) split background — for a light alternate section that ISN'T the dramatic "problem" beat .split--light is reserved for */
@@ -595,18 +597,18 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
           </div>
           <div class="erp-body">
             <div class="erp-sidebar">
-              <div class="erp-nav-item is-active">Dashboard</div>
-              <div class="erp-nav-item">Customers</div>
-              <div class="erp-nav-item">Invoicing</div>
-              <div class="erp-nav-item">Inventory</div>
+              <div class="erp-nav-item is-active reveal">Dashboard</div>
+              <div class="erp-nav-item reveal" style="--reveal-delay:60ms">Customers</div>
+              <div class="erp-nav-item reveal" style="--reveal-delay:120ms">Invoicing</div>
+              <div class="erp-nav-item reveal" style="--reveal-delay:180ms">Inventory</div>
             </div>
             <div class="erp-main">
               <div class="erp-stat-row">
-                <div class="erp-stat-card">
+                <div class="erp-stat-card reveal" style="--reveal-delay:200ms">
                   <span class="erp-stat-label">Revenue (MTD)</span>
                   <span class="erp-stat-value">€48.2k</span>
                 </div>
-                <div class="erp-stat-card">
+                <div class="erp-stat-card reveal" style="--reveal-delay:260ms">
                   <span class="erp-stat-label">Active Customers</span>
                   <span class="erp-stat-value">312</span>
                 </div>
@@ -624,13 +626,13 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
                   <span style="--h:50%; --d:320ms"></span>
                 </div>
               </div>
-              <div class="erp-list reveal" style="--reveal-delay:120ms">
-                <div class="erp-list-head">Recent Invoices</div>
-                <div class="erp-list-row">
+              <div class="erp-list">
+                <div class="erp-list-head reveal" style="--reveal-delay:340ms">Recent Invoices</div>
+                <div class="erp-list-row reveal" style="--reveal-delay:400ms">
                   <span class="erp-list-name">Atlas Retail</span>
                   <span class="erp-list-tag is-paid">Paid</span>
                 </div>
-                <div class="erp-list-row">
+                <div class="erp-list-row reveal" style="--reveal-delay:460ms">
                   <span class="erp-list-name">Nova Logistics</span>
                   <span class="erp-list-tag is-pending">Pending</span>
                 </div>
