@@ -436,6 +436,23 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 .features-head h2 span { color: var(--gray-2); }
 /* neutral (non-accent) split background — for a light alternate section that ISN'T the dramatic "problem" beat .split--light is reserved for */
 .split--neutral { background: #fafafa; }
+/* dark split — same gradient recipe as .hero, for a section that should read as a continuation of the header */
+.split--dark { position: relative; background: var(--hero-bg); overflow: hidden; }
+.split--dark::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(68% 78% at 86% 14%, rgba(254,59,155,0.50) 0%, rgba(254,59,155,0) 58%),
+    radial-gradient(80% 90% at 2% 108%, rgba(120,30,120,0.42) 0%, rgba(120,30,120,0) 55%),
+    linear-gradient(155deg, #0d0713 0%, #23102b 54%, #100a15 100%);
+}
+.split--dark > .split-inner { position: relative; z-index: 1; }
+.split--dark .section-label { color: var(--magenta-on-dark); }
+.split--dark .split-text h2 { color: #F7F7F7; }
+.split--dark .split-text p { color: rgba(255,255,255,0.76); }
+.split--dark .value-icon { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: var(--magenta-on-dark); }
+.split--dark .value-item h4 { color: #F7F7F7; }
+.split--dark .value-item p { color: rgba(255,255,255,0.65); }
+.split--dark .value-item:hover { background: rgba(255,255,255,0.06); }
 /* keep every feat-visual illustration the same height so feat-body text always starts at the same line, whatever the illustration's own intrinsic size */
 .feat-visual { min-height: 160px; display: flex; align-items: center; justify-content: center; }
 
@@ -529,8 +546,8 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
 @media (prefers-reduced-motion: reduce) { .erp-ai-ring::after { animation: none; } }
 
 /* ====================================================== path cards (Beyond the Tool) */
-.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: center; }
-.path-card { background: var(--light); border-radius: 16px; padding: 28px 24px; }
+.path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.path-card { background: var(--light); border-radius: 16px; padding: 28px 24px; display: flex; flex-direction: column; }
 .path-card--featured { background: #fff; box-shadow: 0 20px 44px rgba(20,10,25,0.10); transform: scale(1.04); position: relative; z-index: 1; }
 .path-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--magenta-tint); color: var(--magenta); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
 .path-icon svg { width: 20px; height: 20px; }
@@ -697,7 +714,7 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 500; letter-spacing: -0.5px
   </section>
 
   <!-- WHY CUSTOM -->
-  <section class="split split--neutral" id="why-custom" data-screen-label="Why custom">
+  <section class="split split--dark" id="why-custom" data-screen-label="Why custom">
     <div class="split-inner">
       <div class="split-text">
         <div class="section-label reveal">Why Custom?</div>
