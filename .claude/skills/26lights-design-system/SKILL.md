@@ -538,6 +538,38 @@ every other instance (so alternating sections don't feel monotonous down the pag
 `.detail-photo.detail-graphic` swaps the photo slot for a custom SVG panel (`.schema-panel`,
 `.pm-flow`, `.gp-trajectory` — see §12) instead of an `<img>`; same grid, same flip modifier.
 
+**`.split--light`'s pink gradient is reserved for one specific narrative beat, not a generic
+"light section" utility.** In production it marks *the* dramatic moment — "Escape the 80% trap"
+— where the page names the problem. It is not a stand-in for "this section should be gray
+instead of white." Reaching for `.split--light` on a different split section just because it's
+the closest existing class (e.g. a "why choose us" or "why custom" section) plants an
+accent-tinted background somewhere the content never called for one, and it reads as visual
+noise rather than a deliberate choice — this happened rebuilding `ai-erp`'s "Why Custom?"
+section, which the original content had as a plain neutral gray, not pink. If a split section
+needs a light-but-not-white background and isn't that specific problem/tension beat, use a
+neutral tone instead:
+```css
+.split--neutral { background: #fafafa; }
+```
+Before reusing any `--light`/`--accent`/dark surface modifier on a new section, check what that
+modifier is *for* elsewhere on the page (or other pages), not just whether the name superficially
+fits — matching a class name isn't the same as matching its intent.
+
+**Grid `align-items: stretch` only equalizes the outer card — it doesn't align what's inside
+it.** `.feat-grid`'s default stretch makes every `.feat` in a row the same total height, but if
+each card's `.feat-visual` illustration has a different intrinsic height, the leftover space
+just pools at the bottom of the shorter cards — so `.feat-body` (the heading/copy) starts at a
+different vertical line in each card even though the cards themselves line up. Production avoids
+this by giving every SVG illustration the same `viewBox` aspect ratio (300:128), so they're
+naturally the same height. Custom/mixed illustrations (icon grids, rings, mockups — not a single
+consistent SVG shape) don't get that for free; give `.feat-visual` an explicit shared height
+instead:
+```css
+.feat-visual { min-height: 160px; display: flex; align-items: center; justify-content: center; }
+```
+Check this by measuring, not by eye — `getBoundingClientRect().height` on each card's
+`.feat-visual` should come back equal (or very close) before calling a feature grid done.
+
 ## 12. Custom illustration panels (dark, on-brand, entrance-animated)
 
 Reused chrome for any small "abstract diagram" that needs to sit in a detail-split's visual
