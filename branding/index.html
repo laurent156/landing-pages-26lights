@@ -81,22 +81,11 @@ h3 { font-weight: 500; }
   position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 84px 48px;
   display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 54px; align-items: center;
 }
-.hero .section-label { color: var(--blue-on-dark); }
 .hero h1 { color: #F7F7F7; }
 /* the accent phrase always starts its own line, so the promise reads as two beats */
 .hero h1 em { display: block; font-style: normal; color: var(--blue-on-dark); text-wrap: balance; }
 .hero-sub { max-width: 500px; margin-top: 20px; font-size: 17px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.76); }
 .hero-ctas { display: flex; gap: 14px; align-items: center; margin-top: 32px; flex-wrap: wrap; }
-
-/* "we cover all marketing aspects" — part of the hero block, as on the live page */
-.hero-aspects { margin-top: 40px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,0.14); }
-.hero-aspects p { font-size: 11.5px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: rgba(255,255,255,0.58); margin-bottom: 14px; }
-/* one flowing line with bullet separators, as on the live page: no wrap-orphan at any width */
-.hero-aspects ul { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 0; }
-.hero-aspects li { font-size: 14px; font-weight: 500; letter-spacing: .2px; color: rgba(255,255,255,0.9); }
-.hero-aspects li + li::before {
-  content: "•"; margin: 0 10px; color: rgba(255,255,255,0.34); font-weight: 400;
-}
 
 /* hero visual: the project shot floats directly on the hero gradient, no card/frame around it */
 .hero-visual { position: relative; }
@@ -111,15 +100,13 @@ h3 { font-weight: 500; }
 .hero-shot-cap span { color: var(--blue-on-dark); }
 
 /* hero entrance */
-.hero .section-label { animation: heroUp .8s var(--ease) .04s both; }
 .hero h1 { animation: heroUp .9s var(--ease) .12s both; }
 .hero-sub { animation: heroUp .9s var(--ease) .22s both; }
 .hero-ctas { animation: heroUp .8s var(--ease) .32s both; }
-.hero-aspects { animation: heroUp .8s var(--ease) .42s both; }
 .hero-visual { animation: heroUp 1s var(--ease) .26s both; }
 @keyframes heroUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .hero .section-label, .hero h1, .hero-sub, .hero-ctas, .hero-aspects, .hero-visual { animation: none; }
+  .hero h1, .hero-sub, .hero-ctas, .hero-visual { animation: none; }
 }
 
 /* ====================================================== WORK / PORTFOLIO */
@@ -306,22 +293,10 @@ h3 { font-weight: 500; }
   <section class="hero" data-screen-label="Hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <div class="section-label">Your design and branding partner</div>
         <h1>Beyond aesthetics, <em>a strategic growth lever.</em></h1>
         <p class="hero-sub">Branding is more than just a logo or a visual identity. It's about shaping perceptions, building trust, and driving long-term values. But when should you invest in it? How far should you go? How is this reflected in the whole customer journey?</p>
         <div class="hero-ctas">
           <a href="https://calendly.com/alicia-26lights/30min" target="_blank" rel="noopener" class="btn">Let's discuss your branding needs</a>
-        </div>
-        <div class="hero-aspects">
-          <p>We cover all marketing aspects</p>
-          <ul>
-            <li>Website</li>
-            <li>App UI/UX</li>
-            <li>SEA / SEO</li>
-            <li>Nurturing</li>
-            <li>Socials</li>
-            <li>Outreach</li>
-          </ul>
         </div>
       </div>
       <div class="hero-visual">
