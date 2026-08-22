@@ -242,15 +242,18 @@ h3 { font-weight: 500; }
    only while the next one is still below the fold, so the dwell is roughly (gap - the strip
    of card left under the fold). At 40px there was no pause at all — the next card started
    creeping in immediately. 62vh gives a little over half a screen of scroll per card before
-   the next one appears. Sticky containment is the stack's padding box, so the stack needs
-   the same gap at its foot or the last card would get no pause of its own. */
-.pillars-stack { position: relative; padding-bottom: 62vh; }
+   the next one appears. Sticky containment is the stack's padding box, so the tail below is
+   what holds the last card — it is shorter than the between-card gap because nothing climbs
+   into it, and every pixel of it reads as empty space before the portfolio. */
+.pillars-stack { position: relative; padding-bottom: 24vh; }
 /* 56px of breathing room above the pinned card, but never so much that a shorter laptop
    viewport clips the bottom of it — the offset gives way before the card does */
 .pillar-sticky {
   position: sticky; padding-bottom: 62vh;
   top: max(16px, min(56px, calc(100vh - var(--stack-card-h, 714px) - 24px)));
 }
+/* same reason: no successor to climb into the last card's gap, so it would just be dead white */
+.pillar-sticky:last-child { padding-bottom: 0; }
 /* inside the Elementor iframe there is no scroll to stick to — the script drives the same
    positions with transforms off the parent page scroll instead (see the stack script) */
 .is-embedded .pillar-sticky { position: relative; top: auto; will-change: transform; }
@@ -260,6 +263,14 @@ h3 { font-weight: 500; }
 /* every card is padded up to the tallest one by the equaliser script, so a shorter card can
    never leave the previous one peeking out below it */
 .pillar-sticky .pillar-card { min-height: var(--stack-card-h, 0px); }
+/* --cover is how far the next card has climbed over this one (0 to 1), written by the stack
+   script. Halfway through, both headings used to sit on screen fully legible and it was not
+   clear which one to read; blurring and fading the one being covered settles that. No
+   transition on purpose — the value is already driven frame by frame off the scroll. */
+.pillar-sticky .pillar-card { filter: blur(calc(var(--cover, 0) * 7px)); }
+/* the dim rides on the wrapper, not the card: `.js-reveal .reveal.in` sets opacity at three
+   classes and would beat any rule written against the card here */
+.pillar-sticky { opacity: calc(1 - var(--cover, 0) * 0.6); }
 /* once the card drops to one column it is far taller than a viewport, so the stack has to go
    back to plain stacked cards — same breakpoint for both, or the two disagree and cards get
    pinned half off-screen */
@@ -799,9 +810,9 @@ document.documentElement.classList.add('js-reveal');
     stack.style.setProperty('--stack-card-h', Math.ceil(tallest) + 'px');
     geom = {
       cardH: Math.ceil(tallest),
-      /* the reading gap below each card, read back rather than hardcoded — it is a vh value
-         in the stylesheet, so it moves with the viewport */
-      tail: parseFloat(getComputedStyle(wraps[0]).paddingBottom) || 0,
+      /* each card's reading gap, read back rather than hardcoded — they are vh values in the
+         stylesheet so they move with the viewport, and the last one is deliberately 0 */
+      tails: wraps.map(function (w) { return parseFloat(getComputedStyle(w).paddingBottom) || 0; }),
       bottom: docTop(stack) + stack.offsetHeight,
       tops: wraps.map(docTop)
     };
@@ -817,19 +828,40 @@ document.documentElement.classList.add('js-reveal');
       var natural = geom.tops[i];
       var target = Math.min(
         Math.max(parentTop + offset, natural),
-        geom.bottom - geom.cardH - geom.tail
+        geom.bottom - geom.cardH - geom.tails[i]
       );
       w.style.transform = 'translateY(' + Math.round(target - natural) + 'px)';
     });
   }
 
-  function frame() { raf = 0; place(); }
+  /* 3. Hand-off legibility. Mid-transition the incoming card sits halfway up the one it is
+        covering and both headings read as equally live, which is confusing. Measure how far
+        the next card has climbed and hand that to CSS as --cover, which blurs and fades the
+        card being covered so only the arriving one invites reading. Rects are read after
+        place() so this works the same whether sticky or the embedded transforms positioned
+        them. Quantised to 5% steps because a blur radius that changes every frame forces a
+        re-raster of a very large card. */
+  function paintCover() {
+    if (window.innerWidth <= BREAK) {
+      wraps.forEach(function (w) { w.style.removeProperty('--cover'); });
+      return;
+    }
+    var rects = wraps.map(function (w) { return w.querySelector('.pillar-card').getBoundingClientRect(); });
+    rects.forEach(function (a, i) {
+      var next = rects[i + 1], c = 0;
+      if (next && a.height) c = Math.min(1, Math.max(0, (a.bottom - next.top) / a.height));
+      wraps[i].style.setProperty('--cover', (Math.round(c * 20) / 20).toString());
+    });
+  }
+
+  function frame() { raf = 0; place(); paintCover(); }
   function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
-  function remeasure() { measure(); place(); }
+  function remeasure() { measure(); place(); paintCover(); }
 
   remeasure();
   window.addEventListener('resize', remeasure);
   window.addEventListener('load', remeasure);
+  window.addEventListener('scroll', schedule, { passive: true });
   Array.prototype.forEach.call(stack.querySelectorAll('img'), function (img) {
     if (!img.complete) img.addEventListener('load', remeasure);
   });
