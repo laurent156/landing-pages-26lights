@@ -278,7 +278,10 @@ h3 { font-weight: 500; }
    climbs over the last card to close the run, which is why it is opaque and above them all. */
 .stack-outro {
   position: relative; z-index: 4; background: #fff;
-  min-height: 62vh; display: flex; flex-direction: column; justify-content: center;
+  /* the title sits at the top, not centred: this block rises over the last card top edge
+     first, so anything centred in it arrives as a band of blank white ahead of the words */
+  min-height: 40vh; display: flex; flex-direction: column; justify-content: flex-start;
+  padding: 46px 0 30px;
 }
 .stack-outro h2 { color: var(--ink); }
 .stack-outro h2 span { color: var(--gray-2); }
@@ -290,7 +293,7 @@ h3 { font-weight: 500; }
 /* 56px of breathing room above the pinned card, but never so much that a shorter laptop
    viewport clips the bottom of it — the offset gives way before the card does */
 .pillar-sticky {
-  position: sticky; padding-bottom: 62vh;
+  position: sticky; padding-bottom: 40vh;
   top: max(16px, min(56px, calc(100vh - var(--stack-card-h, 714px) - 24px)));
 }
 /* same reason: no successor to climb into the last card's gap, so it would just be dead white */
@@ -432,29 +435,6 @@ h3 { font-weight: 500; }
 .arch h2 { color: #fff; margin-bottom: 18px; }
 .arch h2 span { color: var(--blue-on-dark); }
 .arch-head p { font-size: 17px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.74); }
-/* The three figures used to sit in three separate cards above the columns, which read as a
-   second set of cards competing with the real ones. They are one line now, below the columns,
-   where they close the section rather than delay it. */
-.statline {
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-  margin-top: 20px; padding: 20px 16px; border-radius: 16px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
-}
-.statline-item { display: flex; align-items: baseline; gap: 11px; padding: 6px 30px; }
-.statline-item b {
-  font-size: 34px; font-weight: 500; letter-spacing: -1px; color: #fff;
-  font-variant-numeric: tabular-nums; line-height: 1;
-}
-.statline-item span { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.7); }
-.statline-sep { width: 1px; align-self: stretch; background: rgba(255,255,255,0.14); }
-@media (max-width: 780px) {
-  /* stacked, so the rules would be dividing nothing */
-  .statline { flex-direction: column; align-items: flex-start; padding: 8px 22px; }
-  .statline-item { padding: 14px 0; }
-  .statline-sep { display: none; }
-}
 
 /* a slot for the visual each column is waiting on — 16:9 keeps three already text-heavy
    cards from growing tall, and the label carries the target size */
@@ -529,7 +509,6 @@ h3 { font-weight: 500; }
   .hero-ctas .btn, .final-ctas .btn { width: 100%; }
   .story-body { padding: 30px 24px 22px; }
   .story-vis, .story--flip .story-vis { padding: 0 24px 24px; }
-  .statline-item b { font-size: 30px; }
 }
 </style>
 </head>
@@ -825,13 +804,6 @@ h3 { font-weight: 500; }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-      </div>
-      <div class="statline reveal">
-        <div class="statline-item"><b data-count="200">0</b><span>startups helped</span></div>
-        <i class="statline-sep" aria-hidden="true"></i>
-        <div class="statline-item"><b data-count="14">0</b><span>years of experience</span></div>
-        <i class="statline-sep" aria-hidden="true"></i>
-        <div class="statline-item"><b data-count="2">0</b><span>offices, in Brussels and Paris</span></div>
       </div>
     </div>
   </section>
