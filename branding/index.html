@@ -237,34 +237,6 @@ h3 { font-weight: 500; }
   padding: 0; gap: 0; overflow: hidden; align-items: stretch;
   grid-template-columns: 1.5fr 1fr;
 }
-/* Trying the first card on the header's own surface. Same gradient recipe as .hero::before,
-   not an approximation of it, so the two read as one family. Every ink-on-white value inside
-   has to be answered or it falls to near-black text on a near-black card — most of the block
-   below is that, not the background itself. */
-.pillar.pillar-card.pillar-card--dark {
-  background: var(--hero-bg);
-  border-color: rgba(255,255,255,0.10);
-  box-shadow: 0 30px 70px rgba(5,5,25,0.28);
-  isolation: isolate;
-}
-.pillar-card--dark::before {
-  content: ""; position: absolute; inset: 0; z-index: 0;
-  background:
-    radial-gradient(64% 74% at 84% 12%, rgba(83,99,245,0.46) 0%, rgba(83,99,245,0) 58%),
-    radial-gradient(80% 90% at 0% 106%, rgba(60,40,140,0.40) 0%, rgba(60,40,140,0) 56%),
-    linear-gradient(155deg, #07070f 0%, #131233 54%, #0a0a14 100%);
-}
-.pillar-card--dark > * { position: relative; z-index: 1; }
-/* two and three classes deep to clear the light-surface rules, which sit at the same weight */
-.pillar.pillar-card--dark .section-label { color: var(--blue-on-dark); }
-.pillar.pillar-card.pillar-card--dark h2,
-.pillar.pillar-card.pillar-card--dark h2 span { color: #F7F7F7; }
-.pillar.pillar-card--dark p { color: rgba(255,255,255,0.72); }
-.pillar-card--dark .aspects { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
-.pillar-card--dark .aspects h3 { color: rgba(255,255,255,0.55); }
-.pillar-card--dark .aspects li { color: rgba(255,255,255,0.88); }
-.pillar-card--dark .aspects li svg { color: var(--blue-on-dark); }
-
 .pillar-card--bleed .pillar-text { padding: 48px 46px; align-self: center; }
 .pillar-card--bleed .pillar-case { display: block; height: 100%; }
 .pillar-card--bleed .pillar-case-shot { display: block; height: 100%; }
@@ -432,15 +404,45 @@ h3 { font-weight: 500; }
 .arch h2 { color: #fff; margin-bottom: 18px; }
 .arch h2 span { color: var(--blue-on-dark); }
 .arch-head p { font-size: 17px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.74); }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 44px; }
-.stat {
-  padding: 26px 24px; border-radius: 16px;
+/* The three figures used to sit in three separate cards above the columns, which read as a
+   second set of cards competing with the real ones. They are one line now, below the columns,
+   where they close the section rather than delay it. */
+.statline {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  margin-top: 20px; padding: 20px 16px; border-radius: 16px;
   background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
   backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
 }
-.stat b { display: block; font-size: 44px; font-weight: 500; letter-spacing: -1.4px; color: #fff; font-variant-numeric: tabular-nums; line-height: 1; }
-.stat span { display: block; margin-top: 10px; font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.7); line-height: 1.45; }
+.statline-item { display: flex; align-items: baseline; gap: 11px; padding: 6px 30px; }
+.statline-item b {
+  font-size: 34px; font-weight: 500; letter-spacing: -1px; color: #fff;
+  font-variant-numeric: tabular-nums; line-height: 1;
+}
+.statline-item span { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.7); }
+.statline-sep { width: 1px; align-self: stretch; background: rgba(255,255,255,0.14); }
+@media (max-width: 780px) {
+  /* stacked, so the rules would be dividing nothing */
+  .statline { flex-direction: column; align-items: flex-start; padding: 8px 22px; }
+  .statline-item { padding: 14px 0; }
+  .statline-sep { display: none; }
+}
+
+/* a slot for the visual each column is waiting on — 16:9 keeps three already text-heavy
+   cards from growing tall, and the label carries the target size */
+.acard-shot { margin-bottom: 20px; }
+.acard-shot--placeholder {
+  aspect-ratio: 16 / 9; border-radius: 11px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px dashed rgba(255,255,255,0.20);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+}
+.acard-shot--placeholder span {
+  font-size: 11px; font-weight: 600; letter-spacing: 1.1px; text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+}
+.acard-shot--placeholder small { font-size: 10.5px; font-weight: 500; letter-spacing: .4px; color: rgba(255,255,255,0.26); }
+.acard-shot img { width: 100%; display: block; border-radius: 11px; }
 .arch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .acard {
   padding: 30px 28px; border-radius: 16px;
@@ -490,7 +492,6 @@ h3 { font-weight: 500; }
   .story-vis { padding: 0 30px 30px; }
   .story-body { padding: 36px 34px 26px; }
   .dgrid { grid-template-columns: repeat(2, 1fr); }
-  .stats { grid-template-columns: 1fr; }
   .arch-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 620px) {
@@ -503,7 +504,7 @@ h3 { font-weight: 500; }
   .hero-ctas .btn, .final-ctas .btn { width: 100%; }
   .story-body { padding: 30px 24px 22px; }
   .story-vis, .story--flip .story-vis { padding: 0 24px 24px; }
-  .stat b { font-size: 38px; }
+  .statline-item b { font-size: 30px; }
 }
 </style>
 </head>
@@ -544,7 +545,7 @@ h3 { font-weight: 500; }
     <div class="pillars-stack">
 
       <div class="pillar-sticky">
-      <div class="pillar pillar-card pillar-card--bleed pillar-card--dark reveal">
+      <div class="pillar pillar-card pillar-card--bleed reveal">
         <div class="pillar-text">
           <div class="section-label">Positioning your brand for lasting impact</div>
           <h2>Brand <span>definition</span></h2>
@@ -768,13 +769,11 @@ h3 { font-weight: 500; }
         <h2 class="reveal">We are <span>growth architects</span></h2>
         <p class="reveal">For over 14 years, 26lights has partnered with more than 200 startups, scale-ups, and ambitious SMEs, guiding them to build sustainable and scalable businesses characterized by healthy growth and robust leadership. With offices in Brussels and Paris, our mission is to architect your company's next growth phase through a unique blend of Business, Tech, and Marketing expertise.</p>
       </div>
-      <div class="stats">
-        <div class="stat reveal"><b data-count="200">0</b><span>startups helped</span></div>
-        <div class="stat reveal" style="--reveal-delay:80ms"><b data-count="14">0</b><span>years of experience</span></div>
-        <div class="stat reveal" style="--reveal-delay:160ms"><b data-count="3">0</b><span>based in Brussels, Paris and Lausanne</span></div>
-      </div>
       <div class="arch-grid">
         <div class="acard reveal">
+          <div class="acard-shot acard-shot--placeholder" role="img" aria-label="Business coaching visual to come">
+            <span>Visual to come</span><small>16:9 &middot; 960 &times; 540 min</small>
+          </div>
           <h3>Business coaching</h3>
           <div class="acard-lede">Smart and predictable growth.</div>
           <p>We'll help you lay out and implement an ambitious yet realistic GROWTH PLAN, with all the relevant KPIs. We'll be with you at every step of the journey.</p>
@@ -784,6 +783,9 @@ h3 { font-weight: 500; }
           </a>
         </div>
         <div class="acard reveal" style="--reveal-delay:80ms">
+          <div class="acard-shot acard-shot--placeholder" role="img" aria-label="Tech experts visual to come">
+            <span>Visual to come</span><small>16:9 &middot; 960 &times; 540 min</small>
+          </div>
           <h3>Tech experts</h3>
           <div class="acard-lede">Experienced tech architects, ready to help</div>
           <p>Beyond writing code, our tech architects will be your strategic partners in success. We know how to deliver strong, scalable solutions, built to last.</p>
@@ -793,6 +795,9 @@ h3 { font-weight: 500; }
           </a>
         </div>
         <div class="acard reveal" style="--reveal-delay:160ms">
+          <div class="acard-shot acard-shot--placeholder" role="img" aria-label="Marketing and sales visual to come">
+            <span>Visual to come</span><small>16:9 &middot; 960 &times; 540 min</small>
+          </div>
           <h3>Marketing &amp; sales</h3>
           <div class="acard-lede">One team, one unified vision</div>
           <p>Creating an outstanding product or service is just the beginning. Ensuring it reaches the right audience, through the right channel, at the perfect timing, within budget is a whole different challenge.</p>
@@ -801,6 +806,13 @@ h3 { font-weight: 500; }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
+      </div>
+      <div class="statline reveal">
+        <div class="statline-item"><b data-count="200">0</b><span>startups helped</span></div>
+        <i class="statline-sep" aria-hidden="true"></i>
+        <div class="statline-item"><b data-count="14">0</b><span>years of experience</span></div>
+        <i class="statline-sep" aria-hidden="true"></i>
+        <div class="statline-item"><b data-count="2">0</b><span>offices, in Brussels and Paris</span></div>
       </div>
     </div>
   </section>
@@ -817,7 +829,7 @@ h3 { font-weight: 500; }
       <div class="final-contact reveal">
         <a href="mailto:alicia@26lights.com">alicia@26lights.com</a>
         <a href="tel:+32492660089">+32 492 66 00 89</a>
-        <span>Brussels &middot; Paris &middot; Lausanne</span>
+        <span>Brussels &middot; Paris</span>
       </div>
     </div>
   </section>
