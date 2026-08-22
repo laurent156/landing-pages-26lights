@@ -162,7 +162,10 @@ h3 { font-weight: 500; }
   grid-template-columns: 1.25fr 0.75fr; gap: 44px;
 }
 /* the card is denser than the standalone pillar layout — it has to fit a screen, not a page */
+/* these headings stay a single ink weight — the two-tone split used elsewhere on the page
+   competes with the case shot for attention inside a card this dense */
 .pillar-card h2 { font-size: clamp(28px, 2.6vw, 37px); margin-bottom: 14px; }
+.pillar.pillar-card h2 span { color: var(--ink); }
 .pillar-card p { font-size: 15.5px; line-height: 1.62; }
 .pillar-card p + p { margin-top: 12px; }
 .pillar-card .aspects { padding: 20px 22px; border-radius: 14px; }
@@ -170,7 +173,8 @@ h3 { font-weight: 500; }
 .pillar-card .aspects ul { gap: 9px; }
 .pillar-card .aspects li { font-size: 14px; line-height: 1.5; }
 .pillar-card .aspects li svg { width: 15px; height: 15px; margin-top: 2px; }
-.pillar-card .link-more { margin-top: 0; }
+/* the CTA is a real button here, not the inline text link the standalone pillars used */
+.pillar-card .btn { margin-top: 4px; }
 .pillar-card .pillar-text .aspects { margin: 18px 0 20px; }
 
 /* full-bleed variant: the case shot runs to the card edge instead of sitting inside the
@@ -426,7 +430,7 @@ h3 { font-weight: 500; }
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>Experience mapping to anticipate key touchpoints</li>
             </ul>
           </div>
-          <a href="https://calendly.com/alicia-26lights/30min" target="_blank" rel="noopener" class="link-more">Let's discuss your branding needs
+          <a href="https://calendly.com/alicia-26lights/30min" target="_blank" rel="noopener" class="btn">Let's discuss your branding needs
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -455,7 +459,7 @@ h3 { font-weight: 500; }
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>Signage &amp; environmental branding to create immersive brand experiences</li>
             </ul>
           </div>
-          <a href="mailto:alicia@26lights.com" class="link-more">Contact our branding team
+          <a href="mailto:alicia@26lights.com" class="btn">Contact our branding team
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -484,7 +488,7 @@ h3 { font-weight: 500; }
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5 11-11"/></svg>Clear brand guidelines for consistent execution internally by the marketing lead</li>
             </ul>
           </div>
-          <a href="https://calendly.com/alicia-26lights/30min" target="_blank" rel="noopener" class="link-more">Fix a 20min meeting with our experts
+          <a href="https://calendly.com/alicia-26lights/30min" target="_blank" rel="noopener" class="btn">Fix a 20min meeting with our experts
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
