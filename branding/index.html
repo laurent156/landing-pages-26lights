@@ -260,8 +260,9 @@ h3 { font-weight: 500; }
    The gap below each card is what buys the reading pause. A pinned card is alone on screen
    only while the next one is still below the fold, so the dwell is roughly (gap - the strip
    of card left under the fold). At 40px there was no pause at all — the next card started
-   creeping in immediately. 62vh gives a little over half a screen of scroll per card before
-   the next one appears. Sticky containment is the stack's padding box, so the tail below is
+   creeping in immediately. 40% of a screen's worth of scroll per card (now computed in JS
+   rather than written as a raw vh value — see --stack-pause) gives a real pause before the
+   next one appears. Sticky containment is the stack's padding box, so the tail below is
    what holds the last card — it is shorter than the between-card gap because nothing climbs
    into it, and every pixel of it reads as empty space before the portfolio. */
 /* A card stays pinned until its own box bottom reaches the stack's padding box, so a card can
@@ -271,15 +272,17 @@ h3 { font-weight: 500; }
    padding here satisfies it exactly — and the trailing space is not dead, it is the last card's
    own reading pause, the same one the other two get. */
 .pillars-stack { position: relative; padding-bottom: 0; }
-/* The portfolio is the last member of the stack. A card holds only until its own box bottom
-   reaches the stack padding box, so whatever follows the last card has to be at least as tall
-   as the card itself, or the card is released before it has been covered and slides up out
-   from behind it — which is what a title-sized block did, escaping 399px early at 47% cover.
-   The portfolio is tall enough to close the hand-off properly, it makes the trailing room
-   content rather than white, and it puts the work title exactly where the eye lands next. */
+/* The portfolio is the last member of the stack, immediately after Brand continuity — which
+   does not pin or recede (see .pillar-sticky--flow), so nothing here needs to be tall enough
+   to "cover" it the way earlier hand-offs do; that constraint only ever applied while all
+   three cards were pinned. This padding is just ordinary section spacing now. 90px top clears
+   Brand continuity's own drop-shadow (0 30px 70px, faint but real) before the work title
+   starts — 54px used to sit inside that shadow's reach and read as a stray line under the
+   card. 90px matches the growth-architects section's own top padding, the closest thing this
+   page has to a standard for "space before a title that follows a dense block." */
 .work-block {
   position: relative; z-index: 4; background: #fff;
-  padding: 54px 0 90px;
+  padding: 90px 0;
 }
 .work-head { margin-bottom: 62px; }
 .work-head h2 { color: var(--ink); }
@@ -289,7 +292,17 @@ h3 { font-weight: 500; }
 /* 56px of breathing room above the pinned card, but never so much that a shorter laptop
    viewport clips the bottom of it — the offset gives way before the card does */
 .pillar-sticky {
-  position: sticky; padding-bottom: 40vh;
+  position: sticky;
+  /* was 40vh: a raw viewport unit here feeds a real bug once this page is embedded. The embed
+     iframe has no scroll of its own, so it is stretched to fit its full content height and a
+     ResizeObserver reports that height back to the parent, which resizes the iframe to match —
+     and resizing the iframe changes what 100vh resolves to inside it. Growing padding grows
+     scrollHeight, which grows the reported height, which grows the iframe again: an unbounded
+     loop with no self-correction. The stack script now computes this from the real effective
+     viewport (window.innerHeight standalone, the parent-reported vh once embedded — see
+     measure()) and writes it here as a plain pixel custom property, which cannot feed back into
+     itself. 300px is only the pre-JS fallback for the first paint. */
+  padding-bottom: var(--stack-pause, 300px);
   top: max(16px, min(56px, calc(100vh - var(--stack-card-h, 714px) - 24px)));
 }
 /* same reason: no successor to climb into the last card's gap, so it would just be dead white */
@@ -942,6 +955,13 @@ document.documentElement.classList.add('js-reveal');
       return;
     }
     clearPaint();
+    /* The reading pause is meant to be "a bit under half a screen of scroll," which needs the
+       actual effective viewport — window.innerHeight standalone, but the iframe's OWN height
+       once embedded (see the --stack-pause comment in the stylesheet for why that distinction
+       is load-bearing, not cosmetic). parentVh comes from the host page over postMessage and
+       does not change just because this iframe resizes, which is what breaks the loop. */
+    var effectiveVh = embedded ? (parentVh || window.innerHeight) : window.innerHeight;
+    stack.style.setProperty('--stack-pause', Math.round(effectiveVh * 0.4) + 'px');
     stack.style.setProperty('--stack-card-h', '0px');
     var tallest = 0;
     wraps.forEach(function (w) {
@@ -950,8 +970,8 @@ document.documentElement.classList.add('js-reveal');
     stack.style.setProperty('--stack-card-h', Math.ceil(tallest) + 'px');
     geom = {
       cardH: Math.ceil(tallest),
-      /* each card's reading gap, read back rather than hardcoded — they are vh values in the
-         stylesheet so they move with the viewport, and the last one is deliberately 0 */
+      /* each card's reading gap, read back rather than hardcoded — they are pixel values written
+         above, and the last one is deliberately 0 */
       tails: wraps.map(function (w) { return parseFloat(getComputedStyle(w).paddingBottom) || 0; }),
       bottom: docTop(stack) + stack.offsetHeight,
       tops: wraps.map(docTop)
