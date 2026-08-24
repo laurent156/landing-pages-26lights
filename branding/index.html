@@ -334,6 +334,13 @@ h3 { font-weight: 500; }
   .pillar-sticky { transform: translateY(var(--shift, 0px)); }
   .pillar-sticky .pillar-card { filter: none; }
 }
+/* Brand continuity does not stack: it is not pinned and it does not recede, it just scrolls
+   into the portfolio like ordinary content. It still shares the other two cards' height (the
+   generic min-height rule above still applies) so it is tall enough to fully cover the card
+   before it — it just does not do anything dramatic on its own way past. Three classes deep
+   to guarantee this wins over the general .pillar-sticky rules regardless of source order. */
+.pillar-sticky.pillar-sticky--flow { position: static; transform: none; opacity: 1; }
+.pillar-sticky.pillar-sticky--flow .pillar-card { filter: none; }
 /* once the card drops to one column it is far taller than a viewport, so the stack has to go
    back to plain stacked cards — same breakpoint for both, or the two disagree and cards get
    pinned half off-screen */
@@ -650,7 +657,7 @@ h3 { font-weight: 500; }
       </div>
 
       </div>
-      <div class="pillar-sticky">
+      <div class="pillar-sticky pillar-sticky--flow">
       <div class="pillar pillar-card pillar-card--bleed reveal">
         <div class="pillar-text">
           <div class="section-label">Building a scalable &amp; adaptable identity</div>
@@ -897,7 +904,14 @@ document.documentElement.classList.add('js-reveal');
   if (!stack) return;
   var wraps = Array.prototype.slice.call(stack.querySelectorAll('.pillar-sticky'));
   if (!wraps.length) return;
-  var closer = stack.querySelector('.work-block');
+  /* Brand continuity (the last card) flows into the portfolio like ordinary content instead
+     of stacking: it does not pin and does not recede, it just scrolls away as the next thing
+     arrives — see .pillar-sticky--flow in the stylesheet. Everything below still measures and
+     positions it normally (it still needs to match the others' height and it is still what
+     visually covers the card before it), it is only exempted from being pinned or receding
+     itself. If the flow class is not found every card is treated as pinned, unchanged. */
+  var flowIndex = wraps.findIndex(function (w) { return w.classList.contains('pillar-sticky--flow'); });
+  var pinnedCount = flowIndex === -1 ? wraps.length : flowIndex;
 
   var BREAK = 980;      /* matches the media query that turns the stack off */
 
@@ -940,17 +954,26 @@ document.documentElement.classList.add('js-reveal');
          stylesheet so they move with the viewport, and the last one is deliberately 0 */
       tails: wraps.map(function (w) { return parseFloat(getComputedStyle(w).paddingBottom) || 0; }),
       bottom: docTop(stack) + stack.offsetHeight,
-      tops: wraps.map(docTop),
-      /* the portfolio closes the stack, so it is what covers the last card — without it that
-         card would never recede and would simply be wiped by an opaque block */
-      closerTop: closer ? docTop(closer) : null
+      tops: wraps.map(docTop)
     };
   }
 
   /* Where each card's top edge sits on screen, worked out from the untransformed geometry
      instead of read back off the boxes — the recede scale would otherwise feed into its own
      input. Same formula sticky applies: ride with the page until the pin point, hold there,
-     then let go once the stack runs out. */
+     then let go once the stack runs out.
+
+     The ceiling is tied to the whole stack's bottom, not to the next sibling's own top — a
+     card's real containing block for sticky purposes is `.pillars-stack` itself, which is why
+     it stays natively pinned for a long stretch after the next card has already fully covered
+     it (confirmed by reading its actual rect through a scroll sweep: still stuck at the offset
+     at scrollY 3000, only releasing past 3900, well beyond where cover reaches 1). A ceiling
+     tied to the next sibling's own top instead released it hundreds of pixels too early —
+     right, self-consistently, in the simulation, but not matching what native sticky actually
+     does, since the simulation and the real rect only agree once opacity is already 0 anyway.
+     Card 3 no longer needs a ceiling of its own (it is not pinned, see .pillar-sticky--flow),
+     but the formula is left generic — a wrap with nothing pinned after it still falls back to
+     holding until the stack ends. */
   function screenTops(scrollTop, vh) {
     var offset = stickTop(vh, geom.cardH);
     return geom.tops.map(function (natural, i) {
@@ -971,6 +994,9 @@ document.documentElement.classList.add('js-reveal');
     }
     var tops = screenTops(parentTop, parentVh);
     wraps.forEach(function (w, i) {
+      /* the flow card needs no shift: it is never sticky, so its natural document position is
+         already correct wherever it renders, standalone or embedded */
+      if (i >= pinnedCount) return;
       /* a custom property, not an inline transform: the stylesheet composes this with the
          recede transform, and an inline one would replace the whole thing */
       w.style.setProperty('--shift', Math.round(tops[i] + parentTop - geom.tops[i]) + 'px');
@@ -980,7 +1006,9 @@ document.documentElement.classList.add('js-reveal');
   /* 3. Hand-off legibility. Mid-transition the incoming card sits halfway up the one it is
         covering and both headings read as equally live, which is confusing. --cover is how far
         the next card has climbed over this one; CSS turns it into the recede — shrink, tilt,
-        blur, then fade — so only the arriving card invites reading.
+        blur, then fade — so only the arriving card invites reading. Only pinned cards recede;
+        the flow card is exempt (see .pillar-sticky--flow), so the loop below stops before it
+        even though it is still what covers the last pinned card as it arrives.
 
         --cover-step is the same value in 5% notches, used for the blur alone: a blur radius
         that changes every frame forces a re-raster of a very large card, while the scale and
@@ -993,19 +1021,20 @@ document.documentElement.classList.add('js-reveal');
       });
       return;
     }
-    var vh = embedded ? parentVh : window.innerHeight;
     var scrollTop = embedded ? parentTop : (window.pageYOffset || 0);
-    var tops = screenTops(scrollTop, vh);
-    /* the last card is covered by the portfolio, which rides in normal flow */
-    var covering = tops.slice(1);
-    if (geom.closerTop !== null) covering.push(geom.closerTop - scrollTop);
-    tops.forEach(function (top, i) {
-      var c = 0;
-      if (i < covering.length) c = (top + geom.cardH - covering[i]) / geom.cardH;
-      c = Math.min(1, Math.max(0, c));
+    var tops = screenTops(scrollTop, embedded ? parentVh : window.innerHeight);
+    for (var i = 0; i < pinnedCount; i++) {
+      /* the thing covering pinned card i: the next pinned card's simulated screen position,
+         or — for the last pinned card — the flow card's real, unsimulated one */
+      var coverSource = (i + 1 < pinnedCount) ? tops[i + 1] : (geom.tops[i + 1] - scrollTop);
+      var c = Math.min(1, Math.max(0, (tops[i] + geom.cardH - coverSource) / geom.cardH));
       wraps[i].style.setProperty('--cover', c.toFixed(3));
       wraps[i].style.setProperty('--cover-step', (Math.round(c * 20) / 20).toString());
-    });
+    }
+    for (var j = pinnedCount; j < wraps.length; j++) {
+      wraps[j].style.removeProperty('--cover');
+      wraps[j].style.removeProperty('--cover-step');
+    }
   }
 
   function frame() { raf = 0; place(); paintCover(); }
