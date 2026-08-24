@@ -347,21 +347,28 @@ h3 { font-weight: 500; }
   .pillar-sticky .pillar-card { filter: none; }
 }
 /* Brand continuity does not stack: it is not pinned and it does not recede, it just scrolls
-   into the portfolio like ordinary content. It still shares the other two cards' height (the
-   generic min-height rule above still applies) so it is tall enough to fully cover the card
-   before it — it just does not do anything dramatic on its own way past. Three classes deep
-   to guarantee this wins over the general .pillar-sticky rules regardless of source order. */
-.pillar-sticky.pillar-sticky--flow { position: static; transform: none; opacity: 1; }
+   into the portfolio like ordinary content.
+
+   position must stay RELATIVE, not static. z-index is ignored on static elements, so setting
+   this to static silently dropped the z-index:3 above and left this card painting in the
+   normal flow layer — underneath the two pinned cards, which carry z-index 1 and 2 and
+   therefore rendered on top of it. That is what made Digital experience bleed through this
+   card and wreck its legibility. relative keeps the exact same layout position while letting
+   the stacking order apply. */
+/* the base .pillar-sticky rule also carries a top offset for the pinned cards (up to 56px),
+   and position:relative honours top where position:static ignores it. Left alone that pulls
+   this card 56px down from its reserved flow space without the next sibling knowing, which
+   overlapped the portfolio block below by exactly 56px. top:0 cancels that without touching
+   position. */
+.pillar-sticky.pillar-sticky--flow { position: relative; top: 0; transform: none; opacity: 1; }
 .pillar-sticky.pillar-sticky--flow .pillar-card { filter: none; }
-/* Brand continuity still has to be min-height'd up to match the tallest card — it is what
-   covers Digital experience as it arrives, and shrinking it would leave a sliver of that card
-   peeking out below it during the hand-off. But once settled, that forces its own (shorter)
-   text column to centre inside 140px of unused space, and centering puts half of that below
-   the CTA — stacking with the section padding after it into 210px of dead air between a button
-   and the next heading. Nothing recedes into this card the way the others get covered, so
-   nothing is actually using that centred space; bottom-aligning it here removes the padding
-   duplication without touching the shadow-clearance fix below. */
-.pillar-sticky--flow .pillar-text { align-self: end; }
+/* And this card takes its natural height rather than being padded up to the tallest one. The
+   min-height exists so a card fully covers the one it slides over, but Digital experience is
+   already at opacity 0 by the time this card finishes arriving (its --cover hits 1 exactly
+   when this card reaches the pin offset), so there is nothing left to hide. Dropping the
+   min-height removes the leftover space outright instead of shuffling it around — which is
+   what the previous align-self:end did, and why the layout visibly changed. */
+.pillar-sticky--flow .pillar-card { min-height: 0; }
 /* once the card drops to one column it is far taller than a viewport, so the stack has to go
    back to plain stacked cards — same breakpoint for both, or the two disagree and cards get
    pinned half off-screen */
