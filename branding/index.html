@@ -69,7 +69,10 @@ h3 { font-weight: 500; }
 .link-more svg { width: 15px; height: 15px; }
 
 /* ====================================================== HERO */
-.hero { position: relative; padding: 0; background: var(--hero-bg); overflow: hidden; }
+/* 0 here would sit the marquee flush against the section's own bottom edge, matching how the
+   reference crops its photos right at the fold — but with no browser chrome around it the way
+   the reference has, that read as the strip being cut off rather than a deliberate edge. */
+.hero { position: relative; padding: 0 0 56px; background: var(--hero-bg); overflow: hidden; }
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
   background:
@@ -554,6 +557,7 @@ h3 { font-weight: 500; }
 
 /* ====================================================== RESPONSIVE */
 @media (max-width: 980px) {
+  .hero { padding-bottom: 48px; }
   .hero-inner { padding: 72px 40px 0; }
   .hero-marquee { height: 170px; margin-top: 44px; }
   /* the six-column footprints stop making sense once the grid is this narrow — fall back to
@@ -575,6 +579,7 @@ h3 { font-weight: 500; }
 @media (max-width: 620px) {
   section { padding: 68px 0; }
   .wrap, .statement-inner, .arch-inner, .final-inner { padding: 0 22px; }
+  .hero { padding-bottom: 40px; }
   .hero-inner { padding: 60px 22px 0; }
   .hero-marquee { height: 130px; margin-top: 36px; -webkit-mask-image: linear-gradient(to right, transparent, #000 32px, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(to right, transparent, #000 32px, #000 calc(100% - 32px), transparent); }
   .bento { grid-template-columns: 1fr; gap: 14px; }
