@@ -275,14 +275,13 @@ h3 { font-weight: 500; }
 /* The portfolio is the last member of the stack, immediately after Brand continuity — which
    does not pin or recede (see .pillar-sticky--flow), so nothing here needs to be tall enough
    to "cover" it the way earlier hand-offs do; that constraint only ever applied while all
-   three cards were pinned. This padding is just ordinary section spacing now. 90px top clears
-   Brand continuity's own drop-shadow (0 30px 70px, faint but real) before the work title
-   starts — 54px used to sit inside that shadow's reach and read as a stray line under the
-   card. 90px matches the growth-architects section's own top padding, the closest thing this
-   page has to a standard for "space before a title that follows a dense block." */
+   three cards were pinned. This padding is just ordinary section spacing now. 140px top clears
+   Brand continuity's own drop-shadow (0 30px 70px, faint but real) with real room to spare —
+   90px cleared it but read as tight once asked for more; 54px used to sit inside the shadow's
+   reach outright and read as a stray line under the card. */
 .work-block {
   position: relative; z-index: 4; background: #fff;
-  padding: 90px 0;
+  padding: 140px 0 90px;
 }
 .work-head { margin-bottom: 62px; }
 .work-head h2 { color: var(--ink); }
