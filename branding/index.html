@@ -354,6 +354,15 @@ h3 { font-weight: 500; }
    to guarantee this wins over the general .pillar-sticky rules regardless of source order. */
 .pillar-sticky.pillar-sticky--flow { position: static; transform: none; opacity: 1; }
 .pillar-sticky.pillar-sticky--flow .pillar-card { filter: none; }
+/* Brand continuity still has to be min-height'd up to match the tallest card — it is what
+   covers Digital experience as it arrives, and shrinking it would leave a sliver of that card
+   peeking out below it during the hand-off. But once settled, that forces its own (shorter)
+   text column to centre inside 140px of unused space, and centering puts half of that below
+   the CTA — stacking with the section padding after it into 210px of dead air between a button
+   and the next heading. Nothing recedes into this card the way the others get covered, so
+   nothing is actually using that centred space; bottom-aligning it here removes the padding
+   duplication without touching the shadow-clearance fix below. */
+.pillar-sticky--flow .pillar-text { align-self: end; }
 /* once the card drops to one column it is far taller than a viewport, so the stack has to go
    back to plain stacked cards — same breakpoint for both, or the two disagree and cards get
    pinned half off-screen */
