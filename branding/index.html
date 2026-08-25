@@ -1041,8 +1041,20 @@ document.documentElement.classList.add('js-reveal');
        actual effective viewport — window.innerHeight standalone, but the iframe's OWN height
        once embedded (see the --stack-pause comment in the stylesheet for why that distinction
        is load-bearing, not cosmetic). parentVh comes from the host page over postMessage and
-       does not change just because this iframe resizes, which is what breaks the loop. */
-    var effectiveVh = embedded ? (parentVh || window.innerHeight) : window.innerHeight;
+       does not change just because this iframe resizes, which is what breaks the loop.
+
+       That "embedded" branch only ever kicks in if the host page actually forwards scroll via
+       postMessage — the Elementor embed snippet in normal use here only wires up gp-height
+       (auto-resize), not gp-scroll, so parentVh is never set and embedded stays false. The
+       plain `window.innerHeight` fallback then silently hits the exact same runaway this
+       comment describes for raw `100vh`, just through a different door: this iframe has no
+       internal scrollbar (its height is set by the parent to match the full document height,
+       via that same auto-resize script), so window.innerHeight *inside* the iframe reads as
+       the full page height, not a real screen height — 9000px+ on a long page, giving a
+       --stack-pause in the thousands of pixels instead of a few hundred. Clamping to a plausible
+       real-viewport range makes the fallback safe on its own, without depending on a bespoke
+       per-page scroll-forwarding snippet nobody else in this repo implements. */
+    var effectiveVh = Math.min(Math.max(embedded ? (parentVh || window.innerHeight) : window.innerHeight, 500), 900);
     stack.style.setProperty('--stack-pause', Math.round(effectiveVh * 0.4) + 'px');
     stack.style.setProperty('--stack-card-h', '0px');
     var tallest = 0;
