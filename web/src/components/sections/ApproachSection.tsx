@@ -23,7 +23,9 @@ export function ApproachSection({ eyebrow, statement, cards, alt, cta }: Approac
       <Wrap>
         <div className="reveal">
           <div className="section-label">{eyebrow}</div>
-          <h2 style={{ maxWidth: "26ch" }}>{statement}</h2>
+          <h2 className="lead-statement" style={{ maxWidth: "60ch" }}>
+            {statement}
+          </h2>
           {cta ? (
             <div style={{ marginTop: 24 }}>
               <Button href={cta.href} variant="primary" target="_blank" rel="noopener">

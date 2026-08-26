@@ -21,10 +21,22 @@ section {
 }
 
 h2 {
-  font-size: clamp(34px, 4vw, 50px);
+  font-size: clamp(32px, 3.6vw, 44px);
   font-weight: 500;
   letter-spacing: -0.5px;
   line-height: 1.1;
+  text-wrap: balance;
+}
+
+/* lead statement — for a full-sentence heading (Approach's statement, Projects' title),
+   as distinct from a short declarative h2 title. Same treatment growth-plan uses
+   (.approach-statement / .cases-title, ~40-42px) rather than reusing the display h2 size,
+   since a long sentence at hero-heading scale reads heavier than a 3-5 word title does. */
+.lead-statement {
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
   text-wrap: balance;
 }
 
