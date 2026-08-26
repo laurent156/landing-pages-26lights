@@ -13,12 +13,16 @@ type ApproachCard = {
 type ApproachSectionProps = {
   eyebrow: string;
   statement: string;
+  /** Supporting detail below the statement, rendered as regular body text rather than
+   * lead-statement size — for when the real copy is really two sentences (a headline
+   * clause plus a logistical one), so the whole thing does not carry hero-scale weight. */
+  sub?: string;
   cards: ApproachCard[];
   alt?: boolean;
   cta?: { label: string; href: string };
 };
 
-export function ApproachSection({ eyebrow, statement, cards, alt, cta }: ApproachSectionProps) {
+export function ApproachSection({ eyebrow, statement, sub, cards, alt, cta }: ApproachSectionProps) {
   const showPhotoSlot = cards.some((card) => card.photo);
   const columns = cards.length >= 4 ? 2 : cards.length;
 
@@ -30,6 +34,11 @@ export function ApproachSection({ eyebrow, statement, cards, alt, cta }: Approac
           <h2 className="lead-statement" style={{ maxWidth: "60ch" }}>
             {statement}
           </h2>
+          {sub ? (
+            <p className="sub-text" style={{ marginTop: 14, maxWidth: "60ch" }}>
+              {sub}
+            </p>
+          ) : null}
           {cta ? (
             <div style={{ marginTop: 24 }}>
               <Button href={cta.href} variant="primary" target="_blank" rel="noopener">
