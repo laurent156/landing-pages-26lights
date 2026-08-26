@@ -95,18 +95,22 @@ export default function DevTeamPage() {
           cards={[
             {
               title: "Startup specialists",
+              photo: { src: "/team/arik.png", alt: "Arik, Business Coach at 26lights" },
               body: "Accompanying startups in their development is our specialty, from the critical early stages to scaling up. We value agility as a mindset and a competitive advantage — and we believe happiness is one of the key success factors. 10 years and 100+ startups later, it's still our recipe.",
             },
             {
               title: "Only talented people",
+              photo: { src: "/team/olivier.jpg", alt: "Olivier, Tech Lead at 26lights" },
               body: "We don't compromise on excellence. Our founder has led multiple companies to success, our tech leads are trailblazing PhDs. We lay solid strategic and technological foundations with senior profiles — then you hire the juniors who grow with your company.",
             },
             {
               title: "Across-the-board expertise",
+              photo: { src: "/team/forster.png", alt: "Forster, Growth Marketer at 26lights" },
               body: "A good product needs solid UX, positioning, and marketing, not just development. Working with a team of varied profiles gets you on-demand access to every skill startup success requires — every step covered, on your terms.",
             },
             {
               title: "Partnership, no ownership",
+              photo: { src: "/team/kelly.png", alt: "Kelly, France Manager at 26lights" },
               body: "We don't want your company. We're going to get involved in almost every conceivable way, but we won't take any equity. This gives you total freedom in reassessing the relationship as time goes on — no strings attached, you evaluate us based on the results we bring. Success takes time, but it usually speaks for itself.",
             },
           ]}
