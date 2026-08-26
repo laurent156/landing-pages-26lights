@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/components.css";
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-kumbh), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

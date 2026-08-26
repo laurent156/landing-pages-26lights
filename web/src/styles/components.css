@@ -1,0 +1,98 @@
+/* Component recipes ported verbatim from SKILL.md §6 (buttons) and §7 (.bistre surface).
+   Single source of truth — page components apply these classes instead of re-declaring
+   the CSS, which is what caused the .bistre gradient-stop drift on 3 separate HTML pages. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 13px 24px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.btn svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.92);
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.btn-outline {
+  background: #fff;
+  border: 1px solid #e2e2ea;
+  color: var(--ink);
+}
+.btn-outline:hover {
+  background: var(--light);
+}
+.btn-light {
+  background: #fff;
+  color: var(--ink);
+}
+.btn-light:hover {
+  background: #f0f0f0;
+}
+.btn-dark {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-dark:hover {
+  background: #222;
+}
+.btn-wide {
+  width: 286px;
+}
+
+/* §7 — the reusable dark, accent-tinted glow surface. Alpha/stop values below are the ones
+   that drifted three times across hand-copied HTML pages (arik-azoulay, jacqueline-c,
+   malorie-dreyfus) before being corrected — this file is now the only place they should
+   ever be written. */
+.bistre {
+  position: relative;
+  background-color: #050505;
+  color: #fff;
+  isolation: isolate;
+}
+.bistre::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+      85% 120% at 88% -12%,
+      rgba(var(--accent-rgb), 0.55) 0%,
+      rgba(var(--accent-rgb), 0.18) 32%,
+      rgba(var(--accent-rgb), 0) 58%
+    ),
+    radial-gradient(
+      110% 140% at 4% 120%,
+      rgba(var(--accent-rgb), 0.38) 0%,
+      rgba(var(--accent-rgb), 0) 52%
+    ),
+    linear-gradient(150deg, var(--bistre-base-1) 0%, var(--bistre-base-2) 46%, var(--bistre-base-3) 100%);
+}

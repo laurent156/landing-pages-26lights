@@ -1,0 +1,99 @@
+/* 26lights design tokens — ported from .claude/skills/26lights-design-system/SKILL.md §2.
+   Neutrals are identical across every unit. Each business unit defines its own accent block;
+   components never reference --blue/--magenta/--orange directly — they read the semantic
+   --accent-* aliases below, which are bound to whichever unit's block is active via
+   [data-unit="business|tech|marketing"] on an ancestor (see layout.tsx / section wrappers). */
+
+:root {
+  /* §2.1 shared neutrals */
+  --ink: #0a0a0a;
+  --hero-bg: #050505;
+  --gray-1: #686868;
+  --gray-2: #757575;
+  --light: #f5f5f5;
+
+  /* status palette (tech-unit pages: before/after, checklist UI) */
+  --danger: #d92d20;
+  --red-text: #c4271b;
+  --green: #059669;
+  --green-text: #0b7d5a;
+  --green-on-dark: #34d399;
+  --red-on-dark: #ff9c9c;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* §2.2 business unit — blue */
+  --blue: #5363f5;
+  --blue-rgb: 83, 99, 245;
+  --blue-text: #4b66ed;
+  --blue-hover: #4150e8;
+  --dark-card: #1b1a36;
+
+  /* §2.3 tech unit — magenta */
+  --magenta: #db187c;
+  --magenta-rgb: 219, 24, 124;
+  --magenta-bright: #fe3b9b;
+  --magenta-hover: #c21169;
+  --magenta-on-dark: #ff8fc8;
+  --magenta-tint: #fdf2f8;
+
+  /* §2.4 marketing unit — orange (proposed, not yet visually signed off) */
+  --orange: #c4570a;
+  --orange-rgb: 196, 87, 10;
+  --orange-bright: #ff7a29;
+  --orange-hover: #a6480a;
+  --orange-on-dark: #ffb27a;
+  --orange-tint: #fff4ec;
+}
+
+/* Semantic accent — the only accent variables components should read.
+   Default to the business unit; wrap a subtree in [data-unit="tech"] or
+   [data-unit="marketing"] to retarget it. Never mix units within one subtree. */
+:root,
+[data-unit="business"] {
+  --accent: var(--blue);
+  --accent-rgb: var(--blue-rgb);
+  --accent-text: var(--blue-text);
+  --accent-hover: var(--blue-hover);
+  --accent-bright: var(--blue);
+  --accent-on-dark: var(--blue);
+  --bistre-base-1: #0a0a14;
+  --bistre-base-2: #14132a;
+  --bistre-base-3: #0c0b18;
+}
+
+[data-unit="tech"] {
+  --accent: var(--magenta);
+  --accent-rgb: var(--magenta-rgb);
+  --accent-text: var(--magenta);
+  --accent-hover: var(--magenta-hover);
+  --accent-bright: var(--magenta-bright);
+  --accent-on-dark: var(--magenta-on-dark);
+  --bistre-base-1: #0d0812;
+  --bistre-base-2: #22112a;
+  --bistre-base-3: #120a16;
+}
+
+[data-unit="marketing"] {
+  --accent: var(--orange);
+  --accent-rgb: var(--orange-rgb);
+  --accent-text: var(--orange);
+  --accent-hover: var(--orange-hover);
+  --accent-bright: var(--orange-bright);
+  --accent-on-dark: var(--orange-on-dark);
+  --bistre-base-1: #120d08;
+  --bistre-base-2: #2a1f11;
+  --bistre-base-3: #16110c;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-hero-bg: var(--hero-bg);
+  --color-gray-1: var(--gray-1);
+  --color-gray-2: var(--gray-2);
+  --color-light: var(--light);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --font-sans: var(--font-kumbh);
+}
