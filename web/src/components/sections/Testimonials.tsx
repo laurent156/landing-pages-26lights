@@ -4,6 +4,7 @@ import { SectionCta } from "@/components/ui/SectionCta";
 
 type Testimonial = {
   quote: string;
+  name: string;
   title: string;
   company: string;
   avatar?: string;
@@ -29,15 +30,17 @@ export function Testimonials({ eyebrow, title, items, cta }: TestimonialsProps) 
               <blockquote className="testi-quote">&ldquo;{item.quote}&rdquo;</blockquote>
               <div className="testi-author-row">
                 {item.avatar ? (
-                  <Image src={item.avatar} alt={`${item.title}, ${item.company}`} width={60} height={60} className="testi-avatar" />
+                  <Image src={item.avatar} alt={item.name} width={60} height={60} className="testi-avatar" />
                 ) : (
                   <span className="testi-avatar-fallback" aria-hidden="true">
                     {item.initials}
                   </span>
                 )}
                 <div>
-                  <div className="testi-author">{item.title}</div>
-                  <div className="testi-role">{item.company}</div>
+                  <div className="testi-author">{item.name}</div>
+                  <div className="testi-role">
+                    {item.title}, {item.company}
+                  </div>
                 </div>
               </div>
             </div>

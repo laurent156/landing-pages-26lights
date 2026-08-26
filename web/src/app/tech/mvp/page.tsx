@@ -4,9 +4,7 @@ import { HeroFigure } from "@/components/sections/HeroFigure";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { TextSection } from "@/components/sections/TextSection";
 import { DetailSplit } from "@/components/sections/DetailSplit";
-import { ToolsBar } from "@/components/sections/ToolsBar";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { MidCta } from "@/components/sections/MidCta";
 import { Projects } from "@/components/sections/Projects";
 import { Team } from "@/components/sections/Team";
 import { FinalCta } from "@/components/sections/FinalCta";
@@ -113,16 +111,15 @@ export default function MvpPage() {
         />
 
         <TextSection
-          eyebrow="Want to try it?"
+          eyebrow="Our stack"
           title="No technology religion."
           paragraphs={[
-            "Launching a project quickly doesn't mean rushing the work. Building an MVP involves a fast-paced process of validation and optimization.",
-            "Quick does not mean dirty.",
+            "Whether it's a mobile app, big data, artificial intelligence, or other technologies, we bring extensive experience and a comprehensive 360° approach to every project.",
+            "We tailor our solutions to fit the unique needs, goals, and budgets of each partner.",
           ]}
           cta={{ label: "Talk about your stack", href: TALK }}
+          toolRows={TOOL_ROWS}
         />
-
-        <ToolsBar rows={TOOL_ROWS} />
 
         <Testimonials
           eyebrow="Our clients say it best"
@@ -131,16 +128,20 @@ export default function MvpPage() {
             {
               quote:
                 "26lights came in to help develop and ship our Cowboy Care platform, our on-demand service for maintenance and tyre puncture fixes. Their engineers worked directly with our team — no overhead, fluid communication. We recommend working with them.",
+              name: "Tanguy Goretti",
               title: "CTO",
               company: "Cowboy",
-              initials: "C",
+              avatar: "/testimonials/tanguy-goretti.png",
+              initials: "TG",
             },
             {
               quote:
                 "We brought 26lights in to do a full audit of our two applications and set up a new workflow that fits our internal team better. We loved their flexibility and solution-oriented mindset. Would work with them again!",
+              name: "Simon Detienne",
               title: "Product Lead",
               company: "Koalect",
-              initials: "K",
+              avatar: "/testimonials/simon-detienne.png",
+              initials: "SD",
             },
           ]}
           cta={{ label: "Talk to our team", href: TALK }}
@@ -154,18 +155,12 @@ export default function MvpPage() {
             "Whether you need a complete team to implement a new project or just a few hours of consultation, we adjust the composition of the team to your needs — you decide the workload, month by month.",
             "During our collaboration, we become your dedicated team. Transparency is crucial to building trust, so you have access to all relevant information and a seat in every significant decision.",
           ]}
-          cta={{ label: "See our approach in action", href: TALK }}
-        />
-
-        <MidCta
-          title="Let's talk about your growth."
-          href={TALK}
-          label="Let's talk"
+          cta={{ label: "See our approach in action", href: TALK, strong: true }}
         />
 
         <Projects
           eyebrow="Projects"
-          title="MVPs that turned into real businesses."
+          title="We deliver massive value to ambitious entrepreneurs who understand that surrounding themselves with the right people is the key to success."
           items={[
             {
               company: "Umedia",
@@ -178,6 +173,7 @@ export default function MvpPage() {
             },
             {
               company: "Yields.io",
+              logo: "/logos/yields.png",
               meta: "MVP development · Tech lead",
               stat: "€5M",
               result: "raised, from MVP to a 35-person company",
@@ -203,7 +199,7 @@ export default function MvpPage() {
                 "We helped e-maprod reorganize their team by putting all the cards on the table, hiring the right people, and giving teams a real sense of ownership so they could run autonomously — while optimizing internal workflows so they could stop relying on spreadsheets.",
             },
           ]}
-          cta={{ label: "Start your MVP", href: TALK }}
+          cta={{ label: "Start your MVP", href: TALK, strong: true }}
         />
 
         <Team eyebrow="Team" title="Let's meet." members={TEAM} cta={{ label: "Work with us", href: TALK }} />

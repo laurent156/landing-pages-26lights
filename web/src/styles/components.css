@@ -608,11 +608,13 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .project-card .result .stat {
-  display: inline;
-  font-size: 1.35em;
+  display: block;
+  font-size: clamp(36px, 4.2vw, 48px);
   font-weight: 500;
   color: var(--accent-bright);
   letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
   font-variant-numeric: tabular-nums;
 }
 .project-card h3 {

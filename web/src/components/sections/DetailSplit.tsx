@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { SectionCta } from "@/components/ui/SectionCta";
+import { Button } from "@/components/ui/Button";
 
 type DetailSplitProps = {
   eyebrow: string;
@@ -7,7 +8,7 @@ type DetailSplitProps = {
   paragraphs: string[];
   photo?: { src: string; alt: string };
   flip?: boolean;
-  cta?: { label: string; href: string };
+  cta?: { label: string; href: string; strong?: boolean };
 };
 
 export function DetailSplit({ eyebrow, title, paragraphs, photo, flip, cta }: DetailSplitProps) {
@@ -28,7 +29,17 @@ export function DetailSplit({ eyebrow, title, paragraphs, photo, flip, cta }: De
                 </p>
               ))}
             </div>
-            {cta ? <SectionCta {...cta} /> : null}
+            {cta ? (
+              cta.strong ? (
+                <div style={{ marginTop: 24 }}>
+                  <Button href={cta.href} variant="outline" target="_blank" rel="noopener">
+                    {cta.label}
+                  </Button>
+                </div>
+              ) : (
+                <SectionCta label={cta.label} href={cta.href} />
+              )
+            ) : null}
           </div>
         </div>
       </div>

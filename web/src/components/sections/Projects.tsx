@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Bistre } from "@/components/ui/Bistre";
 import { Wrap } from "@/components/ui/Wrap";
 import { SectionCta } from "@/components/ui/SectionCta";
+import { Button } from "@/components/ui/Button";
 
 type Project = {
   company: string;
@@ -17,7 +18,7 @@ type ProjectsProps = {
   eyebrow: string;
   title: string;
   items: Project[];
-  cta?: { label: string; href: string };
+  cta?: { label: string; href: string; strong?: boolean };
 };
 
 export function Projects({ eyebrow, title, items, cta }: ProjectsProps) {
@@ -25,7 +26,7 @@ export function Projects({ eyebrow, title, items, cta }: ProjectsProps) {
     <Bistre as="section" data-screen-label="Projects">
       <Wrap style={{ position: "relative", zIndex: 1 }}>
         <div className="section-label">{eyebrow}</div>
-        <h2 style={{ color: "#F7F7F7", marginBottom: 40, maxWidth: "26ch" }}>{title}</h2>
+        <h2 style={{ color: "#F7F7F7", marginBottom: 40, maxWidth: "58ch" }}>{title}</h2>
         <div className="project-grid">
           {items.map((item) => (
             <div className="project-card" key={item.company}>
@@ -43,7 +44,17 @@ export function Projects({ eyebrow, title, items, cta }: ProjectsProps) {
             </div>
           ))}
         </div>
-        {cta ? <SectionCta {...cta} /> : null}
+        {cta ? (
+          cta.strong ? (
+            <div style={{ marginTop: 24 }}>
+              <Button href={cta.href} variant="light" target="_blank" rel="noopener">
+                {cta.label}
+              </Button>
+            </div>
+          ) : (
+            <SectionCta label={cta.label} href={cta.href} />
+          )
+        ) : null}
       </Wrap>
     </Bistre>
   );
