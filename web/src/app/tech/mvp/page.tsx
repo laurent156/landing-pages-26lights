@@ -232,9 +232,6 @@ export default function MvpPage() {
           }
           sub="Want to see what difference we can bring to your business? Book a consultation today."
           primary={{ label: "Book a free 30-min call", href: TALK }}
-          contactEmail="info@26lights.com"
-          phone="+32 492 66 00 89"
-          location="Brussels & Paris"
         />
       </main>
     </div>
