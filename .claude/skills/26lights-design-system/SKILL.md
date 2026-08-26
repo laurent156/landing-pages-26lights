@@ -402,6 +402,19 @@ credential card pinned to a bottom corner.
 .hero-proof-quote { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.8); font-style: italic; }
 .hero-proof-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.04em; }
 .hero-ctas { display: flex; gap: 14px; align-items: center; margin-top: 28px; }
+```
+**Check for a duplicate, dead `.hero-proof` rule before trusting this one — it has shipped
+twice.** Both `arik-azoulay` and `jacqueline-c` carried an *earlier*, unused `.hero-proof`
+definition (an italic quote-style block with `border-left`/`padding-left`/`width: 500px`) left
+over from before the page switched to this avatar+quote flex layout. CSS cascades per property,
+so the dead rule's untouched properties (notably `width`/`max-width`) kept quietly applying on
+top of the real one — on `arik-azoulay` this showed up as a stray blue vertical bar next to the
+proof avatar; on `jacqueline-c` the whole `.hero-proof` block was dead code outright (that page
+never renders a proof quote in the hero at all). Delete the old block entirely rather than
+editing around it, and if `.hero-proof` is kept, give it its own explicit `max-width` (~480px)
+so removing the leftover `width: 500px` does not let it grow wide enough to collide with the
+portrait. Worth checking `malorie-dreyfus` for the same leftover if it is ever touched again.
+```css
 
 /* the "liquid glass" credential card — reused as a floating chip pattern anywhere on dark hero art */
 .hero-glass-card {
@@ -419,6 +432,46 @@ credential card pinned to a bottom corner.
 Mobile (`≤900px`): drop the portrait entirely, fall back to a `.bistre`-style gradient
 background, and make every hero child `position: static` (see the `@media (max-width: 900px)`
 block in any persona page for the exact override list).
+
+**Cutout variant — when a real transparent-background cutout of the person exists (not just a
+rectangular photo), skip the cover-photo-plus-overlay recipe above and put the cutout straight
+on a `.bistre` glow instead** (built for `arik-azoulay`): `.hero { background-color: #050505; }`
++ a `.hero::before` carrying the full `.bistre` gradient (§7, blue accent), no `.hero-overlay` at
+all (nothing needs darkening — there is no background photo pixel data left in the cutout to
+clash with the glow). Size the cutout with `object-fit: contain` (never `cover` — there is no
+spare background to crop into; cropping at all just cuts into the person) and anchor it
+`position: absolute; bottom: 0; right: X%; height: Y%; width: auto;`, tuned to give it real
+headroom rather than starting the crop right at the hairline.
+
+**Absolutely-positioned decorative elements sitting directly against a full-bleed `.hero` drift
+to the physical screen edge on a wide monitor, disconnected from the text column.** `right: 3%`
+(or any percentage `right`/`left`) on `.hero-portrait` or `.hero-glass-card` is a percentage of
+the *entire viewport*, since `.hero` itself is intentionally full-bleed — `.hero-inner` already
+solves this for the text column via its own `max-width`, but a decorative element positioned as
+a direct sibling of `.hero-inner` (not nested inside it) does not inherit that cap. Wrap it in a
+bound instead of positioning it straight against `.hero`:
+```css
+.hero-bound { position: absolute; inset: 0; max-width: 1400px; margin: 0 auto; z-index: 1; }
+```
+(1400px here, wider than `.hero-inner`'s 1175px, since a photo/decoration usually wants more
+breathing room than the text column — pick whatever cap keeps it a sane distance from the copy
+at your widest realistic viewport, not necessarily the same number as `.hero-inner`.) A card
+meant to sit *inside* the text column's own boundary (e.g. `.hero-glass-card` flush with the
+copy's right edge) should instead be nested inside `.hero-inner` itself and positioned `right:
+0` there, rather than getting its own bound.
+
+**`.hero`'s own padding is not `0` by default — it inherits the generic `section { padding: 96px
+0; }` rule (§5) unless explicitly reset, and nothing in this recipe resets it.** That is easy to
+miss because the *background* still fills the full `height: 820px` (padding does not affect a
+solid-color/gradient fill), so the section looks correct at a glance. What it actually shrinks is
+`.hero-inner`'s own box: `height: 100%` resolves against `.hero`'s *content* box, i.e.
+`820 − 96 − 96 = 628px`, not 820, and that shorter box is what ends up vertically centered
+(`justify-content: center`) inside the visually-820px section. Anything measured or positioned
+against "the hero's height" — a `.hero-glass-card`'s `bottom` offset, a script computing where
+the CTA row sits — has to account for this 628px box, not the 820px one, or it will be off by
+however much padding is silently in effect. Verify with
+`getComputedStyle(document.querySelector('.hero-inner')).height` rather than assuming it matches
+`.hero`'s own `height` value.
 
 ## 9. Trust bar (logo strip under the hero)
 
@@ -552,6 +605,20 @@ every other instance (so alternating sections don't feel monotonous down the pag
 ```
 `.detail-photo.detail-graphic` swaps the photo slot for a custom SVG panel (`.schema-panel`,
 `.pm-flow`, `.gp-trajectory` — see §12) instead of an `<img>`; same grid, same flip modifier.
+
+**`.why-split` (persona pages) should use this same framed-photo treatment, not the older
+full-bleed one.** The original persona-page recipe stretched the photo edge-to-edge and as tall
+as the content column happened to need (`grid-template-columns: 40% 1fr; min-height: 700px;`,
+`.why-photo-col` with no `.wrap`, no radius) — both `arik-azoulay` and `jacqueline-c` shipped
+this way and both needed the same fix: wrap the split in `.wrap`, give the photo column a fixed
+`height` (520px worked for both) and `border-radius: 18px`, and use the `.detail-split`-style
+column ratio above instead of a bare `40% 1fr`. Build any new persona "why" section with the
+framed version from the start:
+```css
+.why-split { display: grid; grid-template-columns: minmax(0,0.85fr) minmax(0,1.15fr); column-gap: 64px; align-items: start; }
+.why-photo-col { position: relative; overflow: hidden; border-radius: 18px; height: 520px; align-self: start; }
+.why-photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+```
 
 **`.split--light`'s pink gradient is reserved for one specific narrative beat, not a generic
 "light section" utility.** In production it marks *the* dramatic moment — "Escape the 80% trap"
