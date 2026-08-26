@@ -1,11 +1,15 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
+import { Bistre } from "@/components/ui/Bistre";
 import { Wrap } from "@/components/ui/Wrap";
 
 type Project = {
-  name: string;
+  company: string;
   logo?: string;
+  meta: string;
+  stat?: string;
+  result: ReactNode;
   description: string;
-  href?: string;
 };
 
 type ProjectsProps = {
@@ -16,24 +20,28 @@ type ProjectsProps = {
 
 export function Projects({ eyebrow, title, items }: ProjectsProps) {
   return (
-    <section data-screen-label="Projects">
-      <Wrap>
+    <Bistre as="section" data-screen-label="Projects">
+      <Wrap style={{ position: "relative", zIndex: 1 }}>
         <div className="section-label">{eyebrow}</div>
-        <h2 style={{ marginBottom: 40 }}>{title}</h2>
+        <h2 style={{ color: "#F7F7F7", marginBottom: 40, maxWidth: "26ch" }}>{title}</h2>
         <div className="project-grid">
           {items.map((item) => (
-            <div className="project-card" key={item.name}>
+            <div className="project-card" key={item.company}>
               {item.logo ? (
-                <Image src={item.logo} alt={item.name} width={140} height={40} className="logo" />
-              ) : (
-                <h3>{item.name}</h3>
-              )}
+                <span className="logo-chip">
+                  <Image src={item.logo} alt={item.company} width={100} height={22} />
+                </span>
+              ) : null}
+              <div className="meta">{item.meta}</div>
+              <div className="result">
+                {item.stat ? <span className="stat">{item.stat}</span> : null} {item.result}
+              </div>
+              <h3>{item.company}</h3>
               <p>{item.description}</p>
-              {item.href ? <a href={item.href}>Read case →</a> : null}
             </div>
           ))}
         </div>
       </Wrap>
-    </section>
+    </Bistre>
   );
 }

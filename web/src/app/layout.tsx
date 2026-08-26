@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 
 const kumbhSans = localFont({
   src: "../fonts/KumbhSans-Variable.ttf",
   variable: "--font-kumbh",
   weight: "100 900",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
@@ -16,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" data-unit="business" className={kumbhSans.variable}>
+    <html lang="en" data-unit="business" className={`${kumbhSans.variable} ${dmSans.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
 import Image from "next/image";
-import { Bistre } from "@/components/ui/Bistre";
+import { Wrap } from "@/components/ui/Wrap";
 
 type Logo = {
   src: string;
@@ -8,29 +7,23 @@ type Logo = {
 };
 
 type TrustBarProps = {
-  eyebrow: string;
-  title: ReactNode;
-  sub: string;
+  label: string;
   logos: Logo[];
 };
 
-export function TrustBar({ eyebrow, title, sub, logos }: TrustBarProps) {
+export function TrustBar({ label, logos }: TrustBarProps) {
   return (
-    <Bistre as="section" className="proof" data-screen-label="Social proof">
-      <div className="proof-inner">
-        <div>
-          <div className="section-label">{eyebrow}</div>
-          <h2>{title}</h2>
-          <p>{sub}</p>
+    <div className="trust" data-screen-label="Trust bar">
+      <Wrap>
+        <div className="trust-inner">
+          <span className="trust-label">{label}</span>
+          <div className="trust-logos">
+            {logos.map((logo) => (
+              <Image key={logo.alt} src={logo.src} alt={logo.alt} width={120} height={30} className="trust-logo" />
+            ))}
+          </div>
         </div>
-        <div className="proof-logos">
-          {logos.map((logo) => (
-            <div className="proof-cell" key={logo.alt}>
-              <Image src={logo.src} alt={logo.alt} width={140} height={40} style={{ height: 28, width: "auto" }} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </Bistre>
+      </Wrap>
+    </div>
   );
 }

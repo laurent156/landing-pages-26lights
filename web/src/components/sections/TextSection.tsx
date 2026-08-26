@@ -4,12 +4,13 @@ type TextSectionProps = {
   eyebrow: string;
   title: string;
   paragraphs: string[];
-  tinted?: boolean;
+  /** Alternate light-gray background (validated: #fafafa, never a colored tint on a business-unit page) */
+  alt?: boolean;
 };
 
-export function TextSection({ eyebrow, title, paragraphs, tinted }: TextSectionProps) {
+export function TextSection({ eyebrow, title, paragraphs, alt }: TextSectionProps) {
   return (
-    <section style={tinted ? { background: "var(--accent-tint)" } : undefined}>
+    <section style={alt ? { background: "#fafafa" } : undefined}>
       <Wrap>
         <div className="section-label">{eyebrow}</div>
         <h2 style={{ marginBottom: 24, maxWidth: "20ch" }}>{title}</h2>

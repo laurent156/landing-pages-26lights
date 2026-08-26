@@ -28,9 +28,17 @@ accent token throughout.
 
 | Unit | Accent | Token prefix | Existing pages |
 |---|---|---|---|
-| **Business** (growth/consulting/coaching offers, personal consultant pages) | Blue | `--blue*` | `malorie-dreyfus`, `arik-azoulay`, `jacqueline-c`, `growth-plan`, `branding` |
-| **Tech** (AI/engineering offers) | Magenta | `--magenta*` | `ai-production`, `ai-prototyping`, `ai-erp`, `ai-powered-automation` |
+| **Business** (growth/consulting/coaching offers, personal consultant pages, general tech-adjacent services) | Blue | `--blue*` | `malorie-dreyfus`, `arik-azoulay`, `jacqueline-c`, `growth-plan`, `branding`, `web/tech/mvp` |
+| **Tech** (offers that are specifically about AI-built software) | Magenta | `--magenta*` | `ai-production`, `ai-prototyping`, `ai-erp`, `ai-powered-automation` |
 | **Marketing** | Orange | `--orange*` | *(no page built yet — see §2.3 before first use)* |
+
+**Don't pattern-match the unit from the live site's URL path.** 26lights.com groups a wide
+set of offers under one `/tech/...` nav section — MVP building, Dev Team, Tech Audit, CTO as a
+Service, DRP, ERP/Odoo implementation — alongside the actually-AI-specific pages (AI Prototyping,
+AI ERP, AI-Powered Automation, vibe-coding). Magenta is reserved for that AI-specific subset only.
+A page like `/tech/mvp/` is a general build-a-product engagement, not an AI offer, so it takes the
+**business** (blue) unit — confirmed when rebuilding it in the new stack, where the first pass
+defaulted it to magenta purely from the URL and had to be corrected.
 
 The neutrals (`--ink`, `--hero-bg`, `--gray-1`, `--gray-2`, `--light`, `--font`) are **identical
 byte-for-byte** across every page in the repo regardless of unit. Only the accent block changes.
@@ -327,6 +335,16 @@ against this block rather than assuming a prior page already got it right.
 ### 8A. Product/offer hero (two-column, centered, visual card on the right)
 Use for offer pages (tech-unit AI pages, `growth-plan`). Badges + headline + sub + CTAs on the
 left; a glass "visual card" (progress bar, app mockup, chart) on the right.
+
+**Prefer a real photo over an illustrated card whenever one exists for the page.** The glass
+"visual card" pattern below (progress bar, checklist, chart) is a fallback for pages that have
+no real photography to show — it's not the default. `growth-plan`'s hero uses a real "team at
+work" photo (`.hero-figure`, aspect-ratio 4/5, framed with a border/shadow, see §8B's cutout
+variant for the framing recipe) and that's the validated look for any offer page that has one.
+A first pass on the `tech/mvp` rebuild reached for an invented illustration before a real photo
+was pointed out as the better, already-approved choice — check for a usable photo first.
+Skip the `.hero-badges` pill entirely unless the page actually needs to claim something specific
+(an offer, a limited slot) — an empty/generic badge is worse than no badge.
 
 ```html
 <section class="hero" data-screen-label="Hero">

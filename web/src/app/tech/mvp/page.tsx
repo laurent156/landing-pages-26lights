@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
-import { FocusCard } from "@/components/sections/FocusCard";
+import { HeroFigure } from "@/components/sections/HeroFigure";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { TextSection } from "@/components/sections/TextSection";
 import { PullQuote } from "@/components/sections/PullQuote";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { MidCta } from "@/components/sections/MidCta";
 import { Projects } from "@/components/sections/Projects";
 import { Team } from "@/components/sections/Team";
 import { FinalCta } from "@/components/sections/FinalCta";
@@ -32,28 +33,21 @@ const TEAM = [
 
 export default function MvpPage() {
   return (
-    <div data-unit="tech">
+    <div>
       <main>
         <Hero
-          eyebrow="Tech · MVP"
           title={
             <>
-              We create <em>successful MVPs</em>.
+              We create <em>successful MVP&apos;s</em>
             </>
           }
-          sub="Time is money, and you don't want to waste it. If you know what problem you're solving, you don't need a thousand features to get started — we'll help you build your Minimum Viable Product and get to market fast. And if you don't know what problem you're solving yet, we can talk about that too."
+          sub="Time is money. And you don't want to waste it. If you know what problem you're solving, you don't need a thousand features to get started. We'll help you build your Minimum Viable Product and get to market asap. And if you don't know what problem you're solving, we can talk about that too."
           ctas={[{ label: "Let's talk", href: "https://calendly.com/alicia-26lights/30min" }]}
-          visual={<FocusCard />}
+          visual={<HeroFigure src="/team/hero-work.png" alt="26lights team at work" />}
         />
 
         <TrustBar
-          eyebrow="Trusted by builders"
-          title={
-            <>
-              We&apos;ve shipped MVPs <em>that raised funding.</em>
-            </>
-          }
-          sub="14 years scaling businesses since 2012 — from first prototype to fundraising-ready product."
+          label="Trusted by"
           logos={[
             { src: "/logos/cowboy.png", alt: "Cowboy" },
             { src: "/logos/umedia.png", alt: "Umedia" },
@@ -75,7 +69,7 @@ export default function MvpPage() {
         <TextSection
           eyebrow="How we work"
           title="Connected to the world."
-          tinted
+          alt
           paragraphs={[
             "Your audience comes before your product. So we try, we tweak, and we move forward to offer them exactly what they need — regularly changing the scope, while the mission stays unchanged.",
             "Fast iterations let you get to know your market better while generating revenue. Building an MVP means you can leverage user feedback quickly, measure ROI early, and reinvest in future iterations.",
@@ -117,32 +111,50 @@ export default function MvpPage() {
           ]}
         />
 
+        <MidCta
+          title="Let's talk about your growth."
+          href="https://calendly.com/alicia-26lights/30min"
+          label="Let's talk"
+        />
+
         <Projects
           eyebrow="Projects"
           title="MVPs that turned into real businesses."
           items={[
             {
-              name: "Umedia",
+              company: "Umedia",
               logo: "/logos/umedia.png",
+              meta: "Film production · Process & coaching",
+              stat: "+60%",
+              result: "more investments with no additional recruitment",
               description:
-                "A film production company with $670M invested in 500+ movies, hitting a plateau. We modeled their business and automated recurring tasks, growing investments 60% without growing the team.",
+                "A film production company that has invested $670M in over 100 movies. They came to us when they hit a plateau. We helped them increase their investments by 60% without growing the team — modeling their business and automating the recurring tasks that held them back.",
             },
             {
-              name: "Yields.io",
+              company: "Yields.io",
+              meta: "MVP development · Tech lead",
+              stat: "€5M",
+              result: "raised, from MVP to a 35-person company",
               description:
-                "The founder came to us with an idea while still holding a day job. We challenged it and built the first version — which helped raise €1.25M from VCs. Six years and a few rounds later, the company has 35 people and we still work together daily.",
+                "The founder came to us with an idea while still holding a day job. We challenged it and built the first version of the product, which helped raise €1.25M from VC firms. Six years and a few rounds later, the company has 35 people, and we're still working together daily, mainly through coaching sessions.",
             },
             {
-              name: "Sharingbox",
+              company: "Sharingbox",
               logo: "/logos/sharingbox.png",
+              meta: "Process mapping · Sparring",
+              stat: "×2",
+              result: "process efficiency, then a successful exit",
               description:
-                "We simplified the sequence of actions needed to deploy their technology in the real world, mapping internal processes and building tools that made the company twice as efficient — and eased knowledge transfer for the founders' exit.",
+                "We helped Sharingbox simplify the sequence of actions needed to deploy their technology in the real world. We mapped their internal processes and built the tools to standardize them, making the company twice as efficient — which also eased knowledge transfer when the founders came to exit.",
             },
             {
-              name: "e-maprod",
+              company: "e-maprod",
               logo: "/logos/emaprod.png",
+              meta: "Process · Acceleration",
+              stat: "×5",
+              result: "headcount in 10 years · +100% in 3 years",
               description:
-                "We helped reorganize the team, hire the right people, and give teams a real sense of ownership — while optimizing internal workflows so they could stop relying on spreadsheets.",
+                "We helped e-maprod reorganize their team by putting all the cards on the table, hiring the right people, and giving teams a real sense of ownership so they could run autonomously — while optimizing internal workflows so they could stop relying on spreadsheets.",
             },
           ]}
         />
