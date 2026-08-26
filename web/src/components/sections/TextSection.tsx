@@ -24,7 +24,10 @@ export function TextSection({ eyebrow, title, paragraphs, alt, cta, toolRows }: 
   return (
     <section
       className={toolRows ? "tools" : undefined}
-      style={alt ? { background: "#fafafa" } : toolRows ? { paddingTop: 96, paddingBottom: 96 } : undefined}
+      style={{
+        ...(alt ? { background: "#fafafa" } : undefined),
+        ...(toolRows ? { paddingTop: 96, paddingBottom: 96 } : undefined),
+      }}
     >
       <Wrap>
         <div className="reveal">
