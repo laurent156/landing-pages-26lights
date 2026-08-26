@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Wrap } from "@/components/ui/Wrap";
 import { SectionCta } from "@/components/ui/SectionCta";
+import { Button } from "@/components/ui/Button";
 
 type Tool = {
   src: string;
@@ -13,7 +14,7 @@ type TextSectionProps = {
   paragraphs: string[];
   /** Alternate light-gray background (validated: #fafafa, never a colored tint on a business-unit page) */
   alt?: boolean;
-  cta?: { label: string; href: string };
+  cta?: { label: string; href: string; strong?: boolean };
   /** Tool/tech logos, rendered in the same section right below the text (not a separate section) */
   toolRows?: Tool[][];
 };
@@ -34,7 +35,17 @@ export function TextSection({ eyebrow, title, paragraphs, alt, cta, toolRows }: 
             </p>
           ))}
         </div>
-        {cta ? <SectionCta {...cta} /> : null}
+        {cta ? (
+          cta.strong ? (
+            <div style={{ marginTop: 24 }}>
+              <Button href={cta.href} variant="outline" target="_blank" rel="noopener">
+                {cta.label}
+              </Button>
+            </div>
+          ) : (
+            <SectionCta label={cta.label} href={cta.href} />
+          )
+        ) : null}
         {toolRows ? (
           <div className="tools-rows" style={{ marginTop: 48 }}>
             {toolRows.map((row) => (

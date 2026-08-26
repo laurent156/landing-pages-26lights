@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Wrap } from "@/components/ui/Wrap";
 import { SectionCta } from "@/components/ui/SectionCta";
+import { Button } from "@/components/ui/Button";
 
 type Testimonial = {
   quote: string;
@@ -15,7 +16,7 @@ type TestimonialsProps = {
   eyebrow: string;
   title: string;
   items: Testimonial[];
-  cta?: { label: string; href: string };
+  cta?: { label: string; href: string; strong?: boolean };
   /** #fafafa (validated default, arik-azoulay) unless a neighboring section is already
    * that shade — pass "white" to break up two same-toned sections sitting back to back. */
   background?: "gray" | "white";
@@ -53,7 +54,17 @@ export function Testimonials({ eyebrow, title, items, cta, background = "gray" }
             </div>
           ))}
         </div>
-        {cta ? <SectionCta {...cta} /> : null}
+        {cta ? (
+          cta.strong ? (
+            <div style={{ marginTop: 24 }}>
+              <Button href={cta.href} variant="outline" target="_blank" rel="noopener">
+                {cta.label}
+              </Button>
+            </div>
+          ) : (
+            <SectionCta label={cta.label} href={cta.href} />
+          )
+        ) : null}
       </Wrap>
     </section>
   );

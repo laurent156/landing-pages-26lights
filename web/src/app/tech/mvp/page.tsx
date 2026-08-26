@@ -96,7 +96,7 @@ export default function MvpPage() {
             "Developing countless features that no one uses is a waste of time, energy, and money.",
             "An MVP is a fully functional product. Test your killer feature in the market and start making your first sales — then keep building the rest of your app, iterating on real feedback.",
           ]}
-          cta={{ label: "Find your killer feature", href: TALK }}
+          cta={{ label: "Find your killer feature", href: TALK, strong: true }}
         />
 
         <DetailSplit
@@ -109,7 +109,7 @@ export default function MvpPage() {
             "Fast iterations let you get to know your market better while generating revenue. Building an MVP means you can leverage user feedback quickly, measure ROI early, and reinvest in future iterations.",
             "That's how you manage your investment effectively, control your growth, and minimize financial risk.",
           ]}
-          cta={{ label: "See how we iterate", href: TALK }}
+          cta={{ label: "See how we iterate", href: TALK, strong: true }}
         />
 
         <TextSection
@@ -119,7 +119,7 @@ export default function MvpPage() {
             "Whether it's a mobile app, big data, artificial intelligence, or other technologies, we bring extensive experience and a comprehensive 360° approach to every project.",
             "We tailor our solutions to fit the unique needs, goals, and budgets of each partner.",
           ]}
-          cta={{ label: "Talk about your stack", href: TALK }}
+          cta={{ label: "Talk about your stack", href: TALK, strong: true }}
           toolRows={TOOL_ROWS}
         />
 
@@ -146,7 +146,7 @@ export default function MvpPage() {
               initials: "SD",
             },
           ]}
-          cta={{ label: "Talk to our team", href: TALK }}
+          cta={{ label: "Talk to our team", href: TALK, strong: true }}
           background="white"
         />
 
