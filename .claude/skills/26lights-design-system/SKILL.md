@@ -2,12 +2,12 @@
 name: 26lights-design-system
 description: >
   The 26lights landing-page design system — tokens, page skeleton, and the full component
-  library (hero variants, cards, pricing, team, proof, illustrations, reveal/count-up scripts)
-  extracted from the live pages in this repo (ai-production, growth-plan, malorie-dreyfus,
-  arik-azoulay, jacqueline-c). Load this whenever building a new landing page in this repo,
-  restyling/migrating a page to match the design system, adding a section to an existing
-  page, or asked about 26lights' brand colors / business units (business=blue, tech=magenta,
-  marketing=orange).
+  library (hero variants, cards, pricing, team, proof, illustrations, reveal/count-up scripts,
+  bento galleries, sticky scroll-stacks) extracted from the live pages in this repo
+  (ai-production, growth-plan, malorie-dreyfus, arik-azoulay, jacqueline-c, branding). Load this
+  whenever building a new landing page in this repo, restyling/migrating a page to match the
+  design system, adding a section to an existing page, or asked about 26lights' brand colors /
+  business units (business=blue, tech=magenta, marketing=orange).
 ---
 
 # 26lights landing-page design system
@@ -145,6 +145,21 @@ over unchanged.
   ```
   (Use a light-tinted gradient + darker caption color for placeholders that sit on a white
   section instead of a dark one — see `.why-photo-col--placeholder` in `jacqueline-c`.)
+- **Processing source images before embedding** — macOS ships `sips` (no ImageMagick/Pillow
+  needed): resize with `sips -Z <maxdim> in.png --out out.png` (caps the *long* edge, keeps
+  aspect), re-encode to a smaller JPEG with `sips -s format jpeg -s formatOptions 80 in.png
+  --out out.jpg`. For a gallery of many photos, cap the long edge around 1100px at quality 80 —
+  that kept nineteen portfolio shots (`branding`'s bento, §22) at 35–210KB each (~2.5MB total)
+  instead of the 29MB of source PNGs, in line with this repo's existing asset-weight budget.
+- **"Zoom" a photo that reads too loose inside its tile by cropping tighter, not by scaling in
+  CSS.** `object-fit: cover` already crops to the tile's own aspect ratio, but if the subject
+  itself (a logo mockup, a UI screenshot) still reads small because the source photo has a lot
+  of dead space around it, fix that before embedding: center-crop the source to a smaller box at
+  the same aspect ratio — for a 1.2× zoom, crop to `width/1.2 × height/1.2` centered on the
+  original (`sips -c <h> <w> in.png --out cropped.png`), then resize that crop back up to the
+  normal embed size as above. This lands cleaner than a CSS `transform: scale()` on the `<img>`,
+  which would need to compose with any hover-zoom transition already on that element instead of
+  just replacing it.
 
 ## 4. Page skeleton (boilerplate)
 
@@ -383,7 +398,7 @@ credential card pinned to a bottom corner.
 .hero h1 { width: 580px; font-size: 58px; font-weight: 400; line-height: 66px; letter-spacing: -0.5px; color: #F7F7F7; }
 .hero-sub { width: 520px; margin-top: 20px; font-size: 17px; line-height: 28px; color: rgba(255,255,255,0.75); }
 .hero-proof { display: flex; align-items: center; gap: 14px; margin-top: 24px; }
-.hero-proof-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.25); }
+.hero-proof-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.25); }
 .hero-proof-quote { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.8); font-style: italic; }
 .hero-proof-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.04em; }
 .hero-ctas { display: flex; gap: 14px; align-items: center; margin-top: 28px; }
@@ -717,6 +732,36 @@ Reuses the plain `.wrap` container (no bespoke `.team-inner` grid needed) — th
 header-above-grid skeleton as `.features-head`/`.pricing-head` elsewhere in the system, just with
 `.tcard`s instead of feature or plan cards.
 
+**Aligning a tag row (or any fixed content) below sibling cards whose own logos/marks are
+different shapes.** Two cards side by side, each with a client mark above a row of discipline
+tags — if one mark is a stacked icon+wordmark (taller) and the other is a flat wordmark
+(shorter), the tag row below sits at a different height in each card even though both cards
+start at the same `padding-top`. Fix it with a fixed-height slot around the mark, bottom-aligned,
+sized to the tallest variant in play:
+```css
+.mark-slot { height: 80px; display: flex; align-items: flex-end; margin-bottom: 24px; }
+.mark-slot img { height: 52px; width: auto; display: block; }      /* flat wordmark */
+.mark-slot img.stacked { height: 80px; }                            /* icon + wordmark, taller */
+```
+The slot's fixed height (not the image's) is what both cards agree on, so whatever sits below it
+— a tag row, a divider — starts at the exact same y in every card regardless of which mark shape
+that particular card happens to carry.
+
+**Real people's photos (proof avatars, testimonial avatars, team photos) read as too small at
+44px — 60px is the floor.** `.hero-proof-avatar` and `.testi-avatar` both shipped at 44px on
+every persona page originally (`arik-azoulay`, `jacqueline-c`); a client review of `branding`
+flagged them as illegible at that size, and re-checking on-screen confirmed it — a 44px circle
+loses individual features (eyes, expression) at normal viewing distance, so the photo stops
+doing its job of making the quote feel like it came from a specific person. Fixed on `branding`
+(`.story-person img`) and `arik-azoulay` at 60px; **`jacqueline-c` still has this at 44px and has
+not been fixed** (out of scope of the sessions that caught it so far — flag it next time that
+page is touched, or fix it proactively). When auditing any page against this system, check every
+circular person-photo class (`hero-proof-avatar`, `testi-avatar`, `tcard` photo, team-grid
+photo, `hero-proof-quote`/`hero-glass-card` — anything with a real face in it, not a logo) against
+this 60px floor rather than assuming the page's existing value is correct; this drift is easy to
+miss because 44px still *looks* like a normal avatar size in isolation, it only reads as too
+small next to the copy it is meant to lend credibility to.
+
 ## 15. Pricing — three layouts, pick by offer shape
 
 1. **Card grid** (tech unit `.plans`/`.plan`, Malorie's `.pricing-shell`) — 3–4 boxed plans side
@@ -856,9 +901,110 @@ Two breakpoints, consistently:
 6. Tag every direct-child element that should animate in with `class="reveal"` (+ staggered
    `--reveal-delay` on siblings); leave the reveal script untouched.
 7. If a photo isn't ready yet, use the placeholder recipe (§3), don't block on the asset.
+   Any real person's photo (proof avatar, testimonial avatar, team photo) should be 60px or
+   larger — don't assume an existing page's value is already correct, check it (§14).
 8. Verify content in a real browser: check text against the source content 1:1, and don't trust
    a screenshot alone for anything below the first viewport on these pages — the heavy embedded
    font + backdrop-filter blur can make a preview-tool's headless renderer stall/tear on scroll
    even when the page is correct (confirmed against `ai-production` itself). Cross-check with
    the page's rendered text/accessibility tree, not just a screenshot, before concluding
    something is broken.
+
+## 22. Bento / portfolio grid (mixed-footprint gallery)
+
+For a "many project shots, no captions until hover" gallery (`branding`'s portfolio), a
+six-column CSS grid with two tile footprints reads far less templated than a uniform photo grid:
+
+```css
+.bento {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 100px; gap: 18px; grid-auto-flow: dense;
+}
+.tile { position: relative; overflow: hidden; border-radius: 14px; }
+.tile--tall { grid-column: span 2; grid-row: span 4; }   /* renders ~323×454, ratio 0.71 — portrait/product shots */
+.tile--sq   { grid-column: span 2; grid-row: span 2; }   /* renders ~323×218, ratio 1.48 — laptop/logo/wide shots */
+.tile-img { position: absolute; inset: 0; }
+.tile-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+```
+Pick each shot's footprint by which of the two ratios its own aspect is closer to (0.71 vs 1.48),
+so `object-fit: cover` crops the least. Caption is hover/focus-only — a dark veil fades in from
+the bottom and a `figcaption` (client name + middot-separated discipline tags) rides in just
+behind it, so the grid itself stays purely visual until someone engages with a tile:
+```css
+.tile-veil { position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(8,8,18,.90) 0%, rgba(8,8,18,.48) 40%, rgba(8,8,18,.04) 78%);
+  transition: opacity .35s var(--ease); }
+.tile-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 20px 22px;
+  opacity: 0; transform: translateY(12px); transition: opacity .3s var(--ease), transform .45s var(--ease); }
+.tile:hover .tile-veil, .tile:focus-visible .tile-veil { opacity: 1; }
+.tile:hover .tile-cap, .tile:focus-visible .tile-cap { opacity: 1; transform: none; }
+@media (hover: none) { .tile-veil, .tile-cap { opacity: 1; transform: none; } } /* no hover on touch */
+```
+**`grid-auto-flow: dense` decouples visual/curation order from the packing math.** Without
+`dense`, the browser's sparse auto-placement fills cells strictly in DOM order, so mixing a tall
+(2×4) and a sq (2×2) footprint gaplessly requires hand-sequencing the tiles — a tall has to be
+immediately followed by whatever still fits beside it (more talls, or a pair of sq stacked in its
+remaining rows) before the layout is free to drop to a plain row of sq. That constraint fights
+directly against wanting the tiles ordered by *content* (e.g. mixing photography/branding/UI/web
+work throughout, rather than grouping all-tall-then-all-sq). `dense` lets the browser backfill
+gaps regardless of order — since every tile here is exactly 2 columns wide (one of three equal
+lanes), it behaves like a simple shortest-lane-first packer, so any DOM order of tall/sq tiles
+still closes with zero gaps as long as the total cell count is a multiple of the column count
+(here: 8 tall × 8 rows + 11 sq × 4 rows = 108 cells = 18 full rows of 6). Verify this by measuring,
+not by eye — read every tile's actual `getBoundingClientRect()` after forcing `.reveal` classes
+on, and confirm the container's height matches `rows × (rowHeight + gap) − gap` with zero
+overlaps. The tradeoff: `dense` can reorder a tile's *visual* position away from its DOM/tab
+order in some packings, which sparse never does — fine for a hover-caption gallery like this
+one, worth checking on anything where tab order needs to track visual order exactly.
+
+## 23. Sticky scroll-stack with receding cards
+
+A stack of `position: sticky` cards that pin in turn, each one visually receding (shrink, tilt,
+blur, fade) as the next one arrives, built for `branding`'s three-pillar section. Two real
+browser gotchas surfaced building this one, both worth knowing before reaching for the same
+pattern rather than re-discovering them:
+
+**Never put both `position: sticky` and a `transform` on the same element.** It is tempting to
+drive the recede effect (`scale`/`rotateX`/`opacity`) as a transform directly on the sticky
+wrapper itself — it is the element with the right z-index and the right pin behavior, so it
+feels like the natural place. Some browsers lose track of re-engaging sticky positioning on an
+element that also carries a transform, especially after it has scrolled out of its pin range and
+back — symptom: scroll all the way down the page, then back up, and the cards that should
+recompose stay stuck mid-recede (or invisible) instead of returning to full size/opacity, even
+though every computed style reads back as correct. Fix: keep the sticky wrapper transform-free
+and put the transform/opacity/filter on a plain inner `<div>` instead:
+```css
+.stack-item { position: sticky; top: ...; }                 /* transform-free, always */
+.stack-item .recede {                                        /* plain div, never sticky itself */
+  transform: perspective(1500px) rotateX(calc(var(--cover,0) * 38deg)) scale(calc(1 - var(--cover,0) * .3));
+  opacity: max(0, min(1, calc((1 - var(--cover,0)) / .6)));
+}
+```
+Put the inner wrapper's effect on a genuinely new div, not on whatever content element is already
+there if that element also carries the page's `.reveal`/`.in` entrance-animation classes —
+`.reveal.in { opacity: 1; transform: none; }` (§19) has the same specificity as a rule written
+directly against that same element and sits later in the sheet, so it silently wins and cancels
+the recede effect the instant the card's own entrance reveal fires. A plain, otherwise-unstyled
+wrapper sidesteps that fight entirely.
+
+**A `position: sticky` element's `getBoundingClientRect()` reflects wherever it is *currently
+stuck on screen*, not its resting document position.** Any script that measures a sticky
+element's natural top (to compute pin ranges, cover fractions, etc.) via `rect.top +
+window.pageYOffset` gets the right answer only if that element happens not to be actively stuck
+at the moment of measuring. If that measurement runs again on `resize` — and it should, since a
+viewport size change legitimately changes the geometry — a resize firing while the user has
+already scrolled past that card (window resize, a mobile browser's toolbar collapsing) captures
+the *stuck* position instead, silently corrupting the stored geometry with no self-correction
+until the next reload. This reads as "cards recede far too early, consistently, until I refresh"
+— stable and reproducible, not a transient scroll glitch. Fix: temporarily un-stick every card
+for the moment of measuring, then restore:
+```js
+wraps.forEach(function (w) { w.style.position = 'static'; });
+var tops = wraps.map(function (w) { return w.getBoundingClientRect().top + window.pageYOffset; });
+wraps.forEach(function (w) { w.style.removeProperty('position'); });
+```
+This runs synchronously inside one JS task (no repaint happens until the task yields), so there
+is no visible flicker — verify by reproducing the exact failure first (scroll deep, dispatch a
+`resize` event, compare the sticky element's real stuck `rect.top` against what the un-sticking
+trick reads at the same scroll position — they will differ by however far the element has
+scrolled past its pin point) before trusting that the fix actually changed anything.
