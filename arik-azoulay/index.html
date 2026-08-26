@@ -94,9 +94,15 @@ body {
   position: static;
   display: flex; gap: 14px; align-items: center; margin-top: 28px;
 }
+/* pinned to hero-inner's own right edge (flush, not inset) and to the CTA row's bottom edge —
+   both measured off the live layout rather than the previous arbitrary 64px/52px, which didn't
+   track either the content column or the buttons. Note hero-inner's box is NOT the full 820px
+   hero height: the generic `section { padding: 96px 0; }` rule applies to .hero too (never
+   reset to 0 there), so hero-inner's own content box is only 628px, centered inside the 820px
+   hero — 22px is measured against THAT shorter box, not the full hero height. */
 .hero-glass-card {
   position: absolute;
-  bottom: 64px; right: 52px;
+  bottom: 22px; right: 0;
   z-index: 10; width: 260px;
   background: rgba(60,60,140,0.55);
   backdrop-filter: blur(24px) saturate(140%);
