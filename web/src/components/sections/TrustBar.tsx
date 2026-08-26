@@ -13,7 +13,7 @@ type TrustBarProps = {
 
 export function TrustBar({ label, logos }: TrustBarProps) {
   return (
-    <div className="trust" data-screen-label="Trust bar">
+    <div className="trust reveal" data-screen-label="Trust bar">
       <Wrap>
         <div className="trust-inner">
           <span className="trust-label">{label}</span>

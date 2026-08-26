@@ -20,7 +20,7 @@ type FinalCtaProps = {
 export function FinalCta({ title, sub, primary, contactEmail, phone, location }: FinalCtaProps) {
   return (
     <Bistre as="section" id="contact" className="final" data-screen-label="Final CTA">
-      <Wrap style={{ position: "relative", zIndex: 1 }}>
+      <Wrap style={{ position: "relative", zIndex: 1 }} className="reveal">
         <h2>{title}</h2>
         <p>{sub}</p>
         <div className="final-ctas">

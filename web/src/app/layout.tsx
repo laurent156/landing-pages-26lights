@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { DM_Sans } from "next/font/google";
+import { RevealSetup } from "@/components/ui/RevealSetup";
 import "./globals.css";
 
 const kumbhSans = localFont({
@@ -24,7 +25,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" data-unit="business" className={`${kumbhSans.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <RevealSetup />
+        {children}
+      </body>
     </html>
   );
 }

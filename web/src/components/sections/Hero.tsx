@@ -41,7 +41,7 @@ export function Hero({ eyebrow, title, sub, ctas, visual }: HeroProps) {
             ))}
           </div>
         </div>
-        {visual}
+        <div className="hero-visual-in">{visual}</div>
       </div>
     </section>
   );

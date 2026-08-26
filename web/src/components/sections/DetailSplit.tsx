@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { SectionCta } from "@/components/ui/SectionCta";
 import { Button } from "@/components/ui/Button";
+import { revealDelay } from "@/lib/style";
 
 type DetailSplitProps = {
   eyebrow: string;
@@ -17,11 +18,11 @@ export function DetailSplit({ eyebrow, title, paragraphs, photo, flip, cta, alt 
   return (
     <section className={`detail${alt ? " detail--light" : ""}`} data-screen-label={eyebrow}>
       <div className={`detail-split ${flip ? "flip" : ""}`}>
-        <div className={`detail-photo${photo ? "" : " is-placeholder"}`}>
+        <div className={`detail-photo reveal${photo ? "" : " is-placeholder"}`}>
           {photo ? <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 900px) 90vw, 460px" /> : null}
         </div>
         <div className="detail-content">
-          <div className="detail-inner">
+          <div className="detail-inner reveal" style={revealDelay(120)}>
             <div className="section-label">{eyebrow}</div>
             <h2>{title}</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>

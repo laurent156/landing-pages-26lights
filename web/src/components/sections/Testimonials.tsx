@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Wrap } from "@/components/ui/Wrap";
 import { SectionCta } from "@/components/ui/SectionCta";
 import { Button } from "@/components/ui/Button";
+import { revealDelay } from "@/lib/style";
 
 type Testimonial = {
   quote: string;
@@ -30,11 +31,13 @@ export function Testimonials({ eyebrow, title, items, cta, background = "gray" }
       data-screen-label="Testimonials"
     >
       <Wrap>
-        <div className="section-label">{eyebrow}</div>
-        <h2>{title}</h2>
+        <div className="reveal">
+          <div className="section-label">{eyebrow}</div>
+          <h2>{title}</h2>
+        </div>
         <div className="testi-grid">
-          {items.map((item) => (
-            <div className="testi-card" key={item.company}>
+          {items.map((item, i) => (
+            <div className="testi-card reveal" style={revealDelay(i * 80)} key={item.company}>
               <blockquote className="testi-quote">&ldquo;{item.quote}&rdquo;</blockquote>
               <div className="testi-author-row">
                 {item.avatar ? (

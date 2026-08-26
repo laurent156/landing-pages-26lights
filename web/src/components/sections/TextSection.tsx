@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Wrap } from "@/components/ui/Wrap";
 import { SectionCta } from "@/components/ui/SectionCta";
 import { Button } from "@/components/ui/Button";
+import { revealDelay } from "@/lib/style";
 
 type Tool = {
   src: string;
@@ -26,30 +27,32 @@ export function TextSection({ eyebrow, title, paragraphs, alt, cta, toolRows }: 
       style={alt ? { background: "#fafafa" } : toolRows ? { paddingTop: 96, paddingBottom: 96 } : undefined}
     >
       <Wrap>
-        <div className="section-label">{eyebrow}</div>
-        <h2 style={{ marginBottom: 24, maxWidth: "20ch" }}>{title}</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {paragraphs.map((paragraph) => (
-            <p className="sub-text" key={paragraph.slice(0, 40)}>
-              {paragraph}
-            </p>
-          ))}
+        <div className="reveal">
+          <div className="section-label">{eyebrow}</div>
+          <h2 style={{ marginBottom: 24, maxWidth: "20ch" }}>{title}</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {paragraphs.map((paragraph) => (
+              <p className="sub-text" key={paragraph.slice(0, 40)}>
+                {paragraph}
+              </p>
+            ))}
+          </div>
+          {cta ? (
+            cta.strong ? (
+              <div style={{ marginTop: 24 }}>
+                <Button href={cta.href} variant="primary" target="_blank" rel="noopener">
+                  {cta.label}
+                </Button>
+              </div>
+            ) : (
+              <SectionCta label={cta.label} href={cta.href} />
+            )
+          ) : null}
         </div>
-        {cta ? (
-          cta.strong ? (
-            <div style={{ marginTop: 24 }}>
-              <Button href={cta.href} variant="primary" target="_blank" rel="noopener">
-                {cta.label}
-              </Button>
-            </div>
-          ) : (
-            <SectionCta label={cta.label} href={cta.href} />
-          )
-        ) : null}
         {toolRows ? (
           <div className="tools-rows" style={{ marginTop: 48 }}>
-            {toolRows.map((row) => (
-              <div className="tools-row" key={row.map((t) => t.alt).join("-")}>
+            {toolRows.map((row, i) => (
+              <div className="tools-row reveal" style={revealDelay(i * 80)} key={row.map((t) => t.alt).join("-")}>
                 {row.map((tool) => (
                   <div className="tool-chip" key={tool.alt}>
                     <Image src={tool.src} alt={tool.alt} width={120} height={40} className="tool-logo" />
