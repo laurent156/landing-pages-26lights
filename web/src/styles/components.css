@@ -393,7 +393,7 @@
   flex: none;
 }
 .hero h1 {
-  font-size: clamp(40px, 4.9vw, 58px);
+  font-size: clamp(44px, 5.2vw, 62px);
   font-weight: 400;
   line-height: 1.06;
   letter-spacing: -0.7px;
