@@ -18,7 +18,7 @@ type HeroProps = {
 export function Hero({ eyebrow, title, sub, ctas, visual }: HeroProps) {
   return (
     <section className="hero" data-screen-label="Hero">
-      <div className="hero-inner">
+      <div className={`hero-inner${visual ? "" : " no-visual"}`}>
         <div>
           {eyebrow ? (
             <div className="hero-badges">
@@ -41,7 +41,7 @@ export function Hero({ eyebrow, title, sub, ctas, visual }: HeroProps) {
             ))}
           </div>
         </div>
-        <div className="hero-visual-in">{visual}</div>
+        {visual ? <div className="hero-visual-in">{visual}</div> : null}
       </div>
     </section>
   );

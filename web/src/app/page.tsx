@@ -1,9 +1,24 @@
 import { Button } from "@/components/ui/Button";
 import { Bistre } from "@/components/ui/Bistre";
+import { Hero } from "@/components/sections/Hero";
 
 export default function Home() {
   return (
     <main>
+      <Hero
+        eyebrow="Hero — no visual"
+        title={
+          <>
+            A hero variant with <em>no image</em>
+          </>
+        }
+        sub="Centered single column, for pages with no real photo worth leading with — the bistre glow carries the visual interest instead. Applied automatically whenever Hero gets no visual prop."
+        ctas={[
+          { label: "Primary CTA", href: "#" },
+          { label: "Secondary", href: "#", variant: "ghost" },
+        ]}
+      />
+
       <section className="mx-auto max-w-[1100px] px-12 py-24">
         <p className="text-xs font-bold uppercase tracking-[1.4px] text-accent">
           Design system — checkpoint

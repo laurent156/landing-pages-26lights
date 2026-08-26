@@ -366,6 +366,23 @@
   gap: 56px;
   align-items: center;
 }
+/* no-image hero variant — centered single column, for pages with no photo/visual worth
+   leading with. Applied automatically by Hero when no `visual` prop is passed. */
+.hero-inner.no-visual {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+  padding-top: 120px;
+  padding-bottom: 120px;
+  text-align: center;
+}
+.hero-inner.no-visual .hero-badges,
+.hero-inner.no-visual .hero-ctas {
+  justify-content: center;
+}
+.hero-inner.no-visual .hero-sub {
+  margin-left: auto;
+  margin-right: auto;
+}
 .hero-badges {
   display: flex;
   flex-wrap: wrap;
