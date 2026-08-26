@@ -315,6 +315,13 @@ triplet changes per unit:
 dark linear-gradient base color shifts slightly warmer/cooler per unit too (business unit uses
 `#0a0a14 / #14132a / #0c0b18`) — keep it close to what's shown, exact hue isn't load-bearing.
 
+**The alpha/stop values above are the ones that drift — check them, don't assume them.**
+`arik-azoulay`, `jacqueline-c`, and `malorie-dreyfus` all shipped with inflated first-gradient
+alpha/stop values (seen: `0.92`/`0.30`/`56%` and `0.45`/`50%`, vs. the `0.55`/`0.18`/`58%` and
+`0.38`/`52%` above) before being corrected to this exact recipe — three for three. Whenever
+touching a `.bistre` or hero-glow background on any page, diff its actual `rgba(...)` numbers
+against this block rather than assuming a prior page already got it right.
+
 ## 8. Hero — two variants, pick by page type
 
 ### 8A. Product/offer hero (two-column, centered, visual card on the right)
@@ -413,7 +420,10 @@ proof avatar; on `jacqueline-c` the whole `.hero-proof` block was dead code outr
 never renders a proof quote in the hero at all). Delete the old block entirely rather than
 editing around it, and if `.hero-proof` is kept, give it its own explicit `max-width` (~480px)
 so removing the leftover `width: 500px` does not let it grow wide enough to collide with the
-portrait. Worth checking `malorie-dreyfus` for the same leftover if it is ever touched again.
+portrait. `malorie-dreyfus` was checked and does not have this bug — it never adopted the
+`.hero-proof` component at all (its hero uses a different, older markup: absolute-positioned
+`h1`/`.hero-sub`/`.btn` plus `.hero-glass-card`, no proof-quote element), so there is nothing
+to fix there. Still worth a quick check on any *other* persona page before trusting it blind.
 ```css
 
 /* the "liquid glass" credential card — reused as a floating chip pattern anywhere on dark hero art */
@@ -435,13 +445,17 @@ block in any persona page for the exact override list).
 
 **Cutout variant — when a real transparent-background cutout of the person exists (not just a
 rectangular photo), skip the cover-photo-plus-overlay recipe above and put the cutout straight
-on a `.bistre` glow instead** (built for `arik-azoulay`): `.hero { background-color: #050505; }`
-+ a `.hero::before` carrying the full `.bistre` gradient (§7, blue accent), no `.hero-overlay` at
-all (nothing needs darkening — there is no background photo pixel data left in the cutout to
-clash with the glow). Size the cutout with `object-fit: contain` (never `cover` — there is no
-spare background to crop into; cropping at all just cuts into the person) and anchor it
-`position: absolute; bottom: 0; right: X%; height: Y%; width: auto;`, tuned to give it real
-headroom rather than starting the crop right at the hairline.
+on a `.bistre` glow instead** (built for `arik-azoulay`, also applied to `malorie-dreyfus`):
+`.hero { background-color: #050505; }` + a `.hero::before` carrying the full `.bistre` gradient
+(§7, blue accent), no `.hero-overlay` at all (nothing needs darkening — there is no background
+photo pixel data left in the cutout to clash with the glow). Size the cutout with `object-fit:
+contain` (never `cover` — there is no spare background to crop into; cropping at all just cuts
+into the person) and anchor it `position: absolute; bottom: 0; right: X%; height: Y%; width:
+auto;`, tuned to give it real headroom rather than starting the crop right at the hairline. This
+variant is independent of the hero's text layout — `malorie-dreyfus` keeps its own older,
+absolute-positioned `h1`/`.hero-sub`/`.btn` markup (fixed pixel `top`/`left`, no `.hero-inner`
+flex column) rather than being restructured to match `arik-azoulay`'s flex layout; only the
+background/photo treatment needs to match, not the surrounding text architecture.
 
 **Absolutely-positioned decorative elements sitting directly against a full-bleed `.hero` drift
 to the physical screen edge on a wide monitor, disconnected from the text column.** `right: 3%`
