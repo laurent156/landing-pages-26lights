@@ -78,14 +78,26 @@ or status list:
 ```css
 :root {
   --blue: #5363F5;
-  --blue-text: #4B66ED;   /* slightly darker — used for small text/links on white */
+  --blue-text: #3D56E0;   /* darker — used for small text/links on white */
   --blue-hover: #4150e8;
+  --blue-on-dark: #7C89F7; /* lightened — small/bold text on a bistre surface */
   --dark-card: #1B1A36;   /* solid dark surface for featured pricing cards */
 }
 ```
 Glows/gradients on this unit are written as `rgba(83,99,245, X)` (i.e. the `--blue` RGB
 triplet) directly inside `radial-gradient`/`linear-gradient` — there's no separate glow token,
 just reuse the same RGB numbers at different alphas.
+
+**`--blue-on-dark` and the `--blue-text` value were both corrected by a WCAG contrast audit
+(`a11y-architect`) on the `tech/mvp` Next.js build.** Before the fix, business was the only
+unit whose `--accent-on-dark` alias pointed straight back at the plain accent instead of a
+genuinely lightened variant the way `--magenta-on-dark` (§2.3) and `--orange-on-dark` (§2.4)
+already do — small/bold blue text on a `.bistre` surface (a section eyebrow, a card heading)
+only cleared ~3.3–4.2:1 there, short of the 4.5:1 AA floor for normal text. `--blue-text` was
+also found riding the AA line (4.55:1 on `#fafafa`, essentially no margin). **When adding a
+new unit or a new `--accent-on-dark`-style alias, verify the actual contrast ratio against a
+real dark surface rather than assuming the base accent is legible — it usually is not for
+text below the large-text threshold.**
 
 ### 2.3 Tech unit — magenta
 
