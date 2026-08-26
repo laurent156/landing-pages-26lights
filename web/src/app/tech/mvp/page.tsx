@@ -71,7 +71,10 @@ export default function MvpPage() {
             </>
           }
           sub="Time is money. And you don't want to waste it. If you know what problem you're solving, you don't need a thousand features to get started. We'll help you build your Minimum Viable Product and get to market asap. And if you don't know what problem you're solving, we can talk about that too."
-          ctas={[{ label: "Let's talk", href: TALK }]}
+          ctas={[
+            { label: "Let's talk", href: TALK },
+            { label: "See our work", href: "#projects", variant: "ghost" },
+          ]}
           visual={<HeroFigure src="/team/hero-work.png" alt="26lights team at work" />}
         />
 

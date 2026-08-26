@@ -38,7 +38,7 @@ export function TextSection({ eyebrow, title, paragraphs, alt, cta, toolRows }: 
         {cta ? (
           cta.strong ? (
             <div style={{ marginTop: 24 }}>
-              <Button href={cta.href} variant="outline" target="_blank" rel="noopener">
+              <Button href={cta.href} variant="primary" target="_blank" rel="noopener">
                 {cta.label}
               </Button>
             </div>

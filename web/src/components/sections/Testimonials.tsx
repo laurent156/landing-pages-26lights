@@ -57,7 +57,7 @@ export function Testimonials({ eyebrow, title, items, cta, background = "gray" }
         {cta ? (
           cta.strong ? (
             <div style={{ marginTop: 24 }}>
-              <Button href={cta.href} variant="outline" target="_blank" rel="noopener">
+              <Button href={cta.href} variant="primary" target="_blank" rel="noopener">
                 {cta.label}
               </Button>
             </div>

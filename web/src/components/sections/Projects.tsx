@@ -23,7 +23,7 @@ type ProjectsProps = {
 
 export function Projects({ eyebrow, title, items, cta }: ProjectsProps) {
   return (
-    <Bistre as="section" data-screen-label="Projects">
+    <Bistre as="section" id="projects" data-screen-label="Projects">
       <Wrap style={{ position: "relative", zIndex: 1 }}>
         <div className="section-label">{eyebrow}</div>
         <h2 style={{ color: "#F7F7F7", marginBottom: 40, maxWidth: "58ch" }}>{title}</h2>
