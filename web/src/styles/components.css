@@ -1,6 +1,36 @@
-/* Component recipes ported verbatim from SKILL.md §6 (buttons) and §7 (.bistre surface).
-   Single source of truth — page components apply these classes instead of re-declaring
-   the CSS, which is what caused the .bistre gradient-stop drift on 3 separate HTML pages. */
+/* Component recipes ported verbatim from SKILL.md §5 (typography), §6 (buttons), and §7
+   (.bistre surface, .wrap). Single source of truth — page components apply these classes
+   instead of re-declaring the CSS, which is what caused the .bistre gradient-stop drift on
+   3 separate HTML pages. */
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+.section-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-bottom: 18px;
+}
+.bistre .section-label {
+  color: var(--accent-on-dark, rgba(255, 255, 255, 0.4));
+}
+
+.sub-text {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--gray-1);
+  max-width: 64ch;
+}
+.bistre .sub-text {
+  color: rgba(255, 255, 255, 0.75);
+}
 
 .btn {
   display: inline-flex;
@@ -95,4 +125,434 @@
       rgba(var(--accent-rgb), 0) 52%
     ),
     linear-gradient(150deg, var(--bistre-base-1) 0%, var(--bistre-base-2) 46%, var(--bistre-base-3) 100%);
+}
+
+/* §8A — product/offer hero: badges + headline + sub + CTAs on the left, a visual slot on the
+   right. Same bistre-family glow as .bistre, but painted directly on .hero since the hero
+   needs its own z-index stack for the two-column grid to sit above it. */
+.hero {
+  position: relative;
+  padding: 0;
+  background: var(--hero-bg);
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(68% 78% at 86% 14%, rgba(var(--accent-rgb), 0.5) 0%, rgba(var(--accent-rgb), 0) 58%),
+    radial-gradient(80% 90% at 2% 108%, rgba(var(--accent-rgb), 0.32) 0%, rgba(var(--accent-rgb), 0) 55%),
+    linear-gradient(155deg, var(--bistre-base-1) 0%, var(--bistre-base-2) 54%, var(--bistre-base-3) 100%);
+}
+.hero-inner {
+  position: relative;
+  z-index: 4;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 84px 48px;
+  display: grid;
+  grid-template-columns: 1.04fr 0.96fr;
+  gap: 56px;
+  align-items: center;
+}
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  padding: 6px 13px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.badge svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent-on-dark);
+  flex: none;
+}
+.hero h1 {
+  font-size: clamp(40px, 4.9vw, 58px);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.7px;
+  color: #f7f7f7;
+  text-wrap: balance;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent-bright);
+}
+.hero-sub {
+  max-width: 500px;
+  margin-top: 20px;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.76);
+}
+.hero-ctas {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+/* hero visual — "liquid glass" card, reused as a floating chip pattern on any dark hero art */
+.focus-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 28px 28px 26px;
+  box-shadow: 0 26px 64px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+.focus-card .label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.74);
+  margin-bottom: 18px;
+}
+.focus-list {
+  display: flex;
+  flex-direction: column;
+}
+.focus-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.focus-item:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+.focus-item .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  margin-top: 6px;
+}
+.focus-item.now .dot {
+  background: var(--accent-bright);
+}
+.focus-item.now {
+  color: #fff;
+  font-weight: 500;
+}
+.focus-item.later .dot {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* §9 trust bar — logos on a dark bistre surface */
+.proof {
+  padding: 96px 0;
+}
+.proof-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  column-gap: 64px;
+  align-items: center;
+}
+.proof h2 {
+  color: #fff;
+  margin-bottom: 18px;
+}
+.proof h2 em {
+  font-style: normal;
+  color: var(--accent-bright);
+}
+.proof-logos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.proof-cell {
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+.proof-cell:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+.proof-cell img {
+  max-height: 28px;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.68;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s ease;
+}
+.proof-cell:hover img {
+  opacity: 1;
+}
+
+/* team — rich two-up cards (deep bios) */
+.team-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.tcard {
+  background: #fff;
+  border: 1px solid #e8e8f0;
+  border-radius: 18px;
+  padding: 28px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.tcard:hover {
+  border-color: #dadae6;
+  transform: translateY(-2px);
+}
+.tcard img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.02);
+  margin-bottom: 18px;
+  display: block;
+}
+.tcard h3 {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.tcard .role {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-bottom: 14px;
+}
+.tcard p {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--gray-1);
+}
+
+/* team — compact grid (photo + name + role only), for listing a full roster */
+.team-simple-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px 24px;
+}
+.team-simple-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  object-fit: cover;
+  filter: grayscale(1);
+  margin-bottom: 12px;
+  display: block;
+}
+.team-simple-item h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.team-simple-item .role {
+  font-size: 13px;
+  color: var(--gray-1);
+  margin-top: 2px;
+}
+
+/* project / case-study cards */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.project-card {
+  background: #fff;
+  border: 1px solid #e8e8f0;
+  border-radius: 18px;
+  padding: 28px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.project-card:hover {
+  border-color: #dadae6;
+  transform: translateY(-2px);
+}
+.project-card .logo {
+  height: 28px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  object-position: left;
+  margin-bottom: 16px;
+  display: block;
+}
+.project-card h3 {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.project-card p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--gray-1);
+  margin-bottom: 14px;
+}
+.project-card a {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+}
+.project-card a:hover {
+  text-decoration: underline;
+}
+
+/* testimonial cards, on a .bistre surface */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.testi-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  padding: 30px;
+}
+.testi-card blockquote {
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: 20px;
+}
+.testi-card .attribution {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* short centered pull-quote band, between prose sections */
+.pull-band {
+  padding: 64px 0;
+  text-align: center;
+}
+.pull-band .line {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ink);
+  max-width: 40ch;
+  margin: 0 auto 10px;
+  line-height: 1.3;
+}
+.pull-band .tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+/* final CTA band */
+.final {
+  padding: 92px 0;
+}
+.final h2 {
+  color: #fff;
+  margin-bottom: 18px;
+  max-width: 22ch;
+}
+.final h2 em {
+  font-style: normal;
+  color: var(--accent-bright);
+}
+.final p {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 52ch;
+  margin-bottom: 30px;
+}
+.final-ctas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.final-contact {
+  margin-top: 34px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.final-contact a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+}
+.final-contact a:hover {
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    padding: 56px 24px;
+  }
+  .proof-inner {
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+    padding: 0 24px;
+  }
+  .proof-logos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .team-cards,
+  .project-grid,
+  .testi-grid {
+    grid-template-columns: 1fr;
+  }
+  .team-simple-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
 }

@@ -57,6 +57,7 @@
   --accent-hover: var(--blue-hover);
   --accent-bright: var(--blue);
   --accent-on-dark: var(--blue);
+  --accent-tint: #eef0fe;
   --bistre-base-1: #0a0a14;
   --bistre-base-2: #14132a;
   --bistre-base-3: #0c0b18;
@@ -69,6 +70,7 @@
   --accent-hover: var(--magenta-hover);
   --accent-bright: var(--magenta-bright);
   --accent-on-dark: var(--magenta-on-dark);
+  --accent-tint: var(--magenta-tint);
   --bistre-base-1: #0d0812;
   --bistre-base-2: #22112a;
   --bistre-base-3: #120a16;
@@ -81,6 +83,7 @@
   --accent-hover: var(--orange-hover);
   --accent-bright: var(--orange-bright);
   --accent-on-dark: var(--orange-on-dark);
+  --accent-tint: var(--orange-tint);
   --bistre-base-1: #120d08;
   --bistre-base-2: #2a1f11;
   --bistre-base-3: #16110c;
