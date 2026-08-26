@@ -458,7 +458,7 @@
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #bbb;
+  color: var(--gray-1); /* was #bbb — 1.92:1 on white, failed WCAG AA (needs 4.5:1) */
   white-space: nowrap;
 }
 .trust-logos {
@@ -647,7 +647,8 @@
   font-weight: 600;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.6); /* was 0.42 — ~3.6-4.1:1 on the card surface, failed
+    WCAG AA (needs 4.5:1); 0.6 clears ~5.5-5.7:1 */
   margin-bottom: 16px;
 }
 .project-card .result {
