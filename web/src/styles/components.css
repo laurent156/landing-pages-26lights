@@ -629,16 +629,16 @@
   align-items: center;
   justify-content: center;
   background: #fff;
-  border-radius: 8px;
-  padding: 7px 13px;
-  height: 38px;
+  border-radius: 10px;
+  padding: 12px 20px;
+  height: 60px;
   margin-bottom: 20px;
   align-self: flex-start;
 }
 .project-card .logo-chip img {
-  height: 22px;
+  height: 36px;
   width: auto;
-  max-width: 130px;
+  max-width: 160px;
   object-fit: contain;
   display: block;
 }

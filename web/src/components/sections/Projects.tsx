@@ -45,7 +45,7 @@ export function Projects({ eyebrow, title, items, cta }: ProjectsProps) {
             <div className="project-card reveal" style={revealDelay(i * 80)} key={item.company}>
               {item.logo ? (
                 <span className="logo-chip">
-                  <Image src={item.logo} alt={item.company} width={100} height={22} />
+                  <Image src={item.logo} alt={item.company} width={160} height={36} />
                 </span>
               ) : null}
               <div className="meta">{item.meta}</div>

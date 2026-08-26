@@ -50,7 +50,7 @@ const TEAM = [
   { name: "Kelly", role: "France Manager", photo: "/team/kelly.png" },
   { name: "Céline", role: "Product Owner", photo: "/team/celine.jpg" },
   { name: "Arik", role: "Business Coach", photo: "/team/arik.png" },
-  { name: "Malorie", role: "Negotiation Expert", photo: "/team/malorie.png" },
+  { name: "Malorie", role: "Negotiation Expert", photo: "/team/Malorie-Dreyfus.png" },
   { name: "Olivier", role: "Tech Lead", photo: "/team/olivier.jpg" },
   { name: "Renaud", role: "Tech Lead", photo: "/team/renaud.jpg" },
   { name: "Laurent", role: "Brand Director", photo: "/team/laurent.jpg" },
