@@ -156,10 +156,25 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
 .why-photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 .why-content-col { padding: 0; }
 .why-intro { font-size: 17px; line-height: 30px; color: #444; max-width: 640px; margin: 0 0 56px; }
-.why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: #e8e8e8; border: 2px solid #e8e8e8; border-radius: 16px; overflow: hidden; margin-bottom: 48px; }
-.why-card { background: #fff; padding: 36px 32px; }
-.why-card-label { font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.2px; }
-.why-card p { font-size: 15px; line-height: 26px; color: #444; margin: 0; }
+/* Accordion, not the hairline-grid-of-cards pattern (§14): four full paragraphs shown at once
+   read as a wall of text next to the photo. Only one item's copy is visible at a time — a
+   plain list, no card chrome, so the section stays light until someone actually wants the
+   detail behind a specific trait. */
+.why-accordion { border-top: 1px solid #e6e6e6; margin-bottom: 40px; }
+.why-item { border-bottom: 1px solid #e6e6e6; }
+.why-item-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 2px; background: none; border: none; cursor: pointer; text-align: left;
+  font-family: inherit;
+}
+.why-item-label { font-size: 18px; font-weight: 600; color: var(--ink); letter-spacing: -0.2px; }
+.why-item-icon { width: 20px; height: 20px; flex: none; color: var(--gray-2); transition: transform .3s var(--ease); }
+.why-item.is-open .why-item-icon { transform: rotate(180deg); color: var(--blue); }
+/* the 0fr/1fr grid-rows trick animates height without ever measuring it in JS */
+.why-item-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s var(--ease); }
+.why-item.is-open .why-item-panel { grid-template-rows: 1fr; }
+.why-item-panel-inner { overflow: hidden; }
+.why-item-panel p { font-size: 15px; line-height: 26px; color: #444; max-width: 480px; margin: 0; padding: 0 2px 20px; }
 
 /* ── HOW IT WORKS ── */
 /* the reusable dark, accent-tinted glow surface (see design-system skill §7 .bistre) —
@@ -286,7 +301,6 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
   .why-photo-col { height: 320px; }
   .why-photo { object-position: center 20%; }
   .why-content-col { padding: 0; }
-  .why-grid { grid-template-columns: 1fr; }
   .how-grid { grid-template-columns: 1fr; }
   .testi-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: 1fr; }
@@ -420,22 +434,50 @@ h2 { font-size: clamp(34px, 4vw, 50px); font-weight: 400; letter-spacing: -0.5px
     <div class="section-label reveal">Why Arik</div>
     <h2 class="reveal">Built, broken, and rebuilt.</h2>
     <p class="why-intro reveal">Arik isn't a consultant who runs an audit and leaves with a deck. Across 200+ startups, he's stayed in the room long after the analysis — building the plan alongside the team, not just diagnosing it from the outside. He's not a VC doing due diligence. He's the partner who's still there when the plan hits reality.</p>
-    <div class="why-grid">
-      <div class="why-card reveal">
-        <div class="why-card-label">No-Bullshit Talker</div>
-        <p>No vague frameworks. No polite hedging. If your plan has a hole, you'll know in the first 10 minutes.</p>
+    <div class="why-accordion reveal">
+      <div class="why-item is-open">
+        <button class="why-item-toggle" aria-expanded="true" aria-controls="why-panel-0">
+          <span class="why-item-label">No-Bullshit Talker</span>
+          <svg class="why-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="why-item-panel" id="why-panel-0">
+          <div class="why-item-panel-inner">
+            <p>No vague frameworks. No polite hedging. If your plan has a hole, you'll know in the first 10 minutes.</p>
+          </div>
+        </div>
       </div>
-      <div class="why-card reveal" style="--reveal-delay:80ms">
-        <div class="why-card-label">All-Rounder</div>
-        <p>He won't tell you it's a marketing problem when it's actually your pricing. He sees the whole board.</p>
+      <div class="why-item">
+        <button class="why-item-toggle" aria-expanded="false" aria-controls="why-panel-1">
+          <span class="why-item-label">All-Rounder</span>
+          <svg class="why-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="why-item-panel" id="why-panel-1">
+          <div class="why-item-panel-inner">
+            <p>He won't tell you it's a marketing problem when it's actually your pricing. He sees the whole board.</p>
+          </div>
+        </div>
       </div>
-      <div class="why-card reveal" style="--reveal-delay:40ms">
-        <div class="why-card-label">Visual Thinker</div>
-        <p>He maps your business live, in front of you — so the blind spots become impossible to ignore, even for you.</p>
+      <div class="why-item">
+        <button class="why-item-toggle" aria-expanded="false" aria-controls="why-panel-2">
+          <span class="why-item-label">Visual Thinker</span>
+          <svg class="why-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="why-item-panel" id="why-panel-2">
+          <div class="why-item-panel-inner">
+            <p>He maps your business live, in front of you — so the blind spots become impossible to ignore, even for you.</p>
+          </div>
+        </div>
       </div>
-      <div class="why-card reveal" style="--reveal-delay:120ms">
-        <div class="why-card-label">Hands-On Builder</div>
-        <p>He doesn't diagnose and disappear. He stays until the plan actually runs.</p>
+      <div class="why-item">
+        <button class="why-item-toggle" aria-expanded="false" aria-controls="why-panel-3">
+          <span class="why-item-label">Hands-On Builder</span>
+          <svg class="why-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="why-item-panel" id="why-panel-3">
+          <div class="why-item-panel-inner">
+            <p>He doesn't diagnose and disappear. He stays until the plan actually runs.</p>
+          </div>
+        </div>
       </div>
     </div>
     <a href="#pricing" class="btn btn-dark reveal">See packages</a>
@@ -638,6 +680,24 @@ function toggleStories() {
     grid.querySelectorAll('.testi-hidden.reveal').forEach(function(e) { e.classList.add('in'); });
   }
 }
+(function() {
+  var accordion = document.querySelector('.why-accordion');
+  if (!accordion) return;
+  accordion.querySelectorAll('.why-item-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.why-item');
+      var wasOpen = item.classList.contains('is-open');
+      accordion.querySelectorAll('.why-item').forEach(function (i) {
+        i.classList.remove('is-open');
+        i.querySelector('.why-item-toggle').setAttribute('aria-expanded', 'false');
+      });
+      if (!wasOpen) {
+        item.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+})();
 (function() {
   var els = document.querySelectorAll('.reveal');
   if (!('IntersectionObserver' in window)) { els.forEach(function(e) { e.classList.add('in'); }); return; }
