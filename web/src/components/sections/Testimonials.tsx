@@ -1,35 +1,50 @@
-import { Bistre } from "@/components/ui/Bistre";
+import Image from "next/image";
 import { Wrap } from "@/components/ui/Wrap";
+import { SectionCta } from "@/components/ui/SectionCta";
 
 type Testimonial = {
   quote: string;
-  name: string;
-  role: string;
+  title: string;
+  company: string;
+  avatar?: string;
+  initials: string;
 };
 
 type TestimonialsProps = {
   eyebrow: string;
   title: string;
   items: Testimonial[];
+  cta?: { label: string; href: string };
 };
 
-export function Testimonials({ eyebrow, title, items }: TestimonialsProps) {
+export function Testimonials({ eyebrow, title, items, cta }: TestimonialsProps) {
   return (
-    <Bistre as="section" data-screen-label="Testimonials">
-      <Wrap style={{ position: "relative", zIndex: 1 }}>
+    <section className="testimonials" data-screen-label="Testimonials">
+      <Wrap>
         <div className="section-label">{eyebrow}</div>
-        <h2 style={{ color: "#F7F7F7", marginBottom: 40 }}>{title}</h2>
+        <h2>{title}</h2>
         <div className="testi-grid">
           {items.map((item) => (
-            <div className="testi-card" key={item.name}>
-              <blockquote>&ldquo;{item.quote}&rdquo;</blockquote>
-              <div className="attribution">
-                {item.name} — {item.role}
+            <div className="testi-card" key={item.company}>
+              <blockquote className="testi-quote">&ldquo;{item.quote}&rdquo;</blockquote>
+              <div className="testi-author-row">
+                {item.avatar ? (
+                  <Image src={item.avatar} alt={`${item.title}, ${item.company}`} width={60} height={60} className="testi-avatar" />
+                ) : (
+                  <span className="testi-avatar-fallback" aria-hidden="true">
+                    {item.initials}
+                  </span>
+                )}
+                <div>
+                  <div className="testi-author">{item.title}</div>
+                  <div className="testi-role">{item.company}</div>
+                </div>
               </div>
             </div>
           ))}
         </div>
+        {cta ? <SectionCta {...cta} /> : null}
       </Wrap>
-    </Bistre>
+    </section>
   );
 }

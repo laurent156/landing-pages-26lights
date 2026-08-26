@@ -24,12 +24,169 @@
 .sub-text {
   font-size: 17px;
   font-weight: 400;
-  line-height: 1.65;
+  line-height: 1.5;
   color: var(--gray-1);
   max-width: 64ch;
 }
 .bistre .sub-text {
   color: rgba(255, 255, 255, 0.75);
+}
+
+/* soft in-section CTA — a link, not a full .btn (validated on growth-plan as .detail-cta /
+   .read-more). Reserve full .btn buttons for the hero, mid-page, and final CTA moments;
+   every other section gets this lighter arrow-link instead of repeating the same button. */
+.section-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+}
+.section-cta::after {
+  content: "\2192";
+  transition: transform 0.15s ease;
+}
+.section-cta:hover::after {
+  transform: translateX(4px);
+}
+.bistre .section-cta {
+  color: var(--accent-on-dark, var(--accent-text));
+}
+
+/* tools bar — a grid of tool/tech logos in glass chips, validated on ai-production. Split into
+   fixed rows rather than one flex-wrap row so an odd count does not leave an orphan trailing
+   logo alone on its own row. */
+.tools {
+  position: relative;
+  padding: 52px 0;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.06) 0%, rgba(var(--accent-rgb), 0.02) 55%, #ffffff 100%);
+  overflow: hidden;
+}
+.tools::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 130% at 78% 0%, rgba(var(--accent-rgb), 0.1) 0%, rgba(var(--accent-rgb), 0) 62%);
+}
+.tools > .wrap {
+  position: relative;
+}
+.tools-rows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.tools-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.tool-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 75px;
+  padding: 0 23px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 6px 20px rgba(20, 20, 60, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tool-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(20, 20, 60, 0.11);
+}
+.tool-logo {
+  height: 26px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* detail split — a prose block paired with a photo (or placeholder), validated on growth-plan.
+   Alternate `.flip` across consecutive sections so the photo does not sit on the same side
+   every time. */
+.detail {
+  padding: 84px 0;
+}
+.detail--light {
+  background: #fafafa;
+}
+.detail-split {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  column-gap: 64px;
+  align-items: center;
+}
+.detail-split.flip .detail-photo {
+  order: 2;
+}
+.detail-photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  min-height: 380px;
+}
+.detail-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.detail-photo.is-placeholder {
+  background: linear-gradient(135deg, #e9eaf2 0%, #dcdef0 100%);
+}
+.detail-split.flip .detail-photo.is-placeholder {
+  background: linear-gradient(135deg, #ededf4 0%, #e0e2f1 100%);
+}
+.detail-photo.is-placeholder::after {
+  content: "Visual to come";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(40, 40, 80, 0.22);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.detail-content {
+  display: flex;
+  align-items: center;
+}
+.detail-inner {
+  max-width: 560px;
+}
+.detail-content h2 {
+  color: var(--ink);
+  margin-bottom: 22px;
+}
+
+@media (max-width: 900px) {
+  .detail-split {
+    grid-template-columns: 1fr;
+    padding: 0 24px;
+    row-gap: 32px;
+  }
+  .detail-split.flip .detail-photo {
+    order: 0;
+  }
+  .detail-photo {
+    min-height: 280px;
+  }
 }
 
 .btn {
@@ -199,7 +356,7 @@
   margin-top: 20px;
   font-size: 17px;
   font-weight: 300;
-  line-height: 1.6;
+  line-height: 1.5;
   color: rgba(255, 255, 255, 0.76);
 }
 .hero-ctas {
@@ -469,54 +626,70 @@
 .project-card p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.62);
-  line-height: 1.65;
+  line-height: 1.5;
 }
 
-/* testimonial cards, on a .bistre surface */
+/* testimonial cards — light, validated on arik-azoulay (.testimonials/.testi-card). Prefer
+   this over a dark bistre card: testimonials read as evidence, not brand atmosphere. */
+.testimonials {
+  background: #fafafa;
+}
 .testi-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+  margin-top: 48px;
 }
 .testi-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
-  padding: 30px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
 }
-.testi-card blockquote {
-  font-size: 17px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.92);
-  margin-bottom: 20px;
+.testi-quote {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+  font-style: italic;
+  margin: 0 0 24px;
 }
-.testi-card .attribution {
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.55);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.testi-author-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
 }
-
-/* short centered pull-quote band, between prose sections */
-.pull-band {
-  padding: 64px 0;
-  text-align: center;
+.testi-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
-.pull-band .line {
-  font-size: 26px;
-  font-weight: 500;
-  color: var(--ink);
-  max-width: 40ch;
-  margin: 0 auto 10px;
-  line-height: 1.3;
-}
-.pull-band .tag {
-  font-size: 13px;
+.testi-avatar-fallback {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--accent-text);
+}
+.testi-author {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.testi-role {
+  font-size: 12px;
+  color: var(--gray-1);
+  margin-top: 2px;
 }
 
 /* final CTA band */
@@ -535,7 +708,7 @@
 .final p {
   font-size: 17px;
   font-weight: 300;
-  line-height: 1.6;
+  line-height: 1.5;
   color: rgba(255, 255, 255, 0.8);
   max-width: 52ch;
   margin-bottom: 30px;

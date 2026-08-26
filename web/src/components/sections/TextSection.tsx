@@ -1,4 +1,5 @@
 import { Wrap } from "@/components/ui/Wrap";
+import { SectionCta } from "@/components/ui/SectionCta";
 
 type TextSectionProps = {
   eyebrow: string;
@@ -6,9 +7,10 @@ type TextSectionProps = {
   paragraphs: string[];
   /** Alternate light-gray background (validated: #fafafa, never a colored tint on a business-unit page) */
   alt?: boolean;
+  cta?: { label: string; href: string };
 };
 
-export function TextSection({ eyebrow, title, paragraphs, alt }: TextSectionProps) {
+export function TextSection({ eyebrow, title, paragraphs, alt, cta }: TextSectionProps) {
   return (
     <section style={alt ? { background: "#fafafa" } : undefined}>
       <Wrap>
@@ -21,6 +23,7 @@ export function TextSection({ eyebrow, title, paragraphs, alt }: TextSectionProp
             </p>
           ))}
         </div>
+        {cta ? <SectionCta {...cta} /> : null}
       </Wrap>
     </section>
   );

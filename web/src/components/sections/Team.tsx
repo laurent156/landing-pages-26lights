@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Wrap } from "@/components/ui/Wrap";
+import { SectionCta } from "@/components/ui/SectionCta";
 
 type TeamMember = {
   name: string;
@@ -11,9 +12,10 @@ type TeamProps = {
   eyebrow: string;
   title: string;
   members: TeamMember[];
+  cta?: { label: string; href: string };
 };
 
-export function Team({ eyebrow, title, members }: TeamProps) {
+export function Team({ eyebrow, title, members, cta }: TeamProps) {
   return (
     <section style={{ background: "#fafafa" }} data-screen-label="Team">
       <Wrap>
@@ -28,6 +30,7 @@ export function Team({ eyebrow, title, members }: TeamProps) {
             </div>
           ))}
         </div>
+        {cta ? <SectionCta {...cta} /> : null}
       </Wrap>
     </section>
   );

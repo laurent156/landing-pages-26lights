@@ -3,7 +3,8 @@ import { Hero } from "@/components/sections/Hero";
 import { HeroFigure } from "@/components/sections/HeroFigure";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { TextSection } from "@/components/sections/TextSection";
-import { PullQuote } from "@/components/sections/PullQuote";
+import { DetailSplit } from "@/components/sections/DetailSplit";
+import { ToolsBar } from "@/components/sections/ToolsBar";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { MidCta } from "@/components/sections/MidCta";
 import { Projects } from "@/components/sections/Projects";
@@ -15,6 +16,35 @@ export const metadata: Metadata = {
   description:
     "Time is money. We help you build your Minimum Viable Product around your one killer feature and get to market fast.",
 };
+
+const TALK = "https://calendly.com/alicia-26lights/30min";
+
+const TOOL_ROWS = [
+  [
+    { src: "/logos/tools/typescript.png", alt: "TypeScript" },
+    { src: "/logos/tools/react.png", alt: "React" },
+    { src: "/logos/tools/nodejs.png", alt: "Node.js" },
+    { src: "/logos/tools/python.png", alt: "Python" },
+  ],
+  [
+    { src: "/logos/tools/postgresql.png", alt: "PostgreSQL" },
+    { src: "/logos/tools/graphql.png", alt: "GraphQL" },
+    { src: "/logos/tools/openapi.png", alt: "OpenAPI" },
+    { src: "/logos/tools/docker.png", alt: "Docker" },
+  ],
+  [
+    { src: "/logos/tools/kotlin.png", alt: "Kotlin" },
+    { src: "/logos/tools/scala.png", alt: "Scala" },
+    { src: "/logos/tools/akka.png", alt: "Akka" },
+    { src: "/logos/tools/kafka.png", alt: "Kafka" },
+  ],
+  [
+    { src: "/logos/tools/odoo.png", alt: "Odoo" },
+    { src: "/logos/tools/bubble.png", alt: "Bubble" },
+    { src: "/logos/tools/ansible.png", alt: "Ansible" },
+    { src: "/logos/tools/android.png", alt: "Android" },
+  ],
+];
 
 const TEAM = [
   { name: "Alicia", role: "General Manager", photo: "/team/alicia.png" },
@@ -42,21 +72,24 @@ export default function MvpPage() {
             </>
           }
           sub="Time is money. And you don't want to waste it. If you know what problem you're solving, you don't need a thousand features to get started. We'll help you build your Minimum Viable Product and get to market asap. And if you don't know what problem you're solving, we can talk about that too."
-          ctas={[{ label: "Let's talk", href: "https://calendly.com/alicia-26lights/30min" }]}
+          ctas={[{ label: "Let's talk", href: TALK }]}
           visual={<HeroFigure src="/team/hero-work.png" alt="26lights team at work" />}
         />
 
         <TrustBar
           label="Trusted by"
           logos={[
+            { src: "/logos/lizy.png", alt: "Lizy" },
+            { src: "/logos/sharingbox.png", alt: "Sharingbox" },
             { src: "/logos/cowboy.png", alt: "Cowboy" },
             { src: "/logos/umedia.png", alt: "Umedia" },
-            { src: "/logos/sharingbox.png", alt: "Sharingbox" },
-            { src: "/logos/emaprod.png", alt: "e-maprod" },
+            { src: "/logos/be-angels.png", alt: "beAngels" },
+            { src: "/logos/labbox.png", alt: "LABBOX" },
+            { src: "/logos/ringtwice.png", alt: "RingTwice" },
           ]}
         />
 
-        <TextSection
+        <DetailSplit
           eyebrow="The idea"
           title="The concept of the MVP goes straight to the point."
           paragraphs={[
@@ -64,23 +97,32 @@ export default function MvpPage() {
             "Developing countless features that no one uses is a waste of time, energy, and money.",
             "An MVP is a fully functional product. Test your killer feature in the market and start making your first sales — then keep building the rest of your app, iterating on real feedback.",
           ]}
+          cta={{ label: "Find your killer feature", href: TALK }}
         />
 
-        <TextSection
+        <DetailSplit
           eyebrow="How we work"
           title="Connected to the world."
-          alt
+          flip
           paragraphs={[
             "Your audience comes before your product. So we try, we tweak, and we move forward to offer them exactly what they need — regularly changing the scope, while the mission stays unchanged.",
             "Fast iterations let you get to know your market better while generating revenue. Building an MVP means you can leverage user feedback quickly, measure ROI early, and reinvest in future iterations.",
             "That's how you manage your investment effectively, control your growth, and minimize financial risk.",
           ]}
+          cta={{ label: "See how we iterate", href: TALK }}
         />
 
-        <PullQuote
-          line="Launching a project quickly doesn't mean rushing the work. Quick does not mean dirty."
-          tag="No technology religion"
+        <TextSection
+          eyebrow="Want to try it?"
+          title="No technology religion."
+          paragraphs={[
+            "Launching a project quickly doesn't mean rushing the work. Building an MVP involves a fast-paced process of validation and optimization.",
+            "Quick does not mean dirty.",
+          ]}
+          cta={{ label: "Talk about your stack", href: TALK }}
         />
+
+        <ToolsBar rows={TOOL_ROWS} />
 
         <Testimonials
           eyebrow="Our clients say it best"
@@ -89,31 +131,35 @@ export default function MvpPage() {
             {
               quote:
                 "26lights came in to help develop and ship our Cowboy Care platform, our on-demand service for maintenance and tyre puncture fixes. Their engineers worked directly with our team — no overhead, fluid communication. We recommend working with them.",
-              name: "CTO",
-              role: "Cowboy",
+              title: "CTO",
+              company: "Cowboy",
+              initials: "C",
             },
             {
               quote:
                 "We brought 26lights in to do a full audit of our two applications and set up a new workflow that fits our internal team better. We loved their flexibility and solution-oriented mindset. Would work with them again!",
-              name: "Product Lead",
-              role: "Koalect",
+              title: "Product Lead",
+              company: "Koalect",
+              initials: "K",
             },
           ]}
+          cta={{ label: "Talk to our team", href: TALK }}
         />
 
-        <TextSection
+        <DetailSplit
           eyebrow="Approach"
           title="You run the business. We build the tech."
           paragraphs={[
             "You're the expert at running your business. We're experts at building startups, organizing companies, and developing amazing tech. Through years of R&D with leading researchers, we've developed proprietary methodologies grounded in Visual Thinking — because one picture can convey more than a thousand words.",
-            "Whether you need a complete team to implement a new project or just a few hours of consultation, we adjust the composition of the team to your needs — you decide the workload, month by month. Flexibility doesn't compromise knowledge retention: our consultants can hop on and off your team without any issue.",
+            "Whether you need a complete team to implement a new project or just a few hours of consultation, we adjust the composition of the team to your needs — you decide the workload, month by month.",
             "During our collaboration, we become your dedicated team. Transparency is crucial to building trust, so you have access to all relevant information and a seat in every significant decision.",
           ]}
+          cta={{ label: "See our approach in action", href: TALK }}
         />
 
         <MidCta
           title="Let's talk about your growth."
-          href="https://calendly.com/alicia-26lights/30min"
+          href={TALK}
           label="Let's talk"
         />
 
@@ -157,9 +203,10 @@ export default function MvpPage() {
                 "We helped e-maprod reorganize their team by putting all the cards on the table, hiring the right people, and giving teams a real sense of ownership so they could run autonomously — while optimizing internal workflows so they could stop relying on spreadsheets.",
             },
           ]}
+          cta={{ label: "Start your MVP", href: TALK }}
         />
 
-        <Team eyebrow="Team" title="Let's meet." members={TEAM} />
+        <Team eyebrow="Team" title="Let's meet." members={TEAM} cta={{ label: "Work with us", href: TALK }} />
 
         <FinalCta
           title={
@@ -168,7 +215,7 @@ export default function MvpPage() {
             </>
           }
           sub="Want to see what difference we can bring to your business? Book a consultation today."
-          primary={{ label: "Book a free 30-min call", href: "https://calendly.com/alicia-26lights/30min" }}
+          primary={{ label: "Book a free 30-min call", href: TALK }}
           contactEmail="alicia@26lights.com"
           phone="+32 492 66 00 89"
           location="Brussels & Paris"

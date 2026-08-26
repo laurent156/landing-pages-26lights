@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import { Bistre } from "@/components/ui/Bistre";
 import { Wrap } from "@/components/ui/Wrap";
+import { SectionCta } from "@/components/ui/SectionCta";
 
 type Project = {
   company: string;
@@ -16,9 +17,10 @@ type ProjectsProps = {
   eyebrow: string;
   title: string;
   items: Project[];
+  cta?: { label: string; href: string };
 };
 
-export function Projects({ eyebrow, title, items }: ProjectsProps) {
+export function Projects({ eyebrow, title, items, cta }: ProjectsProps) {
   return (
     <Bistre as="section" data-screen-label="Projects">
       <Wrap style={{ position: "relative", zIndex: 1 }}>
@@ -41,6 +43,7 @@ export function Projects({ eyebrow, title, items }: ProjectsProps) {
             </div>
           ))}
         </div>
+        {cta ? <SectionCta {...cta} /> : null}
       </Wrap>
     </Bistre>
   );
