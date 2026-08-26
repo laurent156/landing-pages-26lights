@@ -16,11 +16,18 @@ type TestimonialsProps = {
   title: string;
   items: Testimonial[];
   cta?: { label: string; href: string };
+  /** #fafafa (validated default, arik-azoulay) unless a neighboring section is already
+   * that shade — pass "white" to break up two same-toned sections sitting back to back. */
+  background?: "gray" | "white";
 };
 
-export function Testimonials({ eyebrow, title, items, cta }: TestimonialsProps) {
+export function Testimonials({ eyebrow, title, items, cta, background = "gray" }: TestimonialsProps) {
   return (
-    <section className="testimonials" data-screen-label="Testimonials">
+    <section
+      className="testimonials"
+      style={background === "white" ? { background: "#fff" } : undefined}
+      data-screen-label="Testimonials"
+    >
       <Wrap>
         <div className="section-label">{eyebrow}</div>
         <h2>{title}</h2>

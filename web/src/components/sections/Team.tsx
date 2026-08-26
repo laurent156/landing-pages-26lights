@@ -11,16 +11,22 @@ type TeamMember = {
 type TeamProps = {
   eyebrow: string;
   title: string;
+  sub?: string;
   members: TeamMember[];
   cta?: { label: string; href: string };
 };
 
-export function Team({ eyebrow, title, members, cta }: TeamProps) {
+export function Team({ eyebrow, title, sub, members, cta }: TeamProps) {
   return (
     <section style={{ background: "#fafafa" }} data-screen-label="Team">
       <Wrap>
         <div className="section-label">{eyebrow}</div>
-        <h2 style={{ marginBottom: 40 }}>{title}</h2>
+        <h2 style={{ marginBottom: sub ? 16 : 40 }}>{title}</h2>
+        {sub ? (
+          <p className="sub-text" style={{ marginBottom: 40 }}>
+            {sub}
+          </p>
+        ) : null}
         <div className="team-simple-grid">
           {members.map((member) => (
             <div className="team-simple-item" key={member.name}>

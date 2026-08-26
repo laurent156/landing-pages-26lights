@@ -9,11 +9,13 @@ type DetailSplitProps = {
   photo?: { src: string; alt: string };
   flip?: boolean;
   cta?: { label: string; href: string; strong?: boolean };
+  /** #fafafa background instead of white — alternate across sections for rhythm */
+  alt?: boolean;
 };
 
-export function DetailSplit({ eyebrow, title, paragraphs, photo, flip, cta }: DetailSplitProps) {
+export function DetailSplit({ eyebrow, title, paragraphs, photo, flip, cta, alt }: DetailSplitProps) {
   return (
-    <section className="detail detail--light" data-screen-label={eyebrow}>
+    <section className={`detail${alt ? " detail--light" : ""}`} data-screen-label={eyebrow}>
       <div className={`detail-split ${flip ? "flip" : ""}`}>
         <div className={`detail-photo${photo ? "" : " is-placeholder"}`}>
           {photo ? <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 900px) 90vw, 460px" /> : null}

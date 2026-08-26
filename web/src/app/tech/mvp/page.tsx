@@ -4,6 +4,7 @@ import { HeroFigure } from "@/components/sections/HeroFigure";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { TextSection } from "@/components/sections/TextSection";
 import { DetailSplit } from "@/components/sections/DetailSplit";
+import { ApproachSection } from "@/components/sections/ApproachSection";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Projects } from "@/components/sections/Projects";
 import { Team } from "@/components/sections/Team";
@@ -88,8 +89,8 @@ export default function MvpPage() {
         />
 
         <DetailSplit
-          eyebrow="The idea"
-          title="The concept of the MVP goes straight to the point."
+          eyebrow="The concept of the MVP goes straight to the point"
+          title="Find your killer feature."
           paragraphs={[
             "What makes your product essential? What's the one feature that delivers the most value to your target audience? That's your killer feature — focus on it, build an MVP, and leave the rest for later.",
             "Developing countless features that no one uses is a waste of time, energy, and money.",
@@ -102,6 +103,7 @@ export default function MvpPage() {
           eyebrow="How we work"
           title="Connected to the world."
           flip
+          alt
           paragraphs={[
             "Your audience comes before your product. So we try, we tweak, and we move forward to offer them exactly what they need — regularly changing the scope, while the mission stays unchanged.",
             "Fast iterations let you get to know your market better while generating revenue. Building an MVP means you can leverage user feedback quickly, measure ROI early, and reinvest in future iterations.",
@@ -145,17 +147,29 @@ export default function MvpPage() {
             },
           ]}
           cta={{ label: "Talk to our team", href: TALK }}
+          background="white"
         />
 
-        <DetailSplit
+        <ApproachSection
           eyebrow="Approach"
-          title="You run the business. We build the tech."
-          paragraphs={[
-            "You're the expert at running your business. We're experts at building startups, organizing companies, and developing amazing tech. Through years of R&D with leading researchers, we've developed proprietary methodologies grounded in Visual Thinking — because one picture can convey more than a thousand words.",
-            "Whether you need a complete team to implement a new project or just a few hours of consultation, we adjust the composition of the team to your needs — you decide the workload, month by month.",
-            "During our collaboration, we become your dedicated team. Transparency is crucial to building trust, so you have access to all relevant information and a seat in every significant decision.",
+          statement="This is what happens when you bring together a team of passionate experts who put people first and strive for success. Strong partnership is the key."
+          alt
+          cards={[
+            {
+              title: "Co-creation",
+              photo: { src: "/team/collab-whiteboard.png", alt: "26lights working through a process map with a client" },
+              body: "You're the expert at running your business. We're experts at building startups, organizing companies, and developing amazing tech. Through years of R&D with leading researchers, we've developed proprietary methodologies grounded in Visual Thinking — because one picture can convey more than a thousand words. Our aim is to empower you, keeping you in control while optimizing the time a highly efficient collaboration takes.",
+            },
+            {
+              title: "Flexibility",
+              body: "Whether you need a complete team to implement a new project or just a few hours of consultation, we adjust the composition of the team to your needs — you decide the workload, month by month. This flexibility doesn't compromise knowledge retention: our consultants can hop on and off your team without any issue.",
+            },
+            {
+              title: "Transparency",
+              body: "During our collaboration, we become your dedicated team. Transparency is crucial to building trust, so you have access to all relevant information and a seat in every significant decision.",
+            },
           ]}
-          cta={{ label: "See our approach in action", href: TALK, strong: true }}
+          cta={{ label: "See our approach in action", href: TALK }}
         />
 
         <Projects
@@ -202,17 +216,23 @@ export default function MvpPage() {
           cta={{ label: "Start your MVP", href: TALK, strong: true }}
         />
 
-        <Team eyebrow="Team" title="Let's meet." members={TEAM} cta={{ label: "Work with us", href: TALK }} />
+        <Team
+          eyebrow="Team"
+          title="Meet our experts."
+          sub="Their track records and expertise are just something else. They work collaboratively as a team and alongside you to unlock your business's full potential."
+          members={TEAM}
+          cta={{ label: "Work with us", href: TALK }}
+        />
 
         <FinalCta
           title={
             <>
-              Let&apos;s talk about <em>your MVP.</em>
+              We&apos;re in the business of <em>making a difference.</em> Let&apos;s get started!
             </>
           }
           sub="Want to see what difference we can bring to your business? Book a consultation today."
           primary={{ label: "Book a free 30-min call", href: TALK }}
-          contactEmail="alicia@26lights.com"
+          contactEmail="info@26lights.com"
           phone="+32 492 66 00 89"
           location="Brussels & Paris"
         />
