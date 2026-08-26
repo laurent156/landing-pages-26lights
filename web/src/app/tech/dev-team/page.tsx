@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
-import { StatsCard } from "@/components/sections/StatsCard";
+import { HeroFigure } from "@/components/sections/HeroFigure";
 import { TrustBar } from "@/components/sections/TrustBar";
-import { DetailSplit } from "@/components/sections/DetailSplit";
 import { TextSection } from "@/components/sections/TextSection";
 import { ApproachSection } from "@/components/sections/ApproachSection";
 import { Projects } from "@/components/sections/Projects";
@@ -74,48 +73,20 @@ export default function DevTeamPage() {
             { label: "Meet our team!", href: "#team" },
             { label: "Let's talk", href: TALK, variant: "ghost" },
           ]}
-          visual={
-            <StatsCard
-              stats={[
-                { value: 14, suffix: " years", label: "Experience" },
-                { value: 200, suffix: "+", label: "Start-ups & scale-ups helped" },
-                { value: 90, suffix: "%", label: "Of our clients still growing" },
-              ]}
-            />
-          }
+          visual={<HeroFigure src="/team/collab-whiteboard.png" alt="26lights working through a process map with a client" />}
         />
 
         <TrustBar
           label="Trusted by"
           logos={[
-            { src: "/logos/cowboy.png", alt: "Cowboy" },
+            { src: "/logos/lizy.png", alt: "Lizy" },
             { src: "/logos/sharingbox.png", alt: "Sharingbox" },
-            { src: "/logos/yields.png", alt: "Yields.io" },
+            { src: "/logos/cowboy.png", alt: "Cowboy" },
+            { src: "/logos/umedia.png", alt: "Umedia" },
+            { src: "/logos/be-angels.png", alt: "beAngels" },
+            { src: "/logos/labbox.png", alt: "LABBOX" },
             { src: "/logos/ringtwice.png", alt: "RingTwice" },
           ]}
-        />
-
-        <DetailSplit
-          eyebrow="How we work with you"
-          title="Partnership, no ownership."
-          paragraphs={[
-            "We don't want your company. We're going to get involved in almost every conceivable way, but we won't take any equity.",
-            "This gives you total freedom in reassessing the relationship as time goes on — no strings attached, you evaluate us based on the results we bring.",
-            "Success takes time, but it usually speaks for itself.",
-          ]}
-          cta={{ label: "Talk about your project", href: TALK, strong: true }}
-        />
-
-        <TextSection
-          eyebrow="Our stack"
-          title="No technology religion."
-          alt
-          paragraphs={[
-            "Whatever your needs are — web, mobile, AI, database — we have experience and knowledge with most available technologies. Having a diverse team of senior devs allows us to cover a lot of ground.",
-            "We always choose technology based on relevance to the project, and build sustainable products that satisfy every stakeholder. Our developers come from successful companies such as Amazon or Teads — they know how to build robust software, but also to ship tactical code in a hurry.",
-          ]}
-          cta={{ label: "Talk about your stack", href: TALK, strong: true }}
-          toolRows={TOOL_ROWS}
         />
 
         <ApproachSection
@@ -134,8 +105,24 @@ export default function DevTeamPage() {
               title: "Across-the-board expertise",
               body: "A good product needs solid UX, positioning, and marketing, not just development. Working with a team of varied profiles gets you on-demand access to every skill startup success requires — every step covered, on your terms.",
             },
+            {
+              title: "Partnership, no ownership",
+              body: "We don't want your company. We're going to get involved in almost every conceivable way, but we won't take any equity. This gives you total freedom in reassessing the relationship as time goes on — no strings attached, you evaluate us based on the results we bring. Success takes time, but it usually speaks for itself.",
+            },
           ]}
           cta={{ label: "See our approach in action", href: TALK }}
+        />
+
+        <TextSection
+          eyebrow="Our stack"
+          title="No technology religion."
+          alt
+          paragraphs={[
+            "Whatever your needs are — web, mobile, AI, database — we have experience and knowledge with most available technologies. Having a diverse team of senior devs allows us to cover a lot of ground.",
+            "We always choose technology based on relevance to the project, and build sustainable products that satisfy every stakeholder. Our developers come from successful companies such as Amazon or Teads — they know how to build robust software, but also to ship tactical code in a hurry.",
+          ]}
+          cta={{ label: "Talk about your stack", href: TALK, strong: true }}
+          toolRows={TOOL_ROWS}
         />
 
         <Projects
