@@ -762,6 +762,39 @@ this 60px floor rather than assuming the page's existing value is correct; this 
 miss because 44px still *looks* like a normal avatar size in isolation, it only reads as too
 small next to the copy it is meant to lend credibility to.
 
+**Four-plus short traits, each with a sentence of supporting copy, read as heavy in the
+`.why-grid` hairline-card layout — reach for a single-open accordion instead when that
+happens.** The card grid works fine for two or three items; at four, showing every paragraph at
+once next to a photo (persona `.why` sections) reads as a wall of text. An accordion — plain
+list, no card chrome, only one item's copy visible at a time — fixes this without losing any
+content, first built for `arik-azoulay`:
+```css
+.why-accordion { border-top: 1px solid #e6e6e6; margin-bottom: 40px; }
+.why-item { border-bottom: 1px solid #e6e6e6; }
+.why-item-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 2px; background: none; border: none; cursor: pointer; text-align: left;
+  font-family: inherit;
+}
+.why-item-label { font-size: 18px; font-weight: 600; color: var(--ink); letter-spacing: -0.2px; }
+.why-item-icon { width: 20px; height: 20px; flex: none; color: var(--gray-2); transition: transform .3s var(--ease); }
+.why-item.is-open .why-item-icon { transform: rotate(180deg); color: var(--blue); }
+/* the 0fr/1fr grid-rows trick animates height without ever measuring it in JS */
+.why-item-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s var(--ease); }
+.why-item.is-open .why-item-panel { grid-template-rows: 1fr; }
+.why-item-panel-inner { overflow: hidden; }
+.why-item-panel p { font-size: 15px; line-height: 26px; color: #444; max-width: 480px; margin: 0; padding: 0 2px 20px; }
+```
+Each `.why-item-toggle` is a real `<button>` (`aria-expanded` synced on click, chevron icon
+rotating from the `.is-open` state), so it stays keyboard- and screen-reader-usable without
+extra work. JS closes every other item before opening the clicked one — never more than one
+open — and toggling the already-open item closes it, leaving none open, which is fine (lighter
+still). Default one item open on load so the section is not empty at first paint; pick whichever
+trait is the strongest hook. Use the `grid-template-rows: 0fr → 1fr` transition, not
+`max-height`, for the collapse animation — `max-height` needs a guessed-too-large value and
+therefore animates at the wrong speed for short content, while `0fr`/`1fr` measures itself and
+just works regardless of how much text is in the panel.
+
 ## 15. Pricing — three layouts, pick by offer shape
 
 1. **Card grid** (tech unit `.plans`/`.plan`, Malorie's `.pricing-shell`) — 3–4 boxed plans side
