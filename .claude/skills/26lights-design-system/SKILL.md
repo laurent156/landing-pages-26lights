@@ -13,12 +13,183 @@ description: >
 # 26lights landing-page design system
 
 This repo holds standalone marketing landing pages for 26lights (a product/growth-engineering
-studio). Each page is embedded on 26lights.com inside an Elementor iframe. They all share one
-visual system — same font, same neutrals, same button/card/section recipes, same reveal-on-scroll
-mechanic — but each is skinned to one of three **business units** via a single accent color.
+studio). Historically each page was one self-contained HTML file embedded on 26lights.com inside
+an Elementor iframe — that is what most of this document describes, and those files are still the
+source the recipes below were extracted from. They all share one visual system — same font, same
+neutrals, same button/card/section recipes, same reveal-on-scroll mechanic — but each is skinned
+to one of three **business units** via a single accent color.
+
+**New pages are no longer built as standalone HTML.** The repo is migrating to a real stack
+(Next.js → Strapi → Vercel), and the Next.js app at `web/` is now the canonical implementation —
+build new pages there, not as another self-contained HTML file. The CSS/typography/spacing
+recipes documented below still apply (they were ported into `web/src/styles/tokens.css` and
+`web/src/styles/components.css` verbatim, and every ratio/value in this doc is what actually
+ships), but instead of copy-pasting a `<section>` block per page you compose a shared React
+component from `web/src/components/sections/` with page-specific data. Two live pages exist as
+reference: `web/src/app/tech/mvp/page.tsx` and `web/src/app/tech/dev-team/page.tsx` — read one of
+those, plus the components it imports, before building a third. Sections 3 and 4 below (file
+convention, page skeleton) describe the *old* HTML boilerplate — skip them for a new page and go
+straight to whichever component covers the section you need; the section numbers still map
+1:1 to a component (§6 buttons → `Button.tsx`, §8 hero → `Hero.tsx` / `HeroFigure.tsx`, §9 trust
+bar → `TrustBar.tsx`, §11 detail split → `DetailSplit.tsx` / `TextSection.tsx`, team/approach/
+project/final-CTA → `Team.tsx` / `ApproachSection.tsx` / `Projects.tsx` / `FinalCta.tsx`, site-wide
+header/footer → `Header.tsx` / `Footer.tsx`, §24).
+
+**This is a standalone site now, not an iframe-embedded fragment.** The stack is Claude, GitHub,
+Strapi, Vercel — `web/` replaces 26lights.com outright, it does not get dropped into an Elementor
+HTML widget. `layout.tsx` renders a real `<Header>` and `<Footer>` around every page (§24); do not
+treat a page's own sections as the whole deliverable, and do not reintroduce the old iframe
+height-postMessage script here — that only applies to the legacy per-page HTML files elsewhere in
+this repo.
+
+**`ServiceColumns.tsx`** — the three business units side by side, each column carrying its unit
+name as a small accent eyebrow, an offer title ("On-demand tech expertise"), the real list of
+named services inside that unit, and a "Know more" arrow-link to its hub page. Built for the
+company-level homepage, where a visitor arrives not yet knowing which of the three units they
+need, so the section works as the routing table into the rest of the site. Prefer
+`ApproachSection` when the three columns are *arguments* (title + prose); reach for this only when
+each column is genuinely a list of named offers. Note it stays on the page's single accent rather
+than colouring each column with its own unit hue — §1's one-accent-per-page rule still holds on
+the homepage, even though all three units appear on it.
+
+**`Pricing.tsx`** — §15, three priced tiers side by side with one `featured` on a dark glow card
+(radial accent gradient, like `.plan--featured`). Reach for this over `ApproachSection` whenever
+the real source states actual figures — burying a price in prose is what makes a visitor bounce to
+ask "how much?" by email instead of buying. Every tier's `cta.href` should be the real checkout
+link (Stripe, Calendly, WhatsApp — whatever the source actually uses), not a generic `#contact`.
+
+**`ExpertCards.tsx`** — a column of argument next to two or three named experts shown in depth
+(large photo, credential line, what they specifically do, skill-chip tags). Distinct from
+`Team.tsx`'s full-roster grid of small avatars: reach for `Team` to prove the company has a team,
+and for this when the argument is *seniority* and the page's whole promise rests on who exactly
+would touch the visitor's work (validated on `ai-production`, whose two PhDs are the entire pitch).
+
+**`FeatureShowcase.tsx`** — a centered eyebrow/statement/sub header with two CTAs (a solid
+primary + a soft arrow-link), followed by a photo on one side and a clickable list of reasons on
+the other. Each row is a single-open accordion (clicking one collapses the others — only the
+active row's body is visible) and the photo swaps to match whichever row is active. Reach for
+this over the plain `ApproachSection` grid when a page has 3-5 "why us" style reasons and you
+want the section to feel interactive rather than a static card layout (validated on
+`tech/cto`'s "Why work with us?"). It is a client component (`"use client"`, holds its own
+`useState` for the active row) — pass `items: {title, body, photo}[]`, a `primaryCta`, and an
+optional `secondaryCta`.
+
+**Reuse company-wide content verbatim across pages — do not re-derive it per page.** Team roster,
+project/case-study data, and the "trusted by" logo set are the same real facts regardless of
+which offer page they appear on. When a new page's live source shows a *subset* of the trust-bar
+logos or a differently-worded project blurb, that is usually just what that one page happened to
+render, not a deliberate per-page variant — reuse the exact data already in another page's
+`page.tsx` (`TEAM`, the `Projects` items, the `TrustBar` logos array) rather than take the
+page-specific subset at face value. Confirmed as a real mistake once: `tech/dev-team` initially
+shipped a 4-logo trust bar because that is what the live dev-team page's DOM happened to contain,
+when the actual set (same real clients) is the fuller 7-logo one already used on `tech/mvp`.
+
+**A muted/opacity-dimmed logo or element is not the same claim as "grayscale."** `ai-production`'s
+proof-logo grid renders each client's real colour (pink Lizy, red LAB BOX, black Cowboy) at
+`opacity: .68` on a dark card — `filter: grayscale()` is nowhere in the source. At small size on a
+dark background this reads, at a glance, as a uniformly muted grey wall, which is a legitimate
+reason a reviewer asks "weren't these grey?" — verify with `getComputedStyle(...).filter` and
+`.opacity` before either agreeing or "fixing" it; don't take the visual impression as ground truth
+in either direction.
+
+**Bespoke CSS/SVG illustrations are real page content, not optional polish to wave through.**
+`ai-production` pairs two sections with hand-built illustrations — an animated terminal
+(`.code-card`, AI's line errors at the production wall, 26lights fixes it, it ships) and three
+SVG diagrams on the "What we do" cards (a self-deduplicating code editor, a Stripe/OAuth/API
+integration diagram, a security-checklist shield) — each wired to the same `.reveal`/`.js-reveal`
+mechanism everything else uses, via per-element `--d`/`--reveal-delay` stagger. A first pass
+substituted plain text sections (`TextSection`, `ApproachSection`) for both, reasoning that
+porting bespoke animated illustrations across 4 similar AI pages would be slow — that is a real
+scope tradeoff worth naming out loud to the user, not a simplification to make silently: caught
+only because the user asked "tu repasses bien sur tout?" after catching an unrelated, smaller gap
+(the missing proof logos, below). When a section's whole visual identity is a custom illustration,
+treat dropping it as equivalent to dropping a paragraph of real copy — flag it, don't quietly swap
+in the nearest existing component.
+
+**When rebuilding a page from its live source, verify structure via the DOM, not just extracted
+text.** A plain text-only read of a live page reliably misses: images (client/tool logos, staff
+photos) that carry no surrounding text of their own; which heading is an eyebrow label versus the
+real title (both can render as literal `<h2>` tags with no semantic distinction in the markup);
+and content-vs-photo pairings when a page's build tool splits a section across sibling DOM nodes
+that don't line up with `.closest('section')`. Confirmed missed at least twice: a stat row and a
+named testimonial photo on `tech/mvp`, and a page-specific trust bar plus a 16-logo tools grid on
+`tech/dev-team` — all four were invisible to a text-only scrape and only surfaced by walking up
+from a distinctive text match to find the real image siblings. **Do not restructure real content
+into an invented section shape to fill a gap** — if a paragraph reads as one block on the live
+page, do not split it into its own titled sub-section with a fabricated eyebrow/CTA/photo unless
+the source actually presents it that way (confirmed mistake: `tech/dev-team`'s "Partnership, no
+ownership" paragraph was really the fourth reason under "Why work with us", not a standalone
+section — it only looked separate because of where it fell in a flattened text extraction).
 
 Read this top-to-bottom the first time you build or migrate a page. Section headers let you
 jump straight to a component once you know the system.
+
+**Inserting a new CSS rule by string-matching an anchor like `".hero-ctas {"` can land inside a
+compound selector instead of before it — verify the diff, don't just trust the anchor matched
+where intended.** Adding `.hero-note` this way spliced it into the middle of
+`.hero-inner.no-visual .hero-badges,\n.hero-inner.no-visual .hero-ctas { justify-content: center; }`
+— the tool matched the literal substring `.hero-ctas {` that happened to sit inside that
+multi-line selector, not a top-level rule. The result compiled without any CSS error (a comment
+between two selectors in a list is syntactically legal) but silently turned into two different
+bugs: `.hero-note` became wrongly scoped to only the no-visual hero variant, and — the one that
+actually got noticed — `.hero-ctas { justify-content: center; }` became **global, unscoped**,
+centering the CTA row's buttons on every two-column hero site-wide (`tech/mvp`, `tech/dev-team`,
+`tech/cto`, `ai/production`, the homepage) instead of only the intentional no-visual/centered
+variant. It read as "the buy button is indented, off to the right" — worse on mobile, where the
+button is much narrower than its full-width flex container so the centering offset is large and
+obvious, but present at every width. Confirmed only when the user compared a hero screenshot
+against the H1's left edge; a glance at desktop alone didn't make it obvious since two full-width
+buttons leave less empty space for `justify-content: center` to redistribute. When you append or
+insert a CSS block programmatically, re-read the few lines immediately around the insertion point
+afterward and confirm the selector list you expected to still exist, still does, verbatim.
+
+**Every page must set its own `data-unit`, or it silently renders in `layout.tsx`'s default
+(`business`/blue).** `[data-unit="business"|"tech"|"marketing"]` on an element retargets every
+`--accent-*` alias for that subtree (§2); `layout.tsx` sets `business` on `<html>` for the site
+chrome (header/footer stay one consistent blue identity regardless of which page you're on — do
+not change that), but nothing below it overrides this per page. Confirmed shipped wrong on six
+pages before being caught: `tech/mvp`, `tech/dev-team`, `tech/audit`, `tech/cto`, `tech/erp`, and
+`ai/production` all rendered in business blue despite being Tech-unit pages (their own ported CSS
+even defines `--magenta` as the accent) — nobody had added `data-unit="tech"` to any of them. Fix:
+put `data-unit="<unit>"` on the page's own top-level wrapper div (`<div data-unit="tech"><main>…`),
+never on `<html>` — that keeps the header/footer on business blue while the page content takes on
+its real unit's accent. When starting a new page, set this **first**, before writing content, or
+it is easy to build an entire page and only notice the wrong colour by explicitly checking
+`getComputedStyle(...).getPropertyValue('--accent-text')`, which is what caught it here — a
+glance at the rendered page did not, because plausible-looking blue and correct magenta are not
+obviously "wrong" side by side without a reference to compare against.
+
+**The accent split: background stays blue everywhere; every foreground colored element follows
+the unit.** This took three rounds of correction in one session to land on — read it carefully
+before touching any accent-related CSS, and see `tokens.css`'s own comment for the enforcement
+rule. Final version, confirmed against `tech/erp` (the page the user pointed to as "the one page
+you got right"):
+
+- **`--glow-rgb` and `--bistre-base-1/2/3` (tokens.css) are fixed to blue, unconditionally, with
+  no `[data-unit]` override.** These drive only the large dark-surface background washes —
+  `.bistre::before`, `.hero::before`, `.value-split::before`, `.appr-card--bistre::before`,
+  `.plan--featured::after`, `.split--light::before`, `.feat-visual::before`, `.tools`'s own tint —
+  every one of them reads `--glow-rgb`, never `--accent-rgb`. This is "le fond" — it never
+  changes, on any page, regardless of unit.
+- **`--accent` and every other alias — `--accent-text`, `--accent-hover`, `--accent-bright`,
+  `--accent-on-dark`, `--accent-tint`, and `--accent-rgb` itself when used for a small foreground
+  border/tint (not a background wash), e.g. `.site-mega-featured a`'s underline or
+  `.appcard-insight`'s border — do vary per `[data-unit]`.** Buttons, section-labels, icons,
+  badges, arrow-links, chip tints: all of it. "Tous les éléments colorés" (the user's words) means
+  exactly that — not just `.btn`, everything foreground.
+- **`data-unit="tech"` covers both the general Tech family (MVP, Dev Team, Tech Audit, CTO, ERP
+  Implementation) and every AI-branded page** (`ai/production`, `ai/prototyping`, `ai/erp`,
+  `ai/powered-automation`) — one shared magenta foreground accent, put on each page's own
+  top-level wrapper div (never on `<html>` — `layout.tsx` hardcodes `business` there for the site
+  chrome, which must stay blue always so header/footer read as one consistent identity across
+  every page). `data-unit="marketing"` gets the same treatment with orange, whenever a Marketing
+  page exists.
+- **When adding a new background-wash rule, reach for `--glow-rgb` by default — reach for
+  `--accent-rgb` only for a genuinely small foreground accent (a thin border, an icon tint), and
+  say why in a comment.** Getting this backwards is the exact mistake that shipped and had to be
+  unwound twice: once when every accent-colored surface (including the backgrounds) was retinted
+  per unit, and once when a first attempt to fix that centered a `--btn-accent`-only split before
+  the user clarified they meant *only* the background stays fixed, not everything-but-the-button.
 
 ## 1. The three business units
 
@@ -114,21 +285,30 @@ This is the more complete token set (base / bright-on-dark / hover / on-dark / p
 prefer copying **this** pattern, not the blue one, when standing up a brand-new unit, because
 it already covers dark-hero and light-section needs separately.
 
-### 2.4 Marketing unit — orange (proposed, not yet used anywhere)
+### 2.4 Marketing unit — orange (shipping on six pages, and the ramp is broken)
 
-No marketing page exists yet. When you build the first one, start from this proposal
-(mirrors the magenta pattern) and get a quick visual sign-off before it ships broadly —
-these hexes are a reasonable starting point, not an approved brand value:
+Six pages ship this unit (`marketing`, `branding`, `go-to-market`, `nurturing`,
+`nurturing-marketing-led`, `video-creation`). **The `web/` app's `tokens.css` collapsed the ramp
+below to a single value** — `--orange`, `--orange-bright` and `--orange-on-dark` are all
+`#feb93e` — and then pointed `--accent-text` at it. Measured consequence: every `.section-label`,
+`.section-cta` and `.cases-eyebrow` on those six pages renders at **1.72:1 on white and 1.65:1 on
+`#fafafa`**, against a 4.5:1 requirement. Blue learned this lesson (`--blue-text: #3d56e0`,
+darkened after a WCAG audit) and magenta passes at 4.7:1; orange never got its text step.
+
+The ramp orange actually needs — the dark step measured, not proposed:
 
 ```css
 :root {
-  --orange: #C4570A;          /* fills + text on light — check contrast before shipping */
-  --orange-bright: #FF7A29;   /* brand-bright: glows, highlights on dark */
-  --orange-hover: #A6480A;
-  --orange-on-dark: #FFB27A;  /* orange text on dark surfaces */
-  --orange-tint: #FFF4EC;     /* pale tint for icon chips, pull-quotes */
+  --orange: #feb93e;          /* the brand yellow: button fills, glows */
+  --orange-text: #b3560a;     /* text on light — 4.94:1 on #fff, 4.73:1 on #fafafa, 4.53:1 on #f5f5f5 */
+  --orange-bright: #ff7a29;   /* brand-bright: glows, highlights on dark */
+  --orange-hover: #e5a52e;
+  --orange-on-dark: #feb93e;  /* 11.9:1 on the dark surfaces — correct as-is */
+  --orange-tint: #fff4ec;     /* pale tint for icon chips, pull-quotes */
 }
 ```
+`--accent-text` must point at `--orange-text`, never at `--orange`. The doc's earlier proposal of
+`#C4570A` measures 4.45:1 on white — it misses, so do not reach for it.
 **Fastest way to build a marketing-unit page**: copy `ai-production/index.html`'s whole
 `<style>` block (it's the most complete template — see §4), then do a mechanical find/replace:
 `magenta` → `orange`, and swap the literal RGB triplet `254,59,155` (magenta-bright) →
@@ -136,9 +316,17 @@ these hexes are a reasonable starting point, not an approved brand value:
 appears inside `rgba(...)` gradients. Everything else (class names, layout, spacing) carries
 over unchanged.
 
-## 3. File convention (read before writing any page)
+## 3. File convention — LEGACY standalone pages only
 
-- **Every page is one self-contained `.html` file** — no external requests, no CDN links, no
+> **This whole section applies only to the old single-file pages at the repo root**
+> (`ai-production/index.html`, `growth-plan/`, `malorie-dreyfus/`, …), which are embedded in
+> Elementor iframes on the live WordPress site. **The `web/` Next.js app — where all current work
+> happens — follows none of it**: real components under `web/src/components/`, styles in
+> `web/src/styles/{tokens,components}.css`, fonts via `next/font`, images as files under
+> `web/public/` served through `next/image`. Read §§5-29 for the app; read this section only when
+> touching a root-level legacy page.
+
+- **Every legacy page is one self-contained `.html` file** — no external requests, no CDN links, no
   separate CSS/JS files. This is required: pages are dropped into an Elementor "HTML" widget /
   iframe on 26lights.com with no build step and no other assets available.
 - **The brand font is embedded as base64** inside a single `@font-face` rule at the top of
@@ -207,7 +395,7 @@ body {
   font-family: var(--font); background: #fff; color: var(--ink);
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden;
 }
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
 section { padding: 96px 0; }
 /* ... component CSS from §6+ ... */
 </style>
@@ -269,21 +457,39 @@ Notes:
 
 ## 5. Typography & section rhythm
 
+Values below are what the `web/` app actually renders (verified against `globals.css` and
+`components.css`, not what an earlier draft of this doc claimed):
+
 ```css
 section { padding: 96px 0; }                       /* 64px on mobile, see §14 */
 h2 {
-  font-size: clamp(34px, 4vw, 50px);
+  font-size: clamp(32px, 3.6vw, 44px);               /* globals.css — renders 26px at 390px */
   font-weight: 400–500;                              /* 400 on tech-unit pages, 500 on business-unit pages */
   letter-spacing: -0.5px; line-height: 1.1;
 }
 .section-label {
-  font-size: 11–13px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
-  color: var(--blue|magenta|orange); margin-bottom: 18–20px;
+  font-size: 13px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--accent-text);                         /* never a raw unit colour — see §2.4 */
+  margin-bottom: 18–20px;
 }
-.sub-text, section > p { font-size: 17px; line-height: 1.6–1.7; color: var(--gray-1); max-width: 56–64ch; }
+.sub-text, section > p { font-size: 17px; line-height: 1.5; color: var(--gray-1); max-width: 56–64ch; }
 ```
 On a dark (`.bistre`/hero) section, flip `.section-label` to a translucent white
 (`rgba(255,255,255,0.4)`) and `h2` to `#F7F7F7`.
+
+**No two adjacent sections may share the same background.** Every section resolves to one of:
+white, the light-gray `alt` tint (`#fafafa`/`#F5F5F5`), or `.bistre` dark — and a page reads as
+a sequence of distinct blocks only when consecutive sections alternate between them. This has
+recurred three times in this repo (two stacked white sections back to back on `nurturing` and
+`nurturing-marketing-led`, then again on a freshly-built `tech/drp`) — always the same shape:
+a component's *default* background (no `alt`, no `bistre`) is white, so two defaults in a row
+are invisibly identical even though nothing in either component call looks wrong on its own.
+Before calling a page done, list every section's actual rendered background in order (a plain
+`getComputedStyle(...).backgroundColor` walk over each `[data-screen-label]`, since a class name
+like `alt` doesn't prove the section that follows it isn't *also* plain) and fix any adjacent
+pair that matches — usually by toggling one section's `alt`/`bistre` flag, never by inventing a
+new surface color. Watch for a bar-component (`TrustBar`, `MiniCtaBanner`) sitting between two
+content sections too — its background counts the same as any other section's for this rule.
 
 ## 6. Buttons
 
@@ -314,12 +520,21 @@ variant based on what background it sits on, never invent a new button style.
 
 ## 7. Section-level surfaces
 
-**`.wrap`** — the standard content container, `max-width: 1100px` (some persona pages use
-`1175px`), `padding: 0 48px` (or `0 40px`).
+**`.wrap`** — the standard content container, `max-width: 1280px` (widened from the original
+1100px across every Next.js page in `web/` — validated on `tech/erp`, more breathing room on
+the 1440px+ viewports the multi-column bento/tool-group layouts get viewed on; the old HTML
+pages below still use 1100px, and persona pages used `1175px`).
 
 **`.bistre`** — the reusable dark, accent-tinted glow surface used for hero backgrounds, proof
-sections, featured pricing cards, and final CTAs. Same recipe every time, only the accent RGB
-triplet changes per unit:
+sections, featured pricing cards, and final CTAs. In the `web/` app the recipe is identical on
+every unit: `tokens.css` pins `--glow-rgb` to the blue triplet site-wide on purpose, so a magenta
+or orange page still gets the same blue-violet dark. Do not re-tint it per unit — an earlier
+draft of this doc said the triplet changes per unit, and it does not.
+
+Four surfaces still hand-roll their own dark base instead of using this recipe — `.cases`,
+`.method`, `.gp-trajectory__glow`, `.appr-card--bistre`. They read as slightly-wrong copies of
+the house dark; fold them in when you next touch them. The legacy root-level HTML pages do vary
+the triplet per unit, as below:
 
 ```css
 .bistre { position: relative; background-color: #050505; color: #fff; isolation: isolate; }
@@ -358,6 +573,41 @@ was pointed out as the better, already-approved choice — check for a usable ph
 Skip the `.hero-badges` pill entirely unless the page actually needs to claim something specific
 (an offer, a limited slot) — an empty/generic badge is worse than no badge.
 
+**Reversed order (visual on the left, copy on the right)** is a same-styling variant of this
+hero — pass `reverse` to `Hero.tsx` (adds `.reverse` to `.hero-inner`, which sets `order: -1` on
+the visual column via CSS `order` — no change to the dark/bistre background, copy, or CTAs).
+Reach for it purely for visual rhythm when a page's hero would otherwise look identical to
+another page right above it in the nav, not as a signal of anything semantic (validated on
+`tech/cto`).
+
+**`visualAlign="stretch"` is only for a visual meant to fill the column both ways — check the real
+source's own width for that visual before reaching for it.** It shipped wrongly applied to
+`ai-prototyping`'s hero once: that page's `.stackwrap` sets an explicit fixed `width: 300px`
+(centered, with two fanned "ghost" cards behind it — the width matters to the fan effect), and
+`visual-stretch`'s `.hero-visual-in > * { width: 100% }` silently overrode it to fill the entire
+column (~629px), stretching a card that was supposed to stay compact. Caught only when the user
+asked to compare the built width against the real source's. Use it for a visual with no width
+opinion of its own (`ai-production`'s `.prog-card`, which is a plain block with no explicit
+width) — never for one that deliberately sets its own fixed size.
+
+**Hero height rule — fill most of the first screen together with the trust bar, not the hero
+alone.** `.hero` (in `components.css`) is `min-height: calc((100vh - 107px) * 0.85)` — `107px` is
+the real measured height of `.trust` (§9) at desktop width, so hero + trust bar land almost
+exactly at the viewport fold; the `* 0.85` keeps it from reading as a rigid, perfectly-snapped
+100vh block and lets the next section peek in. On mobile (`≤900px`) this is overridden back to
+`min-height: auto` — the trust bar wraps to more rows there and its height stops being
+predictable, so let the hero size to its own content instead of fighting the calc. Apply this
+same formula to any new full-bleed dark hero rather than inventing a fixed px height per page
+(validated through several rounds of user sizing feedback on `tech/erp`).
+
+The `.hero-inner.no-visual` variant (centered, no visual column — used whenever `Hero` gets no
+`visual` prop, see §8 boilerplate below) uses **asymmetric** top/bottom padding: `padding-top:
+120px` but `padding-bottom: 72px`. Because `.hero`'s content is vertically centered inside the
+`min-height` box, trimming only the inner box's own bottom padding (not the top) pulls the CTA
+button closer to the section's bottom edge without also shrinking the gap above the headline —
+a straight symmetric padding cut moves both gaps by the same amount and doesn't fix a
+bottom-heavy hero on its own.
+
 ```html
 <section class="hero" data-screen-label="Hero">
   <div class="hero-inner">
@@ -380,7 +630,7 @@ Skip the `.hero-badges` pill entirely unless the page actually needs to claim so
 ```css
 .hero { position: relative; padding: 0; background: var(--hero-bg); overflow: hidden; }
 .hero::before { /* same recipe as .bistre::before, §7 */ }
-.hero-inner { position: relative; z-index: 4; max-width: 1100px; margin: 0 auto; padding: 84px 48px;
+.hero-inner { position: relative; z-index: 4; max-width: 1280px; margin: 0 auto; padding: 84px 48px;
   display: grid; grid-template-columns: 1.04fr 0.96fr; gap: 56px; align-items: center; }
 .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
 .badge {
@@ -637,7 +887,7 @@ photo/graphic, one side copy, with a `.flip` modifier to swap which side the vis
 every other instance (so alternating sections don't feel monotonous down the page).
 
 ```css
-.detail-split { max-width: 1100px; margin: 0 auto; padding: 0 48px;
+.detail-split { max-width: 1280px; margin: 0 auto; padding: 0 48px;
   display: grid; grid-template-columns: minmax(0,0.88fr) minmax(0,1.12fr); column-gap: 64px; align-items: center; }
 .detail-split.flip .detail-photo { order: 2; }
 .detail-photo { position: relative; overflow: hidden; border-radius: 18px; min-height: 380px; }
@@ -649,6 +899,23 @@ every other instance (so alternating sections don't feel monotonous down the pag
 ```
 `.detail-photo.detail-graphic` swaps the photo slot for a custom SVG panel (`.schema-panel`,
 `.pm-flow`, `.gp-trajectory` — see §12) instead of an `<img>`; same grid, same flip modifier.
+
+**A real product screenshot goes in `photoFit="contain"`, not the plain `cover` default.**
+`cover` (the default) is right for a portrait/team photo — fill the frame edge to edge, crop
+what doesn't fit. A screenshot of real software is the opposite case: cropping into it loses the
+point of showing it. `photoFit="contain"` (`DetailSplit.tsx`) shrinks the image to ~70% on a
+`var(--light)` backdrop instead — `.detail-photo--contain { display:flex; align-items:center;
+justify-content:center; background:var(--light); } .detail-photo--contain img { width:70%;
+height:auto; object-fit:contain; }`. Validated on `tech/odoo-implementation`'s three real Odoo
+screenshots, which read as oddly zoomed/cropped under plain `cover`.
+
+Before reaching for a custom SVG/CSS illustration to *replace* a real screenshot in this slot
+("make it feel more on-brand"), try `photoFit="contain"` first — a hand-drawn abstract diagram
+standing in for a real product is a bigger swing, and one attempt on this exact page (a dark
+hub-and-spokes diagram, magenta center node, six connected modules) was reverted after checking
+it live: it read as a generic tech diagram, not specific to the product, and didn't sit well
+next to the other two real screenshots on the same page. Real screenshot > abstract diagram
+unless a specific illustration has already been checked live and approved.
 
 **`.why-split` (persona pages) should use this same framed-photo treatment, not the older
 full-bleed one.** The original persona-page recipe stretched the photo edge-to-edge and as tall
@@ -1152,3 +1419,462 @@ is no visible flicker — verify by reproducing the exact failure first (scroll 
 `resize` event, compare the sticky element's real stuck `rect.top` against what the un-sticking
 trick reads at the same scroll position — they will differ by however far the element has
 scrolled past its pin point) before trusting that the fix actually changed anything.
+
+## 24. Site header & footer (site-wide chrome)
+
+Unlike every other section in this doc, `Header.tsx` and `Footer.tsx` are not per-page
+components — they're rendered once, in `web/src/app/layout.tsx`, and wrap every page. Content
+(nav labels, footer columns, contact block) is ported verbatim from the live 26lights.com header
+and footer via live-DOM inspection, same "reuse real content" principle as everywhere else in
+this doc — do not invent nav items or footer copy.
+
+**Transparent-over-hero header, solid on scroll.** Every page in this app opens on a dark
+`.hero` (§8), so the header is designed to sit *on top of* it rather than as a separate white bar
+above it — `position: fixed`, `background: transparent` by default, with a white logo variant
+(`/logos/26lights-logo-white.png`, not a CSS filter — a real light-wordmark asset the user
+supplied, since inverting the colored icon with `filter: brightness(0) invert(1)` would flatten
+its actual brand colors to solid white) and white/translucent nav text. `Header.tsx` tracks
+`window.scrollY` and flips a `solid` boolean (`scrolled || servicesOpen || mobileOpen`) once past
+`24px`, adding `.is-solid` to `.site-header`: background goes white, the logo swaps back to the
+colored `/logos/26lights-logo.png`, nav text and the hamburger bars go from white to `--ink`, and
+the header CTA swaps `btn-ghost` (transparent, for the transparent state) to `btn-outline` (for
+the solid state). The mega-menu panel and the mobile nav panel are always opaque white regardless
+of scroll — only the top bar itself toggles. Opening the mega-menu does **not** force `solid` —
+`const solid = scrolled` only — the bar must stay transparent behind an open panel (confirmed
+mistake: an earlier version also forced `solid` on `servicesOpen`/`mobileOpen`, which flashed the
+bar white the moment "Services" was clicked; the floating panel is a self-contained opaque card,
+it doesn't need the bar behind it to go solid too).
+
+Reach for `fixed` positioning here specifically because the header must overlay the hero with no
+layout push (a `sticky` header, like the old per-page static HTML used, reserves its own row and
+pushes the hero down, recreating exactly the "white bar above the hero" look this pattern
+replaces). `.site-mobile-nav`'s `top` offset is hand-matched to the header's own real height
+(`65px` at the current thin nav-bar sizing) — if the header's vertical padding or logo size ever
+changes, update that offset alongside it or the mobile panel will show a gap or overlap under the
+bar.
+
+**State that lives in the root layout does not reset on navigation — reset it on `pathname`
+yourself.** `layout.tsx` never remounts during client-side navigation, so anything stateful it
+renders survives a route change, and two real bugs shipped from exactly this:
+
+- `RevealSetup` ran its `IntersectionObserver` in a `useEffect(…, [])`, so it only ever observed
+  the *first* page's `.reveal` elements. Every page reached by clicking a nav link kept
+  `.js-reveal .reveal { opacity: 0 }` forever — **the entire page below the hero rendered
+  invisible**, which read to the user as "I can't see or feel that I changed page" (the hero has
+  no `.reveal`, so it alone stayed visible). Keying the effect on `usePathname()` re-queries the
+  new page's elements, and the fade-up doubles as the arrival animation.
+- `Header`'s open mega-menu / mobile-menu state stayed open on top of the page just navigated to.
+  Closing all menus in a `useEffect` keyed on `pathname` fixes it, and the panel closing is itself
+  feedback that navigation happened.
+
+Treat "does this reset on navigation?" as a standing question for any layout-level state.
+
+**Give the nav a "you are here" state.** Every page in this app opens on a similar dark hero, so
+without it a route change is nearly invisible. `Header` compares `usePathname()` against the nav
+data: the matching mega-menu row keeps the `--accent-tint` background plus an inset accent rule on
+its left edge and gets `aria-current="page"`, and the `Services` trigger carries an underline
+while the current route is any of its services (white over the transparent hero, `--accent` once
+the bar is solid). Derive it from the same `NAV_GROUPS` data the menu renders — never hand-maintain
+a second list of "which paths are under Services".
+
+**Mega-menu dismissal must be click-outside + Escape, never `onBlur`.** An earlier version closed
+the "Services" dropdown on the trigger button's `blur` event — this silently broke every link
+inside the panel, because clicking a link blurs the trigger (moving focus toward the link) before
+the click's own action fires, so the panel closed and unmounted the link out from under the click.
+Fixed by tracking a ref on the nav-item wrapper and closing only on a `pointerdown` outside that
+ref, plus an `Escape` keydown handler. Any future dropdown/menu in this app should follow the same
+pattern, not `onBlur`.
+
+**Mega-menu shape: family → service → one-line teaser, not a bare link list.** Each `NavGroup`
+("Tech" / "AI" / "Business" / "Marketing") is a *family* — its own small uppercase colored eyebrow
+(`.site-mega-col-title`, 12px, `--accent-text`, not a big heading — a large column title reads as
+competing with the item titles below it rather than a quiet category label). Each `NavLink`
+underneath is a real named *service* with its own short *teaser* description (`.site-mega-link-
+title` bold 15px + `.site-mega-link-desc` 13px gray, both inside one `<a>` so the whole row is
+clickable, with a rounded `var(--light)` hover highlight behind the row via negative margin +
+padding). Write the teaser as a compressed, factual summary of that service's own real hero/meta
+copy (its already-built `page.tsx` sub, or the live 26lights.com page's meta description /
+hero-sub if not migrated yet) — never an unrelated invented marketing line.
+
+**Keep every teaser to one rendered line, and give each family its own tagline.** Two-line
+descriptions push the panel past the fold and leave the columns ending at wildly different
+heights — the whole panel measured 1060px tall (in a 900px viewport) before the copy was trimmed,
+767px after, which is what makes it read as designed rather than as a dump of everything on offer.
+Each family also carries a one-line `tagline` under its eyebrow (`.site-mega-col-sub`, 13px,
+`--gray-2` — deliberately one step lighter than the items' `--gray-1`, both still clearing AA on
+white; do **not** use the ~#a4a8bb greys that design mocks reach for here, they fail contrast the
+same way the old `#bbb` trust-bar label did, §9). **No "Popular"/promo badges on menu items** — a
+design reference put a `Popular` chip on MVP and Go To Market, and it was cut on sight: 26lights
+does not rank its own offers in the nav, and the chip pulls the eye away from the family the
+visitor is actually scanning. Don't reintroduce per-item badges here.
+
+**Cluster a sub-family behind its own label instead of leaving it inline.** Tech's three ERP
+offers (ERP Implementation, Odoo Implementation, AI ERP) sit in a `subgroups` entry rendered under
+a small `ERP` label with a hairline top border (`.site-mega-subgroup`) — they read as one decision
+("which ERP route?") rather than three unrelated top-level services, and it pulls AI ERP next to
+its siblings instead of stranding it in the AI column. **When you add a subgroup, flatten its
+items back into the mobile accordion** (`[...group.items, ...group.subgroups?.flatMap(s => s.items)]`)
+— the mobile panel has no subgroup UI, and a confirmed bug shipped briefly where the three ERP
+services were unreachable on mobile because the accordion only mapped `group.items`.
+
+**Fill a short family column with a real case study, never a fabricated one.** `.site-mega-featured`
+is a `--light` card (title / one line / accent-colored "Read the story" link) closing the gap under
+AI's three services. It must cite a real client with real numbers — this one uses Corset Daum
+("80% of tasks automated", custom ERP on Monday, MRR ×3 in three years), the same case study
+already shipping in `/tech/erp`'s `Projects` section, linked to its real `customer-stories/` page.
+A design reference for this slot arrived with an invented client ("How Hexa cut 12 hours a week");
+swap that kind of placeholder for a real story before building it, don't ship the mock's copy.
+
+**Close the panel with an exit bar.** `.site-mega-foot` (a `--light` strip with a top hairline)
+holds a browse link on the left and "Not sure what you need?" + a solid `.btn` on the right,
+pointing at the real Calendly 30-minute link every page already uses — so a visitor who does not
+recognise their own problem in 23 service names still has a way out. Only link destinations that
+actually exist: the reference's "See all services" had to become "See our customer stories"
+(`/customer-stories/`, verified 200) because 26lights has no all-services overview page —
+`/services/`, `/our-services/` and `/offers/` all 404.
+
+**Split an oversized family into two columns along a real seam, not an arbitrary half-cut.** The
+live site's own nav groups everything under one "Tech & AI" family (~11 items) next to "Business"
+and "Marketing" (~6 each) — once every item carries a teaser line, that one column runs roughly
+twice as tall as the other two, unbalancing the whole panel. Fixed by splitting it into two
+`NavGroup`s along the split the label itself already implies: **Tech** (MVP, Dev Team, Tech Audit,
+CTO as a Service, DRP, ERP Implementation, Odoo Implementation — the classic dev/implementation
+offers) and **AI** (Ai App development, AI Prototyping, AI ERP, AI-Powered Automations — the
+AI-branded offers, matching the separate `ai-*` pages already called out in §1's business-unit
+table). This is the "family already has two names joined by &" pattern — reach for it whenever a
+family's real item count runs far ahead of its siblings, rather than reflowing items into
+same-family sub-columns or trimming real services to force a false balance. Both `Tech` and `AI`
+currently link their column-title eyebrow to the same real hub URL (`/tech-team/`), since no
+separate AI-only hub page exists on the live site yet.
+
+**The panel must center on the page, not on whichever nav item triggered it, and can run nearly
+full-width.** `.site-mega` is `position: fixed` (not `absolute`) specifically so its containing
+block is the viewport, not `.site-nav-item` — nesting it inside a `position:relative` trigger
+wrapper with `absolute` positioning centers it on that trigger's own bounding box, which sits well
+left of true page-center once "Services" is the first nav item. `top` is a hand-matched pixel
+value (`84px`) rather than `calc(100% + Npx)`, since percentage/`100%` offsets on a `fixed`
+element resolve against the viewport height, not the header's height. Width is `min(1240px,
+94vw)` — close to the page's own `.wrap` max-width (1280px), so the panel visually aligns with the
+page content grid beneath it rather than reading as a narrow dropdown. Grid (`.site-mega-cols`) is
+`1.05fr 1fr 1fr 1fr` — four family columns, the first slightly wider because Tech carries the ERP
+subgroup. There is no separate promo/filler column: an earlier version added a 5th one (a photo
+tile promoting Arik Azoulay's coaching offer) but once every item carries its own teaser line
+there was no room left for it — removed once the user flagged "on a déjà pas assez de place", and
+the job of filling a short column now belongs to the in-column `.site-mega-featured` case-study
+card instead. Note `.site-mega` itself holds no padding and sets `overflow: hidden` — the padding
+lives on `.site-mega-cols`, so the exit bar below can run edge-to-edge inside the rounded corners.
+
+**Nav destinations: internal route if it exists in `web/`, otherwise the live 26lights.com page.**
+The full mega-menu and footer link sets mirror the real site's, but most of those destinations
+(Manifesto, Stories, Business/Marketing offer pages, most of the Tech & AI sub-pages) haven't been
+migrated into this Next.js app yet. `Header.tsx`/`Footer.tsx` link straight to the equivalent
+`https://www.26lights.com/...` URL for anything not yet built, and to the internal route
+(`/tech/mvp`, `/tech/dev-team`, `/tech/audit`, `/tech/cto`, `/tech/erp`) for the handful of pages
+that exist. As more pages get migrated, swap their entries from the external URL to the internal
+route — do not leave a page linking externally to itself once it has a real internal route.
+
+Footer is a flat dark neutral (`#25282b`), not the accent-tinted `.bistre` glow — three link
+columns (Services / Offers / Blog) plus a contact block (address, email, phone, a `btn-ghost`
+"Let's Talk!" pill, a LinkedIn icon), then a plain centered "Proud partner of ambitious companies"
+badge image below the link grid. No page-specific final CTA logic here; that belongs to each
+page's own `FinalCta` section (§18), which still renders inside `<main>`, above this footer.
+
+## 25. Process tabs — click-through phase reveal (`ProcessTabs.tsx`)
+
+A numbered row of tabs above one content panel, only the selected phase's detail visible at a
+time — distinct from a plain numbered `FeatureGrid` (every phase visible at once, no click) and
+from `WhyAccordion` (vertical, single-open, paired with one fixed photo beside it). Reach for
+this specifically when the real source itself gates detail behind clickable tabs (validated on
+`tech/odoo-implementation`'s "Business Analysis / Solutions Panel / Building & Delivery / Support
+& Maintenance"). New this page — promote it out of one-off status once a second real source
+reaches for the same shape.
+
+```
+<ProcessTabs eyebrow="Process" title="..." alt
+  phases={[{ number: "01", label: "Business Analysis", title: "...", body: "..." }, ...]} />
+```
+
+**Card and panel stay light; the active tab alone gets the emphasis treatment — and that
+treatment took three live-checked passes to land right, in this order:**
+1. Whole card as a dark `.bistre` glow surface (matching `.appr-card--bistre`) — the active tab's
+   own highlight barely read against its own already-dark surrounding card, and white-on-dark
+   body text was harder to read for a real paragraph than dark-on-light.
+2. Active tab alone inverted to solid dark (`var(--ink)`) against its light-gray siblings — still
+   rejected once checked live ("ça marche pas trop je trouve").
+3. **Shipped:** active tab lifts to solid white (`#fff`) with `box-shadow: inset 0 -2px 0
+   var(--accent)` as the bottom rule, label in `var(--ink)`, number in `var(--accent-text)` —
+   plain contrast against the `var(--light)` inactive tabs, no dark fill anywhere in the
+   component. Simplest option, and the one that actually read correctly once rendered.
+Don't skip straight to a "make the active state bolder/darker" instinct on this pattern — check
+the plain light/white contrast first; it's carried the weight on every pass tried so far.
+
+## 26. Three standing rules settled this session (apply on the next page, not just Odoo)
+
+- **No two adjacent sections may share the same background** (white / `#fafafa` alt / `.bistre`
+  dark) — see §5. Walk every section's actual rendered background in order before calling a page
+  done; a component's *default* (no `alt`, no `bistre`) is white, so two defaults in a row are
+  invisibly identical even though neither prop call looks wrong on its own. Recurred three times
+  before it became a documented rule (`nurturing`, `nurturing-marketing-led`, then `tech/drp`).
+- **`StatsRow` (the "14 years / 200+ startups / 90%" counter strip) is gone from every page that
+  had it** (`tech/cto`, `tech/dev-team`, `tech/audit`; never added to `tech/drp` or
+  `tech/odoo-implementation`) — a standing removal, not a one-off preference. Don't reach for it
+  on a new tech-unit page; if a section right before or after it depended on it for background
+  alternation, fix that with `alt` on the neighboring section instead of bringing it back.
+- **`TrustBar` needs no `logos` prop on a real client-trust page.** It ships with a hardcoded
+  canonical 9-logo roster (`TrustBar.tsx`, matching the live homepage's own logo marquee — Lizy,
+  Sharingbox, Cowboy, Umedia, beAngels, Yields.io, LABBOX, RingTwice, Sortlist) as its default, so
+  a page just renders `<TrustBar />`. Pass an explicit `logos` array only for a bar that isn't a
+  client-trust strip at all (`jacqueline-c`'s "Background" — her CV, not her clients). Previously
+  every page hand-typed its own subset and they'd all quietly drifted from each other and from the
+  real homepage list.
+- **A "Team" section pulls the full canonical 12-person roster from `src/lib/data/team.ts`
+  (`members={TEAM}`)**, never a hand-picked subset — the same 12 people already reused verbatim
+  across `tech/erp`, `tech/mvp`, `tech/cto`, `tech/dev-team`, `tech/audit` and `marketing`. A first
+  draft of `tech/drp` shipped with 6 people before this was caught and fixed.
+
+## 27. The dark finale is a deliberate exception to the alternation rule
+
+§26's "no two adjacent sections may share the same background" has one sanctioned exception, at
+the very bottom of a page: **`GrowthArchitects` → `FinalCta`** (both `#050505`), and its
+persona-page twin **`Bio` → `FinalCta`**. Both components are unconditionally dark, the pairing
+appears on every page that closes this way (`branding`, `go-to-market`, `nurturing`,
+`nurturing-marketing-led`, `video-creation`, `jacqueline-c`, `malorie-dreyfus`), and the invisible
+boundary is the point: the page ends on one continuous dark finale rather than two stacked slabs.
+Approved explicitly rather than "fixed" — do not add an `alt` to break it up, and do not build a
+light variant of `FinalCta` to satisfy the rule.
+
+The rule still bites everywhere above the fold-out: a dark section running into `CaseResults`
+(dark unless `alt`) mid-page, or a `.bistre` `DetailSplit` landing on `Projects`, is a real bug.
+`CaseResults`' `alt` prop exists for exactly that.
+
+## 28. Shared data files — check these before typing an array into a page
+
+Retyping a roster into a page is how every drift in this repo started. Current shared sources:
+
+| File | Exports | Used by |
+|---|---|---|
+| `lib/data/team.ts` | `TEAM` (12 people) | every `Team` section |
+| `lib/data/case-studies.ts` | `CASE_STUDIES` | `CaseResults` on growth-plan, marketing |
+| `lib/data/nurturing-cases.ts` | `NURTURING_CASES` | both nurturing pages |
+| `lib/data/marketing-capabilities.tsx` | `capability(key, title)` | every marketing page's `BeyondSection` |
+| `lib/data/tech-projects.ts` | `TECH_PROJECTS` (4 client cases) | `Projects` on mvp, dev-team, cto, audit |
+| `lib/data/tech-tools.ts` | `TECH_TOOLS` (16), `TECH_TOOL_ROWS` (4×4) | `TextSection`'s `toolRows` on mvp, dev-team, cto, tech-team |
+| `lib/data/proof-logos.ts` | `HERO_PROOF_LOGOS` (the 9 canonical clients, white) | `Hero`'s `proofLogos` on cto, go-to-market, both nurturing pages |
+
+`HERO_PROOF_LOGOS` is the white-silhouette twin of `TrustBar`'s roster (§26) — a page shows the
+client strip either as the light `TrustBar` under the hero **or** as `proofLogos` inside it, never
+both, and both lists must stay the same nine clients. cto used to hand-pick four (and included
+Listminut', which isn't on the roster at all).
+
+Two section shapes were also deduplicated, and a third copy of either should reuse the component
+rather than being pasted again:
+
+- **`HowWeWork.tsx`** — the "from building to autonomy" pair of boxed cards (checklist on the
+  first, button on the second). Was three near-identical bespoke `<section>`s on `go-to-market`
+  and both nurturing pages.
+- **`MethodFunnel.tsx`** — the six-stage co-creation funnel SVG. Was duplicated verbatim (bar one
+  em-dash) between `growth-plan` and `arik-azoulay`. Takes no props on purpose.
+
+### 28.1 `CaseResults`' `photoRatio="16/9"` — pass it on every real-photo grid, not just some
+
+`CaseResults` items come in two flavors: a `logo` card (no image at all — growth-plan, marketing,
+malorie-dreyfus) and a `photo` card (a real screenshot or photograph). `photoRatio` only matters
+for the second kind, and it defaults to `"default"` (a fixed-height crop built for a *product
+screenshot*, where legibility matters more than the crop). The moment the photo is real
+photography — team photos, event shots, campaign banners, not a UI screenshot — pass
+`photoRatio="16/9"` instead, so the crop is a deliberate widescreen banner instead of whatever
+height the screenshot recipe happens to produce.
+
+This is opt-in per call site, not automatic, which is exactly how it drifted: `nurturing` and
+`nurturing-marketing-led` both render `NURTURING_CASES` (real campaign screenshots/banners, not
+product UI) through the same `CaseResults` grid as `customer-stories` and `go-to-market`, but only
+the newer two pages had `photoRatio` set when the prop shipped — the two `nurturing` pages were
+never revisited. Fixed 2026-09-09. **Current real-photo grids, all now `photoRatio="16/9"`:**
+`customer-stories` (hub + `e-maprod`), `go-to-market`, `nurturing`, `nurturing-marketing-led`.
+Before adding a new `CaseResults` with `photo` items, check whether the photos are real
+photography (→ set it) or a product screenshot (→ leave it at `"default"`) — don't just copy
+whatever the nearest existing page did.
+
+## 29. Photography is black and white, from `public/team/`
+
+Every photo in the bank is desaturated (measured: saturation 0.00 across `team/*`). Two colour
+files pulled straight off the live WordPress site onto `tech-team` (saturation 0.15 and 0.35) read
+as foreign immediately and were swapped for bank photos. So: source photos from `public/team/`,
+and if a genuinely new photo has to come in, desaturate it first.
+
+The persona heroes want one more thing: a **cut-out portrait with an alpha channel**
+(`arik-hero.png`, `jacqueline.png`, `Malorie-Dreyfus.png` — all `alpha=Blend`), so the subject
+sits in the dark hero gradient instead of bringing a light rectangle into it. A flattened copy of
+Malorie's portrait had shipped and looked wrong for exactly this reason. Check with
+`magick <file> -format "%A" info:` before wiring a new portrait in.
+
+When you replace an image file in place, the dev server keeps serving the old optimized bytes from
+`.next/dev/cache/images` — delete that directory (production builds are unaffected).
+
+## 30. The accent-tinted section ground (`--accent-tint` as a surface)
+
+A fourth light surface, added 2026-09-08 and validated on the homepage's `SituationRouter`: the
+section ground is `var(--accent-tint)` and the cards on it stay white.
+
+**Why it exists.** The router shipped as white cards on `#fafafa`. Those two differ by five
+units of luminance (1.05:1), so the four cards read as one flat field and the block a visitor is
+supposed to *act on* went unnoticed — the user's words were "blanc sur gris, ça passe un peu
+inaperçu". `--accent-tint` is `#eef0fe` on the blue units, which is 14 units off white *and*
+differs in hue, so the card edges appear without needing a heavy border.
+
+**The recipe** (all of it matters; a tinted ground with the old flat cards still looks soft):
+
+```css
+.router { background: var(--accent-tint); }
+.router-card {
+  background: #fff;
+  border: 1px solid rgba(var(--accent-rgb), 0.16);
+  box-shadow: 0 1px 2px rgba(var(--glow-rgb), 0.04), 0 8px 24px rgba(var(--glow-rgb), 0.06);
+}
+.router-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 2px 4px rgba(var(--glow-rgb), 0.06), 0 16px 40px rgba(var(--glow-rgb), 0.12);
+  transform: translateY(-2px);
+}
+/* hairlines and quiet marks inside the card have to step up too, or they vanish */
+.router-links { border-color: #ececf3; }
+.router-card--corner .router-card-num { color: rgba(var(--accent-rgb), 0.34); }
+```
+
+**The lifted-white-card shadow is its own reusable recipe — copy the value, don't approximate
+it.** Three components now put a white card on this tint and lift it off with a shadow
+(`router-card` above, `ProcessTabs`' `.process-tabs`, `RelatedPages`' `.related-card`), and the
+first two passes each wrote a slightly different rgba by feel instead of reusing the first one —
+one used `rgba(0,0,0,…)` instead of `rgba(var(--glow-rgb),…)`, another used different blur/spread
+numbers for no real reason. Consolidated 2026-09-09 to a single two-step value, resting and
+hover:
+```css
+/* resting */
+box-shadow: 0 1px 2px rgba(var(--glow-rgb), 0.04), 0 8px 24px rgba(var(--glow-rgb), 0.06);
+/* hover / lifted */
+box-shadow: 0 2px 4px rgba(var(--glow-rgb), 0.06), 0 16px 40px rgba(var(--glow-rgb), 0.12);
+```
+Always `var(--glow-rgb)`, never a literal black — a black shadow under a card on a colored tint
+reads muddier than a shadow tinted the same hue as the ground it's lifting off. The next
+component that needs a card lifted off a tinted (or any light-colored) ground reuses this literal
+value; if it genuinely doesn't fit, that's worth a note here explaining why, not a fourth
+unexplained variant.
+
+**The rule: at most one per page, on the block the visitor is meant to act on.** The tint is a
+"this is the working section" signal. Use it twice and neither section reads as the important
+one — you have just invented a second `#fafafa`. Every other light section on the page stays
+white or `#fafafa`. `RelatedPages` is the one documented exception to "use sparingly": it always
+sits on the tint (no prop to opt out) because it is by definition the page's single "go do the
+next thing" block — see its own doc comment for why that makes it safe to leave unconditional
+rather than threading a prop through 15 call sites.
+
+**It counts as its own tone for §26's alternation rule.** `#eef0fe` next to white is a visible
+step, so `TINT → WHITE` is fine; `TINT → #fafafa` is not (both are near-white lights and the
+boundary reads as an accident).
+
+**Before using it on a tech or AI page, look at it.** `--accent-tint` follows the unit, so on
+`[data-unit="tech"]` the ground renders `#fdf2f8` — pale pink. That is the documented magenta
+tint and it is not wrong, but it is a much warmer ground than the blue, and it sits badly next
+to the black-and-white photography if the section also carries photos. Check it in the browser
+rather than assuming it ports.
+
+**Second validation: `ProcessTabs` on `tech-team`, 2026-09-09.** Shipped via a new `tint` prop
+(takes precedence over `alt`) rather than repurposing `alt` itself — `ProcessTabs` also renders on
+`tech/odoo-implementation`, which wasn't asked for this and shouldn't silently change. Paired
+with two more readability fixes on the same component, worth keeping together as one recipe:
+- Grid cells went from `var(--light)` (gray, same tone as most inactive UI) to solid white — a
+  gray cell reads as *disabled*, which fights scanability on a 9-cell grid at a glance.
+- Each cell's number switched from `var(--gray-2)` to `var(--accent-text)`, on every cell, not
+  just the active one — an accent-colored index is what makes the grid scan as "9 things to pick
+  from" instead of "1 highlighted, 8 dimmed".
+The panel below keeps `var(--light)` as its own fill, so the white grid and the gray panel still
+read as two zones of one card, and the whole card picked up a shadow (`0 1px 2px rgba(0,0,0,.04),
+0 12px 32px rgba(0,0,0,.06)`) to lift it off the now-tinted ground — flat cells with only a
+1px border had nothing to separate them from `#fafafa`; on a colored ground the flatness read
+worse, not better.
+
+**Candidates worth trying next** (each needs the one-per-page check first):
+
+- `Pricing` on the four `ai/*` pages, and `RateTable` on `arik-azoulay` / `malorie-dreyfus` — the
+  decision block on a page that states a price.
+- `ChecklistSection` is *not* a candidate: it is read, not acted on.
+
+## 31. Headline line count is never left to chance
+
+Every `Hero`/`PageHeader` title (and any `DetailSplit`/`TextSection` `h2` long enough to wrap) is
+`text-wrap: balance` by default (§5), but **balance only reshapes the line count the browser was
+already going to use — it does not choose it.** Left alone, a title wraps to whatever number of
+lines its column width happens to produce, which drifts per page (tech-team's title wrapped to
+3 uneven lines purely because nobody checked). The rule: **decide the line count, don't inherit
+it.**
+
+**Correction, 2026-09-09 — there is no reliable character-count budget, and the earlier version
+of this table was wrong.** It claimed `no-visual` (~17–20 chars/line) was meaningfully tighter
+than the two-column `Hero` (~28–32 chars/line) at the *same* 586px measure. A full site audit
+(13 of ~27 titles were overflowing their intended line count, most far past 2 lines) showed the
+real cause: both variants share the identical 586px measure and the identical `clamp(44px, 5.2vw,
+62px)` font — the earlier numbers came from comparing tests run at *different, uncontrolled
+browser viewport widths*, not from a real difference between the variants. Kumbh Sans at 62px
+(the size any desktop ≥1192px wide actually renders, since that's where the clamp maxes out) is
+wide enough that the honest capacity of a 586px line is **~17–22 characters** regardless of
+variant, dropping to single words once you add an `<em>` weight shift. Character-counting by eye
+undershoots this badly and produces exactly the accidental-overflow bug this section exists to
+prevent — don't estimate, measure.
+
+**How to measure a candidate line for real, before touching JSX:**
+```js
+// run in the browser console/devtools on any page — reuses the page's own loaded font
+const ctx = document.createElement('canvas').getContext('2d');
+ctx.font = '400 62px kumbhSans';           // the maxed-out clamp() size, ~1192px+ viewports
+ctx.measureText('Every founder needs someone').width;   // → 880 (px)
+```
+Compare that to the real available width — `document.querySelector('.hero-h1, .page-header-title,
+[class*="-text"]').getBoundingClientRect().width` on the actual page, not a guessed container
+max-width, since the grid can shave a few px off it. A fragment fits if its measured width is
+*less* than the container width; there is no fixed character count that reliably predicts this
+across fragments with different letter-width mixes ("nurturing" alone measured 267px — a 9-letter
+word eating nearly half a 586px line).
+
+**To force an exact, controlled line count:**
+1. Split the title into clauses at natural boundaries — commas, "and", a relative pronoun, the
+   sentence's own subject/predicate break. Never split mid-word or mid-phrase.
+2. Join the fragments with `<br />` inside a `<>...</>` fragment. `text-wrap: balance` will not
+   undo a hard `<br />`; it only balances the line count normal wrapping inside *each* fragment
+   was already going to produce — so a fragment that's still too long for its line will balance
+   into 2 (or more) sub-lines instead of overflowing raggedly, but it still adds a line you didn't
+   plan for.
+3. Measure every fragment (technique above) against the real container width before reloading —
+   this catches most misses before you burn a round-trip on it. Reload and count anyway
+   (`h1.getBoundingClientRect()` plus a `Range` over each text node, one rect group per real
+   line — grouping by `Math.round(rect.top)` across *text nodes*, not the whole `h1`, since a
+   `display:block` child like `.marquee-hero-text h1 em` produces its own container rect that
+   inflates a naive count by one).
+4. If a fragment still overflows: shorten that specific fragment, or — only where the component
+   offers it — widen the measure instead of shrinking the type:
+   - `Hero` (no `visual`): pass `wide` → 1080px measure (`wide`'s own doc comment in `Hero.tsx`
+     explains the tradeoff; validated on `go-to-market`'s 71-character title).
+   - `PersonaHero`: pass `wide` → 720px measure (added 2026-09-09 for exactly this — `arik-azoulay`,
+     `malorie-dreyfus`, and `jacqueline-c` all needed it; **cap around 820px**, not further — the
+     text column shares the section with the portrait bleeding in from the right, and CSS alone
+     can't warn you if you've pushed the measure into it, only a screenshot will).
+   - A `Hero` **with** a `visual` has no widening escape hatch — the two-column grid gives the
+     copy column a hard 586px ceiling. Expect to split verbose copy into 3-4 short fragments
+     instead of 2 (`ai/powered-automation`'s 78-character title needed 5 controlled lines; there
+     was no clean way to do it in fewer without cutting words).
+5. **2 lines is the ideal, not a hard requirement — 3 is a fine, deliberate outcome; what's never
+   acceptable is an *uncontrolled* line count** (text wrapping wherever the browser happens to
+   break it, unverified). If a title needs 4-5 lines even fully split and widened, that's a copy
+   problem: the sentence is trying to say too much for this slot, and no amount of `<br />`
+   placement fixes that — flag it instead of forcing an ugly break.
+
+**Applies to:** `Hero` title, `PersonaHero` title, `PageHeader` title. `DetailSplit`'s `title`
+already has its own downsizing escape hatch (`LONG_TITLE_THRESHOLD`, §11) for a long
+single-clause title instead of line-count control — that's a different fix for a different shape
+of problem (one long clause vs. a title that reads better as several), don't conflate them.
+
+**Always pin the browser viewport width before measuring or comparing results across pages** —
+`resize_window` to a fixed size (1440×900 is a reasonable real-desktop default) first. The
+`clamp()` maxes out at ~1192px, so anything at or above that renders the same H1 size, but the
+grid's *actual* column width can still drift a little below that, and two checks done at
+different uncontrolled widths are not comparable — this exact mistake produced the wrong budget
+table above.
