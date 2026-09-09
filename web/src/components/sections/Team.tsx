@@ -10,16 +10,21 @@ type TeamMember = {
 };
 
 type TeamProps = {
+  /** Anchor target, for a page whose hero CTA links down to the team ("Meet our team!"). */
+  id?: string;
   eyebrow: string;
   title: string;
   sub?: string;
   members: TeamMember[];
   cta?: { label: string; href: string };
+  /** "gray" (default, #fafafa) or "white" — same escape hatch as `Testimonials`, for a page
+   * whose neighbouring section is already #fafafa. */
+  background?: "gray" | "white";
 };
 
-export function Team({ eyebrow, title, sub, members, cta }: TeamProps) {
+export function Team({ id, eyebrow, title, sub, members, cta, background = "gray" }: TeamProps) {
   return (
-    <section style={{ background: "#fafafa" }} data-screen-label="Team">
+    <section id={id} style={{ background: background === "white" ? "#fff" : "#fafafa" }} data-screen-label="Team">
       <Wrap>
         <div className="reveal">
           <div className="section-label">{eyebrow}</div>

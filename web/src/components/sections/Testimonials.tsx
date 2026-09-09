@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { Wrap } from "@/components/ui/Wrap";
 import { SectionCta } from "@/components/ui/SectionCta";
@@ -21,9 +24,51 @@ type TestimonialsProps = {
   /** #fafafa (validated default, arik-azoulay) unless a neighboring section is already
    * that shade — pass "white" to break up two same-toned sections sitting back to back. */
   background?: "gray" | "white";
+  /** Extra testimonials shown only after the visitor clicks the reveal button — for a page
+   * whose source ships 7+ stories but only wants 3 up front (validated on arik-azoulay). */
+  moreItems?: Testimonial[];
+  moreLabel?: string;
+  lessLabel?: string;
+  /** 2 (default, validated on tech/mvp) or 3 (validated on arik-azoulay's 7-story grid). */
+  columns?: 2 | 3;
 };
 
-export function Testimonials({ eyebrow, title, items, cta, background = "gray" }: TestimonialsProps) {
+function TestimonialCard({ item, delay, className = "testi-card reveal" }: { item: Testimonial; delay: number; className?: string }) {
+  return (
+    <div className={className} style={revealDelay(delay)}>
+      <blockquote className="testi-quote">&ldquo;{item.quote}&rdquo;</blockquote>
+      <div className="testi-author-row">
+        {item.avatar ? (
+          <Image src={item.avatar} alt={item.name} width={60} height={60} className="testi-avatar" />
+        ) : (
+          <span className="testi-avatar-fallback" aria-hidden="true">
+            {item.initials}
+          </span>
+        )}
+        <div>
+          <div className="testi-author">{item.name}</div>
+          <div className="testi-role">
+            {item.title}, {item.company}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Testimonials({
+  eyebrow,
+  title,
+  items,
+  cta,
+  background = "gray",
+  moreItems,
+  moreLabel = "Read more founder stories →",
+  lessLabel = "Show less ↑",
+  columns = 2,
+}: TestimonialsProps) {
+  const [open, setOpen] = useState(false);
+
   return (
     <section
       className="testimonials"
@@ -35,28 +80,24 @@ export function Testimonials({ eyebrow, title, items, cta, background = "gray" }
           <div className="section-label">{eyebrow}</div>
           <h2>{title}</h2>
         </div>
-        <div className="testi-grid">
+        <div className={`testi-grid${columns === 3 ? " testi-grid--3" : ""}${open ? " open" : ""}`}>
           {items.map((item, i) => (
-            <div className="testi-card reveal" style={revealDelay(i * 80)} key={item.company}>
-              <blockquote className="testi-quote">&ldquo;{item.quote}&rdquo;</blockquote>
-              <div className="testi-author-row">
-                {item.avatar ? (
-                  <Image src={item.avatar} alt={item.name} width={60} height={60} className="testi-avatar" />
-                ) : (
-                  <span className="testi-avatar-fallback" aria-hidden="true">
-                    {item.initials}
-                  </span>
-                )}
-                <div>
-                  <div className="testi-author">{item.name}</div>
-                  <div className="testi-role">
-                    {item.title}, {item.company}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <TestimonialCard item={item} delay={i * 80} key={item.company} />
+          ))}
+          {moreItems?.map((item, i) => (
+            <TestimonialCard
+              item={item}
+              delay={i * 80}
+              className={`testi-card testi-hidden reveal${open ? " in" : ""}`}
+              key={item.company}
+            />
           ))}
         </div>
+        {moreItems?.length ? (
+          <button className="testi-more reveal" onClick={() => setOpen((o) => !o)}>
+            {open ? lessLabel : moreLabel}
+          </button>
+        ) : null}
         {cta ? (
           cta.strong ? (
             <div style={{ marginTop: 24 }}>

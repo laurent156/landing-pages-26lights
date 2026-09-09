@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/Button";
 import { CountUp } from "@/components/ui/CountUp";
 import { revealDelay } from "@/lib/style";
 
-type Stat = {
+export type Stat = {
   value: number;
   prefix?: string;
   suffix?: string;
   decimals?: number;
 };
 
-type Project = {
+export type Project = {
   company: string;
   logo?: string;
   meta: string;
