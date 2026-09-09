@@ -41,20 +41,26 @@
   --magenta-on-dark: #ff8fc8;
   --magenta-tint: #fdf2f8;
 
-  /* §2.4 marketing unit — orange (proposed, not yet visually signed off) */
-  --orange: #c4570a;
-  --orange-rgb: 196, 87, 10;
-  --orange-bright: #ff7a29;
-  --orange-hover: #a6480a;
-  --orange-on-dark: #ffb27a;
-  --orange-tint: #fff4ec;
+  /* No orange. The marketing unit ran on #FEB93E for one day and was dropped on 2026-09-08:
+     as a text colour it measured 1.72:1 on white and 1.65:1 on #fafafa against a 4.5:1
+     requirement, so every eyebrow and arrow-link on the six marketing pages was unreadable, and
+     the swatch had no dark step to fall back to. Decision: "enlève le orange, garde le full bleu
+     partout, sauf dans les pages tech où on peut mettre du magenta." Two accents now — blue is
+     the default for every page, magenta for [data-unit="tech"]. Do not reintroduce a third. */
 }
 
-/* Semantic accent — the only accent variables components should read.
-   Default to the business unit; wrap a subtree in [data-unit="tech"] or
-   [data-unit="marketing"] to retarget it. Never mix units within one subtree. */
-:root,
-[data-unit="business"] {
+/* Semantic accent — read by every *foreground* colored element: buttons, section-labels, icons,
+   badges, arrow-links, chip borders, small accent tints. This is the one that varies per
+   [data-unit] — blue everywhere by default, magenta on tech+AI pages — see §1 below.
+
+   --glow-rgb and --bistre-base-1/2/3, further down, are the deliberate exception: they drive the
+   large dark hero/bistre background washes specifically, and stay the fixed blue values on every
+   page regardless of unit. Final rule as of 2026-09-04, after two rounds of correction: "le fond
+   reste bleu partout ; tous les autres éléments colorés suivent l'unité" — the background (the
+   dark surface *and* its tinted glow) is the one thing that never changes; literally everything
+   else that carries color does. Do not merge --glow-rgb back into --accent-rgb, and do not let
+   [data-unit] override --glow-rgb/--bistre-base-* — both mistakes have already shipped once. */
+:root {
   --accent: var(--blue);
   --accent-rgb: var(--blue-rgb);
   --accent-text: var(--blue-text);
@@ -62,11 +68,27 @@
   --accent-bright: var(--blue);
   --accent-on-dark: var(--blue-on-dark);
   --accent-tint: #eef0fe;
+
+  /* the accented word inside a hero headline (`.hero-h1 em`). Its own token because no existing
+     one fits: --accent-bright is the right value for tech but is also used on light surfaces
+     (.project-card .meta, .testi-more), so it cannot be lightened for business; and business's
+     --accent-bright falls back to plain --blue, which is the darkest of the blues and was
+     rendering the homepage/growth-plan headlines noticeably duller than the persona and branding
+     headlines right next door in the same business unit. One token, one value per unit. */
+  --hero-em: var(--blue-on-dark);
+
+  /* background-glow only — .bistre::before, .hero::before and every other dark-surface wash
+     read this, never --accent-rgb. Fixed to blue; never overridden per [data-unit]. */
+  --glow-rgb: var(--blue-rgb);
   --bistre-base-1: #0a0a14;
   --bistre-base-2: #14132a;
   --bistre-base-3: #0c0b18;
 }
 
+/* Tech offers and every AI-branded page (ai/production, ai/prototyping, ai/erp,
+   ai/powered-automation) share one accent — magenta — across every foreground colored element,
+   per the user's explicit "tous les éléments colorés, il faut qu'ils soient en rose." Put
+   data-unit="tech" on either kind of page's own top-level wrapper (never on <html>). */
 [data-unit="tech"] {
   --accent: var(--magenta);
   --accent-rgb: var(--magenta-rgb);
@@ -75,23 +97,12 @@
   --accent-bright: var(--magenta-bright);
   --accent-on-dark: var(--magenta-on-dark);
   --accent-tint: var(--magenta-tint);
-  --bistre-base-1: #0d0812;
-  --bistre-base-2: #22112a;
-  --bistre-base-3: #120a16;
+  --hero-em: var(--magenta-bright);
 }
 
-[data-unit="marketing"] {
-  --accent: var(--orange);
-  --accent-rgb: var(--orange-rgb);
-  --accent-text: var(--orange);
-  --accent-hover: var(--orange-hover);
-  --accent-bright: var(--orange-bright);
-  --accent-on-dark: var(--orange-on-dark);
-  --accent-tint: var(--orange-tint);
-  --bistre-base-1: #120d08;
-  --bistre-base-2: #2a1f11;
-  --bistre-base-3: #16110c;
-}
+/* [data-unit="marketing"] deliberately has no accent block: marketing pages inherit the blue
+   `:root` set above. The attribute stays on those pages because it is the documented contract and
+   QA reads it, but it no longer changes any colour. */
 
 @theme inline {
   --color-ink: var(--ink);
