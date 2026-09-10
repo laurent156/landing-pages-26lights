@@ -7,7 +7,7 @@ description: >
   (ai-production, growth-plan, malorie-dreyfus, arik-azoulay, jacqueline-c, branding). Load this
   whenever building a new landing page in this repo, restyling/migrating a page to match the
   design system, adding a section to an existing page, or asked about 26lights' brand colors /
-  business units (business=blue, tech=magenta, marketing=orange).
+  business units (business=blue, tech=magenta, marketing=blue — orange was retired, §2.4).
 ---
 
 # 26lights landing-page design system
@@ -31,9 +31,36 @@ those, plus the components it imports, before building a third. Sections 3 and 4
 convention, page skeleton) describe the *old* HTML boilerplate — skip them for a new page and go
 straight to whichever component covers the section you need; the section numbers still map
 1:1 to a component (§6 buttons → `Button.tsx`, §8 hero → `Hero.tsx` / `HeroFigure.tsx`, §9 trust
-bar → `TrustBar.tsx`, §11 detail split → `DetailSplit.tsx` / `TextSection.tsx`, team/approach/
-project/final-CTA → `Team.tsx` / `ApproachSection.tsx` / `Projects.tsx` / `FinalCta.tsx`, site-wide
-header/footer → `Header.tsx` / `Footer.tsx`, §24).
+bar → `TrustBar.tsx`, §11 detail split → `DetailSplit.tsx` / `TextSection.tsx`, team/project/
+final-CTA → `Team.tsx` / `Projects.tsx` / `FinalCta.tsx`, site-wide header/footer → `Header.tsx` /
+`Footer.tsx`, §24).
+
+**Vocabulary: "component" vs. "section type".** Both words come up a lot talking about this repo,
+and they're not quite the same thing — this maps directly onto three real folders:
+
+- **`web/src/components/sections/*.tsx`** — **section types**. Each one is a horizontal slice of
+  a page (Team, Hero, FeatureGrid, Pricing, CaseResults, ProcessTabs, …) that takes props to vary
+  its content per page. When someone says "the Team section" or "a features-type section", this
+  is the folder they mean.
+- **`web/src/components/ui/*.tsx`** — smaller primitives used *inside* section types, not full
+  page slices on their own: `Button`, `Wrap`, `Bistre`, `CountUp`, `SectionCta`, `RevealSetup`,
+  `PillarRecedeEffect`. A section type is usually built out of several of these.
+- **`web/src/components/layout/*.tsx`** — site-wide chrome (`Header.tsx`, `Footer.tsx`), outside
+  any individual page's own section stack.
+
+**The same section type can have more than one implementation.** "Hero" is one conceptual role —
+open the page — but three different components fill it, because the source pages don't all share
+enough shape to force one component to do everything:
+- `Hero.tsx` — offer pages: two-column grid, badges, CTA row, optional visual card.
+- `PersonaHero.tsx` — consultant pages: full-bleed cutout portrait, floating glass credential card.
+- `MarqueeHero.tsx` — branding: full-bleed text over glow, horizontal portfolio marquee underneath.
+
+Picking the right one for a new page is a §8-style judgment call (what does the *real source*
+actually give you to work with), not a technical constraint — see §8 for the two offer-hero
+sub-variants and §8B/PersonaHero's own doc comment for the rest.
+
+"Component" (unqualified) covers all three folders above — reach for "section type" specifically
+when the distinction matters (e.g. comparing two hero *section types*, not two `ui/` primitives).
 
 **This is a standalone site now, not an iframe-embedded fragment.** The stack is Claude, GitHub,
 Strapi, Vercel — `web/` replaces 26lights.com outright, it does not get dropped into an Elementor
@@ -47,13 +74,13 @@ name as a small accent eyebrow, an offer title ("On-demand tech expertise"), the
 named services inside that unit, and a "Know more" arrow-link to its hub page. Built for the
 company-level homepage, where a visitor arrives not yet knowing which of the three units they
 need, so the section works as the routing table into the rest of the site. Prefer
-`ApproachSection` when the three columns are *arguments* (title + prose); reach for this only when
+`FeatureGrid` when the columns are *arguments* (title + prose); reach for this only when
 each column is genuinely a list of named offers. Note it stays on the page's single accent rather
 than colouring each column with its own unit hue — §1's one-accent-per-page rule still holds on
 the homepage, even though all three units appear on it.
 
 **`Pricing.tsx`** — §15, three priced tiers side by side with one `featured` on a dark glow card
-(radial accent gradient, like `.plan--featured`). Reach for this over `ApproachSection` whenever
+(radial accent gradient, like `.plan--featured`). Reach for this over `FeatureGrid` whenever
 the real source states actual figures — burying a price in prose is what makes a visitor bounce to
 ask "how much?" by email instead of buying. Every tier's `cta.href` should be the real checkout
 link (Stripe, Calendly, WhatsApp — whatever the source actually uses), not a generic `#contact`.
@@ -68,7 +95,7 @@ would touch the visitor's work (validated on `ai-production`, whose two PhDs are
 primary + a soft arrow-link), followed by a photo on one side and a clickable list of reasons on
 the other. Each row is a single-open accordion (clicking one collapses the others — only the
 active row's body is visible) and the photo swaps to match whichever row is active. Reach for
-this over the plain `ApproachSection` grid when a page has 3-5 "why us" style reasons and you
+this over the plain `FeatureGrid` grid when a page has 3-5 "why us" style reasons and you
 want the section to feel interactive rather than a static card layout (validated on
 `tech/cto`'s "Why work with us?"). It is a client component (`"use client"`, holds its own
 `useState` for the active row) — pass `items: {title, body, photo}[]`, a `primaryCta`, and an
@@ -199,9 +226,9 @@ accent token throughout.
 
 | Unit | Accent | Token prefix | Existing pages |
 |---|---|---|---|
-| **Business** (growth/consulting/coaching offers, personal consultant pages, general tech-adjacent services) | Blue | `--blue*` | `malorie-dreyfus`, `arik-azoulay`, `jacqueline-c`, `growth-plan`, `branding`, `web/tech/mvp` |
+| **Business** (growth/consulting/coaching offers, personal consultant pages, general tech-adjacent services) | Blue | `--blue*` | `malorie-dreyfus`, `arik-azoulay`, `jacqueline-c`, `growth-plan`, `web/tech/mvp` |
 | **Tech** (offers that are specifically about AI-built software) | Magenta | `--magenta*` | `ai-production`, `ai-prototyping`, `ai-erp`, `ai-powered-automation` |
-| **Marketing** | Orange | `--orange*` | *(no page built yet — see §2.3 before first use)* |
+| **Marketing** | Blue (no override — orange was retired, §2.4) | `--blue*` | `marketing`, `branding`, `go-to-market`, `nurturing`, `nurturing-marketing-led`, `video-creation` |
 
 **Don't pattern-match the unit from the live site's URL path.** 26lights.com groups a wide
 set of offers under one `/tech/...` nav section — MVP building, Dev Team, Tech Audit, CTO as a
@@ -285,36 +312,22 @@ This is the more complete token set (base / bright-on-dark / hover / on-dark / p
 prefer copying **this** pattern, not the blue one, when standing up a brand-new unit, because
 it already covers dark-hero and light-section needs separately.
 
-### 2.4 Marketing unit — orange (shipping on six pages, and the ramp is broken)
+### 2.4 Marketing unit — retired orange, now plain blue (2026-09-08)
 
-Six pages ship this unit (`marketing`, `branding`, `go-to-market`, `nurturing`,
-`nurturing-marketing-led`, `video-creation`). **The `web/` app's `tokens.css` collapsed the ramp
-below to a single value** — `--orange`, `--orange-bright` and `--orange-on-dark` are all
-`#feb93e` — and then pointed `--accent-text` at it. Measured consequence: every `.section-label`,
-`.section-cta` and `.cases-eyebrow` on those six pages renders at **1.72:1 on white and 1.65:1 on
-`#fafafa`**, against a 4.5:1 requirement. Blue learned this lesson (`--blue-text: #3d56e0`,
-darkened after a WCAG audit) and magenta passes at 4.7:1; orange never got its text step.
+**Superseded — kept only as the record of why.** Marketing shipped on `#feb93e` for one day
+(`marketing`, `branding`, `go-to-market`, `nurturing`, `nurturing-marketing-led`,
+`video-creation`) and it measured **1.72:1 on white** against a 4.5:1 requirement — the ramp had
+been collapsed to a single value with no real text step, unlike blue (`--blue-text`) and magenta,
+which both pass. Rather than manufacture a third accent's text step for a colour nobody had
+signed off on, the call was to drop it: `tokens.css`'s `[data-unit="marketing"]` block is now
+empty (a comment explaining this, nothing else), so `[data-unit="marketing"]` pages simply
+inherit the `:root` default — plain blue, same as the business unit.
 
-The ramp orange actually needs — the dark step measured, not proposed:
-
-```css
-:root {
-  --orange: #feb93e;          /* the brand yellow: button fills, glows */
-  --orange-text: #b3560a;     /* text on light — 4.94:1 on #fff, 4.73:1 on #fafafa, 4.53:1 on #f5f5f5 */
-  --orange-bright: #ff7a29;   /* brand-bright: glows, highlights on dark */
-  --orange-hover: #e5a52e;
-  --orange-on-dark: #feb93e;  /* 11.9:1 on the dark surfaces — correct as-is */
-  --orange-tint: #fff4ec;     /* pale tint for icon chips, pull-quotes */
-}
-```
-`--accent-text` must point at `--orange-text`, never at `--orange`. The doc's earlier proposal of
-`#C4570A` measures 4.45:1 on white — it misses, so do not reach for it.
-**Fastest way to build a marketing-unit page**: copy `ai-production/index.html`'s whole
-`<style>` block (it's the most complete template — see §4), then do a mechanical find/replace:
-`magenta` → `orange`, and swap the literal RGB triplet `254,59,155` (magenta-bright) →
-`255,122,41` (orange-bright) and `219,24,124` (magenta) → `196,87,10` (orange) everywhere it
-appears inside `rgba(...)` gradients. Everything else (class names, layout, spacing) carries
-over unchanged.
+**What this means building a marketing-unit page today:** do nothing accent-related. `data-unit
+="marketing"` on the page wrapper is still correct (keeps the unit semantically tagged even
+though it carries no override), and every `--accent*`/`--blue*` reference in this doc already
+does the right thing with no extra step. There is no orange token left to reach for — if you see
+one in an old page or a stale doc passage, that's drift, not a still-valid option.
 
 ## 3. File convention — LEGACY standalone pages only
 
