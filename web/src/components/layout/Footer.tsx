@@ -56,7 +56,7 @@ const FOOTER_COLUMNS: FooterGroup[][] = [
         { label: "Manifesto", href: "/manifesto" },
         { label: "Stories", href: "/customer-stories" },
         { label: "Events", href: "https://www.26lights.com/events/" },
-        { label: "Careers", href: "https://www.26lights.com/careers/" },
+        { label: "Careers", href: "/careers" },
         { label: "Contact", href: "/contact" },
       ],
     },

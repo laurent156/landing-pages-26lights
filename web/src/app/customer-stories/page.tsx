@@ -12,10 +12,8 @@ export const metadata: Metadata = {
 
 const CALL = "https://calendly.com/alicia-26lights/30min";
 
-/** Three of these "Read story" links still point at the live WordPress detail page — those are
- * real long-form case studies (challenge / approach / results, several quotes) being ported one
- * at a time; this hub does not wait on all four. e-maprod shipped first; repoint the rest to
- * "/customer-stories/<slug>" as each one ships. */
+/** All four real long-form case studies (challenge / approach / results, several quotes) are now
+ * ported — each "Read story" link points at its own "/customer-stories/<slug>" page. */
 const FEATURED = [
   {
     photo: { src: "/customer-stories/e-maprod-banner.png", alt: "The e-maprod team" },
@@ -27,19 +25,19 @@ const FEATURED = [
     photo: { src: "/customer-stories/sharingbox-banner.png", alt: "Sharingbox photo booths at an event" },
     result: "Automating 120+ tasks to support a fast, international expansion",
     body: "When faced with managing 120 photo booths for simultaneous activations, an Excel-based system couldn't keep up with their growth. We developed a comprehensive ERP solution that streamlined operations across project management, logistics, and client interfaces.",
-    href: "https://www.26lights.com/customer-stories/sharingbox/",
+    href: "/customer-stories/sharingbox",
   },
   {
     photo: { src: "/customer-stories/corset-daum-banner.png", alt: "The Corset DAUM founding team" },
     result: "How to leverage founders' years of expertise to improve their business.",
     body: "Founded by Reuwen and Sarah Daum, the Corset DAUM® is a groundbreaking orthopaedic brace, featuring an innovative dynamic piston solution, effectively treating various back pain conditions by redistributing body weight and enabling vertebral decompression.",
-    href: "https://www.26lights.com/customer-stories/corset-daum/",
+    href: "/customer-stories/corset-daum",
   },
   {
     photo: { src: "/customer-stories/evoluno-banner.png", alt: "The Evoluno team" },
     result: "From strategic uncertainty to structured clarity",
     body: "Evoluno is a company specializing in mental health in the workplace. It positions itself as a mental health partner for organizations, offering solutions to improve employees' psychological well-being and create a healthier work environment.",
-    href: "https://www.26lights.com/customer-stories/evoluno/",
+    href: "/customer-stories/evoluno",
   },
 ];
 

@@ -154,7 +154,7 @@ const FLAT_LINKS: NavLink[] = [
   { label: "Stories", href: "/customer-stories" },
   { label: "Events", href: "https://www.26lights.com/events/" },
   { label: "Blog", href: "https://www.26lights.com/blog/" },
-  { label: "Careers", href: "https://www.26lights.com/careers/" },
+  { label: "Careers", href: "/careers" },
 ];
 
 const CONTACT_HREF = "/contact";
