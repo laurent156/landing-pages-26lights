@@ -1019,6 +1019,152 @@
   color: var(--accent-on-dark);
   flex: none;
 }
+
+/* homepage hero — a distinct shape from the shared offer/persona/marquee heroes (§8): the H1 and
+   the sub/CTA column sit side by side instead of stacked, and a strip of real team photos runs
+   below instead of a single portrait card. Built bespoke for the homepage rather than folded into
+   Hero.tsx, since no other page shares this split-column + photo-strip shape — promote it into a
+   real variant if a second page ever wants the same thing. Still reuses the shared .hero-h1 type
+   recipe, .badge pill, and .btn family rather than inventing new ones for this layout. */
+.home-hero {
+  /* the fixed header floats on top of the hero rather than pushing it down, so its own top
+     padding is what keeps the H1 clear of the header bar. min-height is 100vh minus the trust
+     bar's own height (roughly one row of logos + its padding) so header + hero + trust bar read
+     as one full "above the fold" screen together, not the hero alone claiming the whole
+     viewport and pushing the trust bar below it. Deliberately NOT a flex column: `.wrap`'s
+     `margin: 0 auto` is what centers its 1280px content box today, but as a flex item those auto
+     margins absorb the cross-axis stretch instead, collapsing `.wrap` (and the photo-strip grid
+     inside it) down to its own near-zero content width. Block layout keeps `.wrap`'s own
+     centering intact. */
+  min-height: calc(100vh - 190px);
+  padding: 150px 0 56px;
+  overflow: hidden;
+}
+.home-hero-top {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 56px;
+  align-items: start;
+  padding-bottom: 64px;
+}
+.home-hero-left .badge {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+.home-hero-right {
+  padding-top: 8px;
+}
+.home-hero-sub {
+  max-width: 460px;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.76);
+}
+.home-hero-ctas {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+/* entrance, staggered element by element (H1 → badge → sub → CTAs → photos) rather than the two
+   halves just fading in as flat blocks — same heroFadeUp keyframe the shared Hero.tsx uses,
+   scoped under .home-hero so it doesn't touch that component's own `.hero h1` etc. rule. Plays
+   once on load; no scroll trigger needed since the hero is already in view. */
+.home-hero .hero-h1 {
+  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+.home-hero-left .badge {
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
+}
+.home-hero-sub {
+  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+.home-hero-ctas {
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-hero .hero-h1,
+  .home-hero-left .badge,
+  .home-hero-sub,
+  .home-hero-ctas {
+    animation: none;
+  }
+}
+.home-hero-strip {
+  display: grid;
+  /* each column's fr matches that photo's own real aspect ratio (portrait 0.77, portrait-ish
+     0.71, landscape 1.5, near-square 1.04) — not a uniform 1fr each. fr distributes the row's
+     fixed width proportionally, so the strip still fills edge to edge with no gap or overflow,
+     but a portrait shot reads narrower and a landscape shot reads wider, matching what each
+     photo actually is instead of force-cropping all four to the same width (validated against a
+     real mockup that had visibly uneven column widths — a first pass here used flat `flex: 1` on
+     every photo and missed that entirely). */
+  grid-template-columns: 0.77fr 0.71fr 1.5fr 1.04fr;
+  /* heights vary per photo too, not just width — and centered rather than bottom-aligned, so a
+     shorter photo floats with air on BOTH edges, not just the top with every photo still glued
+     to one shared baseline. That's what actually reads as a loose collage instead of a row of
+     different-length photos hanging from the same shelf. */
+  align-items: center;
+  gap: 16px;
+  height: clamp(220px, 24vw, 340px);
+}
+.home-hero-photo {
+  position: relative;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  /* staggered entrance, one photo after another rather than the whole strip popping in at once —
+     see the shared heroFadeUp keyframe in globals.css, reused here with per-photo delays. */
+  opacity: 0;
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.55s;
+}
+.home-hero-photo:nth-child(2) {
+  height: 80%;
+  animation-delay: 0.63s;
+}
+.home-hero-photo:nth-child(3) {
+  height: 66%;
+  animation-delay: 0.71s;
+}
+.home-hero-photo:nth-child(4) {
+  height: 92%;
+  animation-delay: 0.79s;
+}
+.home-hero-photo img {
+  object-fit: cover;
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-photo {
+    opacity: 1;
+    animation: none;
+  }
+}
+@media (max-width: 900px) {
+  .home-hero {
+    min-height: auto;
+    padding-top: 120px;
+  }
+  .home-hero-top {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-bottom: 40px;
+  }
+  .home-hero-strip {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+    align-items: stretch;
+    height: auto;
+  }
+  .home-hero-photo,
+  .home-hero-photo:nth-child(2),
+  .home-hero-photo:nth-child(3) {
+    height: 100%;
+  }
+}
+
 /* the one shared typographic recipe for every dark hero's H1 — offer `Hero`, `PersonaHero`,
    `MarqueeHero`. Apply this class alongside the bare `<h1>` on all three. Three near-identical
    ad-hoc H1 rules (58px fixed, clamp(40,4.9vw,58), clamp(44,5.2vw,62), two different
@@ -1822,8 +1968,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding-top: 24px;
+  padding-bottom: 24px;
 }
 .site-logo {
   display: flex;
@@ -1908,7 +2054,7 @@
   /* fixed (not absolute) so it centers on the viewport regardless of where the trigger sits
      in the nav, rather than on its own nav-item wrapper. */
   position: fixed;
-  top: 84px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   width: min(1240px, 94vw);

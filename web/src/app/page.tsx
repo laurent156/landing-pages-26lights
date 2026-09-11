@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Hero } from "@/components/sections/Hero";
-import { HeroFigure } from "@/components/sections/HeroFigure";
+import { HomeHero } from "@/components/sections/HomeHero";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { SituationRouter } from "@/components/sections/SituationRouter";
 import { ServiceColumns } from "@/components/sections/ServiceColumns";
@@ -19,7 +18,7 @@ import { AiAutomationVisual } from "@/components/illustrations/AiAutomationVisua
 export const metadata: Metadata = {
   title: "26lights — We Are Growth Architects",
   description:
-    "Business, tech and marketing under one roof, month to month, no equity. The outside team 200+ startups, scale-ups and SMEs bring in when the business is ready to move faster than it can hire. Brussels, Paris, Lausanne.",
+    "Business, tech and marketing under one roof, month to month, no equity. The outside team 200+ startups, scale-ups and SMEs bring in when the business is ready to move faster than it can hire. Brussels, Paris.",
 };
 
 const CALL = "https://calendly.com/alicia-26lights/30min";
@@ -28,20 +27,7 @@ export default function Home() {
   return (
     <div>
       <main>
-        <Hero
-          title={
-            <>
-              We are <em>growth architects</em>.
-            </>
-          }
-          sub="For 14 years we have been the outside team that startups, scale-ups and ambitious SMEs bring in when the business is ready to move faster than it can hire — business, tech and marketing under one roof, month to month, no equity."
-          note="200+ companies · Offices in Brussels, Paris and Lausanne."
-          ctas={[
-            { label: "Book a 30-min call", href: CALL },
-            { label: "Find your starting point", href: "#router", variant: "ghost" },
-          ]}
-          visual={<HeroFigure src="/team/homepage-team-at-work.jpg" alt="26lights team at work" />}
-        />
+        <HomeHero />
 
         <TrustBar />
 
