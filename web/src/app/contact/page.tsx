@@ -6,7 +6,7 @@ import { FinalCta } from "@/components/sections/FinalCta";
 export const metadata: Metadata = {
   title: "Contact — 26lights",
   description:
-    "Tell us what you are building and we will tell you whether we can help. Offices in Brussels, Paris and Lausanne — or book a 30-minute call with Alicia.",
+    "Tell us what you are building and we will tell you whether we can help. Offices in Brussels and Paris — or book a 30-minute call with Alicia.",
 };
 
 const CALL = "https://calendly.com/alicia-26lights/30min";
@@ -19,7 +19,7 @@ export default function ContactPage() {
           eyebrow="Contact"
           title="Tell us what you are building."
           sub="Two ways in: send the form below and we answer within a working day, or take a 30-minute slot straight in Alicia's calendar if you would rather talk it through."
-          note="Offices in Brussels, Paris and Lausanne."
+          note="Offices in Brussels and Paris."
           ctas={[{ label: "Book a 30-min call", href: CALL }]}
           wide
         />

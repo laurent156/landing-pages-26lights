@@ -67,7 +67,7 @@ export function GrowthArchitects() {
             We are <span>growth architects</span>
           </h2>
           <p className="reveal arch-stats">
-            200 startups helped &middot; 14 years of experience &middot; Based in Brussels, Paris and Lausanne
+            200 startups helped &middot; 14 years of experience &middot; Based in Brussels and Paris
           </p>
           <p className="reveal">
             For over 14 years, 26lights has partnered with more than 200 startups, scale-ups, and ambitious SMEs,
